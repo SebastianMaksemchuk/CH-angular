@@ -1,2 +1,2 @@
-<!-- <cha-dashboard></cha-dashboard> -->
-<cha-login></cha-login>
+<cha-login *ngIf="!authenticated" (logIn)="authenticated = true" />
+<cha-dashboard *ngIf="authenticated" (logOut)="authenticated=false" />

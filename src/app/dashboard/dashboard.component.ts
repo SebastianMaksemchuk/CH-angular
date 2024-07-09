@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'cha-dashboard',
@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
   showFiller = false;
+  @Output() logOut = new EventEmitter;
 }
