@@ -1,12 +1,11 @@
 <mat-drawer-container class="example-container" autosize>
-  <mat-drawer #drawer class="example-sidenav" mode="side">
-    <p>Auto-resizing sidenav</p>
-    @if (showFiller) {
-    <p>Lorem, ipsum dolor sit amet consectetur.</p>
-    }
-    <button (click)="showFiller = !showFiller" mat-raised-button>
-      Toggle extra text
-    </button>
+  <mat-drawer [opened]="true" #drawer class="example-sidenav" mode="side">
+    <mat-nav-list>
+      <a mat-list-item (click)="main='start'">Inicio</a>
+      <a mat-list-item (click)="main='courses'">Cursos</a>
+      <a mat-list-item (click)="main='students'">Estudiantes</a>
+      <a mat-list-item (click)="main='subscriptions'">Inscripciones</a>
+    </mat-nav-list>
   </mat-drawer>
 
   <div class="example-sidenav-content">
@@ -14,17 +13,20 @@
       <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>My App</span>
+      <span>Sistema de administración</span>
       <span class="example-spacer"></span>
       <button mat-icon-button class="example-icon favorite-icon">
-        <mat-icon>favorite</mat-icon>
+        <mat-icon>sunny</mat-icon>
       </button>
       <button (click)="logOut.emit()" mat-icon-button class="example-icon">
         <mat-icon>logout</mat-icon>
       </button>
     </mat-toolbar>
-    <main class="p-5">
-      <cha-courses></cha-courses>
+    <main [ngSwitch]="main" class="p-5">
+      <p *ngSwitchCase="'start'">Seleccione Cursos o Estudiantes del menú lateral</p>
+      <cha-courses *ngSwitchCase="'courses'"></cha-courses>
+      <cha-students *ngSwitchCase="'students'"></cha-students>
+      <p *ngSwitchCase="'subscriptions'">Esta función aún no ha sido implementada.</p>
     </main>
   </div>
 

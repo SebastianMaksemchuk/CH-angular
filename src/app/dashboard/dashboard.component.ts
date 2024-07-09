@@ -7,5 +7,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class DashboardComponent {
   showFiller = false;
+  main: string = "start"
   @Output() logOut = new EventEmitter;
 }
