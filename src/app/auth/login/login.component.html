@@ -4,19 +4,23 @@
       <h2>Iniciar Sesion</h2>
     </mat-card-header>
     <mat-card-content>
-      <form>
+      <form [formGroup]="logInForm" class="mb-8">
         <mat-form-field class="w-full" appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput>
-          <mat-hint>Debe ingresar un correo electr[onico v[alido</mat-hint>
-          <mat-icon matSuffix>email</mat-icon>
+          <mat-label>Correo electrónico</mat-label>
+          <input formControlName="email" matInput>
+          <mat-error *ngIf="logInForm.get('email')?.hasError('required')">El campo es requerido</mat-error>
+          <mat-error *ngIf="logInForm.get('email')?.hasError('email')">Ingrese una dirección de correo electrónico</mat-error>
         </mat-form-field>
 
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>Contraseña</mat-label>
-          <input matInput>
-          <mat-hint>Ingrese su contraseña</mat-hint>
-          <mat-icon matSuffix>key</mat-icon>
+          <input formControlName="password" matInput type="password">
+          <mat-error *ngIf="logInForm.get('password')?.hasError('required')">El campo es requerido</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('upperCase')">La contraseña debe tener al menos una letra mayúscula</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('lowerCase')">La contraseña debe tener al menos una letra minúscula</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('numeric')">La contraseña debe tener al menos un número</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('specialChar')">La contraseña debe tener al menos un símbolo</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('minLength')">La contraseña debe tener al menos 8 caracteres</mat-error>
         </mat-form-field>
       </form>
       <div style="display: flex; justify-content: space-around;align-items: center;">

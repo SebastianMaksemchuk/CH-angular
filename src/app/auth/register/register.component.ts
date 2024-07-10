@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 
@@ -11,7 +12,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class RegisterComponent {
   registerForm: FormGroup;
   idIndex: number = 0;
-  constructor(private formBuilder: FormBuilder, private matDialogRef: MatDialogRef<RegisterComponent>) {
+  constructor(private formBuilder: FormBuilder, private matDialogRef: MatDialogRef<RegisterComponent>, private dateAdapter: DateAdapter<Date>) {
+    this.dateAdapter.setLocale('es-AR')
     matDialogRef.disableClose = true;
     this.registerForm = this.formBuilder.group({
       id: [],
@@ -31,30 +33,16 @@ export class RegisterComponent {
   }
 
   passwordValidator(): ValidatorFn {
-    return (control: AbstractControl): {[key:string]:any} | null => {
+    return (control: AbstractControl): { [key: string]: any } | null => {
       const value = control.value
-      if (!value) {
-        return null
-      }
+      if (!value) { return null }
       const errors: any = {};
-
-    if (!/[A-Z]+/.test(value)) {
-      errors.upperCase = true;
-    }
-    if (!/[a-z]+/.test(value)) {
-      errors.lowerCase = true;
-    }
-    if (!/[0-9]+/.test(value)) {
-      errors.numeric = true;
-    }
-    if (!/[!@#$%^&*(),.?":{}|<>]+/.test(value)) {
-      errors.specialChar = true;
-    }
-    if (value.length < 8) {
-      errors.minLength = true;
-    }
-
-    return Object.keys(errors).length ? errors : null;
+      if (!/[A-Z]+/.test(value)) { errors.upperCase = true; }
+      if (!/[a-z]+/.test(value)) { errors.lowerCase = true; }
+      if (!/[0-9]+/.test(value)) { errors.numeric = true; }
+      if (!/[!@#$%^&*(),.?":{}|<>]+/.test(value)) { errors.specialChar = true; }
+      if (value.length < 8) { errors.minLength = true; }
+      return Object.keys(errors).length ? errors : null;
     }
   }
 }

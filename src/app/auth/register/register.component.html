@@ -1,3 +1,4 @@
+<h2 mat-dialog-title>Complete sus datos</h2>
 <mat-dialog-content>
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="w-full" appearance="outline">
@@ -7,7 +8,7 @@
     </mat-form-field>
   
     <mat-form-field class="w-full" appearance="outline">
-      <mat-label>Aapellido/s</mat-label>
+      <mat-label>Apellido/s</mat-label>
       <input formControlName="lastName" matInput>
       <mat-error>El campo es requerrido</mat-error>
     </mat-form-field>
@@ -23,15 +24,19 @@
       <mat-label>Fecha de nacimiento</mat-label>
       <input formControlName="DOB" matInput [matDatepicker]="picker">
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-hint>DD/MM/YYYY</mat-hint>
       <mat-datepicker #picker></mat-datepicker>
-      <mat-error>El campo es requerrido</mat-error>
+      <mat-error>Seleccione una fecha</mat-error>
     </mat-form-field>
   
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Rol</mat-label>
-      <input formControlName="role" matInput>
-      <mat-error>El campo es requerrido</mat-error>
+      <mat-select matNativeControl formControlName="role" >
+        <mat-option value="student">Alumno</mat-option>
+        <mat-option value="teacher">Docente</mat-option>
+        <mat-option value="admin">Administrador</mat-option>
+      </mat-select>
+      <mat-error>Seleccione un rol</mat-error>
     </mat-form-field>
   
     <mat-form-field class="w-full" appearance="outline">
