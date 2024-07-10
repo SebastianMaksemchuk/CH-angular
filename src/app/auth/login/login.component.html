@@ -19,8 +19,11 @@
           <mat-icon matSuffix>key</mat-icon>
         </mat-form-field>
       </form>
-      <button mat-button (click)="logIn.emit()"> Ingresar</button>
-
+      <div style="display: flex; justify-content: space-around;align-items: center;">
+        <button mat-flat-button (click)="logIn.emit()"> Ingresar</button>
+        <button mat-flat-button (click)="openRegisterDialog()">Registrarse</button>
+      </div>
     </mat-card-content>
+    <span>La funcionalidad de registro y login aún no ha sido implementada. Se puede ingresar con solo clickear el botón.</span>
   </mat-card>
 </div>

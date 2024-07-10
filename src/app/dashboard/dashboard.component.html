@@ -20,7 +20,7 @@
       <span *ngSwitchCase="'subscriptions'">Inscripciones</span>
     </span>
       <span class="example-spacer"></span>
-      <button mat-icon-button class="example-icon favorite-icon">
+      <button (click)="changeTheme()" mat-icon-button class="example-icon favorite-icon">
         <mat-icon>sunny</mat-icon>
       </button>
       <button (click)="logOut.emit()" mat-icon-button class="example-icon">

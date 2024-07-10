@@ -9,4 +9,7 @@ export class DashboardComponent {
   showFiller = false;
   main: string = "start"
   @Output() logOut = new EventEmitter;
+  changeTheme() {
+    alert('modo oscuro aún no implementado')
+  }
 }
