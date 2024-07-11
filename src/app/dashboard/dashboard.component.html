@@ -1,4 +1,4 @@
-<mat-drawer-container class="container" autosize>
+<mat-drawer-container class="container dashboard" autosize>
 
   <mat-drawer [opened]="true" #drawer class="sidenav" mode="side">
     <mat-nav-list>
@@ -11,7 +11,7 @@
 
   <div class="sidenav-content">
 
-    <mat-toolbar>
+    <mat-toolbar class="toolbar">
       <button (click)="drawer.toggle()" mat-icon-button class="icon" aria-label="Example icon-button with menu icon" matTooltip="Menú">
         <mat-icon>menu</mat-icon>
       </button>

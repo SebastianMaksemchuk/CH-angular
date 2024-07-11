@@ -12,8 +12,20 @@
 .sidenav {
   padding: 20px;
   max-width: 300px;
+  border-radius: 0;
+  background-color: greenyellow;
+  border-bottom: 1px solid black;
 }
 
 .spacer {
   flex: 1 1 auto;
+}
+
+.dashboard {
+  background-color: gainsboro;
+}
+
+.toolbar {
+  background-color: greenyellow;
+  border-bottom: 1px solid black;
 }

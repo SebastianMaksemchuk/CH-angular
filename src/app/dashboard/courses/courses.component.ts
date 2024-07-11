@@ -77,6 +77,8 @@ export class CoursesComponent {
   };
 
   deleteCourseById(id: string | number) {
-    this.dataSource = this.dataSource.filter(el => el.id != id);
+    if (confirm('¿Está seguro que desea elminiar este curso?')) {
+      this.dataSource = this.dataSource.filter(el => el.id != id);
+    }
   };
 };
