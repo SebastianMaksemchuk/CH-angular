@@ -1,6 +1,6 @@
 # CHAngularMaksemchuk
 
-Primer preentrega del proyecto para el curso Angular de CoderGouse comisión 57210
+Primer preentrega del proyecto para el curso Angular de CoderHouse comisión 57210
 
 
 
