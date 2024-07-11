@@ -15,6 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatInputModule,
     MatDatepickerModule,
     MatTableModule,
-    MatInputModule
+    MatTooltipModule
   ],
   exports: [StudentsComponent]
 })
