@@ -1,6 +1,9 @@
 export interface Course {
-  id: string;
+  id: number;
+  comision: number;
   name: string;
   startDate: Date;
-  endDate: Date
+  endDate: Date;
+  studentQuota: number;
+  subscribedStudents: any;
 }

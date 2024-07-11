@@ -4,19 +4,19 @@
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Nombre/s</mat-label>
       <input formControlName="firstName" matInput>
-      <mat-error>El campo es requerrido</mat-error>
+      <mat-error *ngIf="registerForm.get('firstName')?.hasError('required')">El nombre es requerido</mat-error>
     </mat-form-field>
   
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Apellido/s</mat-label>
       <input formControlName="lastName" matInput>
-      <mat-error>El campo es requerrido</mat-error>
+      <mat-error *ngIf="registerForm.get('lastName')?.hasError('required')">El apellido es requerido</mat-error>
     </mat-form-field>
   
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Correo electrónico</mat-label>
       <input formControlName="email" matInput>
-      <mat-error *ngIf="registerForm.get('email')?.hasError('required')">El campo es requerido</mat-error>
+      <mat-error *ngIf="registerForm.get('email')?.hasError('required')">El correo es requerido</mat-error>
       <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Ingrese una dirección de correo electrónico</mat-error>
     </mat-form-field>
   
@@ -36,13 +36,13 @@
         <mat-option value="teacher">Docente</mat-option>
         <mat-option value="admin">Administrador</mat-option>
       </mat-select>
-      <mat-error>Seleccione un rol</mat-error>
+      <mat-error>Debe seleccionar un rol</mat-error>
     </mat-form-field>
   
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Contraseña</mat-label>
       <input formControlName="password" matInput type="password">
-      <mat-error *ngIf="registerForm.get('password')?.hasError('required')">El campo es requerido</mat-error>
+      <mat-error *ngIf="registerForm.get('password')?.hasError('required')">Debe crear una contraseña</mat-error>
       <mat-error *ngIf="registerForm.get('password')?.hasError('upperCase')">La contraseña debe tener al menos una letra mayúscula</mat-error>
       <mat-error *ngIf="registerForm.get('password')?.hasError('lowerCase')">La contraseña debe tener al menos una letra minúscula</mat-error>
       <mat-error *ngIf="registerForm.get('password')?.hasError('numeric')">La contraseña debe tener al menos un número</mat-error>

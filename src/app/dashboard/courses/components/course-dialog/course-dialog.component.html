@@ -1,21 +1,40 @@
-<h2 mat-dialog-title>{{ course ? 'Editando ' + course.name : 'Crear curso' }}</h2>
+<h2 mat-dialog-title>{{ course ? 'Editando curso ' + course.name : 'Nuevo curso' }}</h2>
 <mat-dialog-content>
   <form [formGroup]="courseForm">
-    <mat-form-field class="w-full">
-      <mat-label>Nombre</mat-label>
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Nombre del curso</mat-label>
       <input formControlName="name" matInput>
-      <mat-error>El campo es requerrido</mat-error>
+      <mat-error>Debe asignarle un nombre al curso</mat-error>
     </mat-form-field>
 
-    <mat-form-field class="w-full">
-      <mat-label>Ingrese fechas de inicio y fin del curso</mat-label>
-      <mat-date-range-input [rangePicker]="picker">
-        <input matStartDate formControlName="startDate" placeholder="Fecha inicio">
-        <input matEndDate formControlName="endDate" placeholder="Fecha fin">
-      </mat-date-range-input>
-      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Número de comisión</mat-label>
+      <input type="number" formControlName="comision" matInput>
+      <mat-error>Complete el número de comisión</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Fecha de inicio</mat-label>
+      <input formControlName="startDate" matInput [matDatepicker]="picker">
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-hint>Fecha de la primera clase</mat-hint>
+      <mat-error>Seleccione una fecha</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Fecha de fin</mat-label>
+      <input formControlName="endDate" matInput [matDatepicker]="picker">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-hint>Fecha de la última clase</mat-hint>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>Seleccione una fecha</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Cupos</mat-label>
+      <input type="number" formControlName="studentQuota" matInput>
+      <mat-hint>Cupo máximo de alumnos para el curso</mat-hint>
     </mat-form-field>
 
   </form>
@@ -23,5 +42,5 @@
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancelar</button>
-  <button (click)="onSubmit()" mat-button>Guardar</button>
+  <button (click)="onSubmit()" mat-button [disabled]="courseForm.invalid">Guardar</button>
 </mat-dialog-actions>

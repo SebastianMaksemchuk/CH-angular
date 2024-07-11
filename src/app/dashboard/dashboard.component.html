@@ -10,7 +10,7 @@
 
   <div class="example-sidenav-content">
     <mat-toolbar>
-      <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" matTooltip="Menú">
         <mat-icon>menu</mat-icon>
       </button>
       <span [ngSwitch]="main">
@@ -20,10 +20,10 @@
       <span *ngSwitchCase="'subscriptions'">Inscripciones</span>
     </span>
       <span class="example-spacer"></span>
-      <button (click)="changeTheme()" mat-icon-button class="example-icon favorite-icon">
+      <button (click)="changeTheme()" mat-icon-button class="example-icon favorite-icon" matTooltip="Modo oscuro">
         <mat-icon>sunny</mat-icon>
       </button>
-      <button (click)="logOut.emit()" mat-icon-button class="example-icon">
+      <button (click)="logOut.emit()" mat-icon-button class="example-icon" matTooltip="Salir">
         <mat-icon>logout</mat-icon>
       </button>
     </mat-toolbar>

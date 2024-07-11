@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CoursesModule } from './courses/courses.module';
 import { MatListModule } from '@angular/material/list';
 import { StudentsModule } from './students/students.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { StudentsModule } from './students/students.module';
     MatButtonModule,
     CoursesModule,
     MatListModule,
-    StudentsModule
+    StudentsModule,
+    MatTooltipModule
   ],
   exports: [DashboardComponent]
 })

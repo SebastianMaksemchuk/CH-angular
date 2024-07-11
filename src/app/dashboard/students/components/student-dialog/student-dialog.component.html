@@ -1,1 +1,38 @@
-<p>student-dialog works!</p>
+<h2 mat-dialog-title>{{ student ? 'Editando alumno' : 'Nuevo alumno' }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="studentForm">
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Nombre/s</mat-label>
+      <input formControlName="firstName" matInput>
+      <mat-error *ngIf="studentForm.get('firstName')?.hasError('required')">El nombre es requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Apellido/s</mat-label>
+      <input formControlName="lastName" matInput>
+      <mat-error *ngIf="studentForm.get('lastName')?.hasError('required')">El apellido es requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Fecha de nacimiento</mat-label>
+      <input formControlName="DOB" matInput [matDatepicker]="picker">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-hint>DD/MM/YYYY</mat-hint>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>Seleccione una fecha</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Correo electrónico</mat-label>
+      <input formControlName="email" matInput>
+      <mat-error *ngIf="studentForm.get('email')?.hasError('required')">El correo es requerido</mat-error>
+      <mat-error *ngIf="studentForm.get('email')?.hasError('email')">Ingrese una dirección de correo electrónico</mat-error>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button (click)="onSubmit()" mat-button [disabled]="studentForm.invalid">Guardar</button>
+</mat-dialog-actions>

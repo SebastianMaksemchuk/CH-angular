@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Student } from '../../../../global/interfaces/students';
+import { DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'cha-student-dialog',
@@ -7,7 +10,26 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrl: './student-dialog.component.scss'
 })
 export class StudentDialogComponent {
-  constructor(private matDialogRef: MatDialogRef<StudentDialogComponent>){
-    matDialogRef.disableClose = true;
+  studentForm: FormGroup;
+  constructor (private formBuilder: FormBuilder, private matDialogRef: MatDialogRef<StudentDialogComponent>, private dateAdapter: DateAdapter<Date>,
+    @Inject(MAT_DIALOG_DATA) public student?: Student 
+  ) {
+    this.dateAdapter.setLocale('es-AR')
+    this.matDialogRef.disableClose = true;
+    this.studentForm = this.formBuilder.group({
+      id: [],
+      firstName: [null, Validators.required],
+      lastName: [null, Validators.required],
+      DOB: [new Date(),Validators.required],
+      email: [null, {validators: [Validators.required, Validators.email], updateOn: 'blur'}],
+    });
+  if(this.student) {
+    this.studentForm.patchValue(this.student)
   }
-}
+  }
+  onSubmit():void {
+    this.matDialogRef.close(this.studentForm.value)
+    console.log(this.studentForm.value)
+  }
+  }
+  

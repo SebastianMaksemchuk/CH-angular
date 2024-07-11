@@ -38,3 +38,11 @@ $CH-angular-maksemchuk-theme: mat.define-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+// Global styles
+
+mat-form-field {
+  margin: 10px;
+}
