@@ -4,4 +4,4 @@ export interface Student {
   lastName: string;
   DOB: Date;
   email: string;  
-}
+};

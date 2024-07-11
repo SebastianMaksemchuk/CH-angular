@@ -6,4 +6,4 @@ export interface Course {
   endDate: Date;
   studentQuota: number;
   subscribedStudents: any;
-}
+};

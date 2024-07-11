@@ -1,2 +1,3 @@
+<!-- Se define qué componente se muestra según una variable. Más adelante se implementará la función de autenticación -->
 <cha-login *ngIf="!authenticated" (logIn)="authenticated = true" />
 <cha-dashboard *ngIf="authenticated" (logOut)="authenticated=false" />

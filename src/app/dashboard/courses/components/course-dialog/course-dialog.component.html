@@ -1,6 +1,8 @@
 <h2 mat-dialog-title>{{ course ? 'Editando curso ' + course.name : 'Nuevo curso' }}</h2>
+
 <mat-dialog-content>
   <form [formGroup]="courseForm">
+
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Nombre del curso</mat-label>
       <input formControlName="name" matInput>

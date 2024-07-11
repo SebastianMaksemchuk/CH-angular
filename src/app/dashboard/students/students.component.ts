@@ -1,17 +1,22 @@
 import { Component } from '@angular/core';
-import { Student } from '../../global/interfaces/students';
-import { MatDialog } from '@angular/material/dialog';
+
+import { Student } from '../../global/interfaces/student';
 import { StudentDialogComponent } from './components/student-dialog/student-dialog.component';
+
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'cha-students',
   templateUrl: './students.component.html',
   styleUrl: './students.component.scss'
 })
+
 export class StudentsComponent {
-  dataSource: Student[] = []
+
+  dataSource: Student[] = [];
   displayedColumns: string[] = ['id', 'name', 'email', 'DOB', 'details', 'edit', 'delete'];
   idIndex: number = 0;
+
   constructor(private matDialog: MatDialog) {
     this.dataSource = [
       {
@@ -44,37 +49,37 @@ export class StudentsComponent {
       }
     ];
     this.idIndex = this.dataSource.length;
-  }
+  };
 
   newStudent(): void {
     this.matDialog
-    .open(StudentDialogComponent)
-    .afterClosed()
-    .subscribe({
-      next: (value) => {
-        if (value['email']) {
-          value['id'] = ++this.idIndex
-          value['subscribedStudents'] = []
-          this.dataSource = [...this.dataSource, value]
+      .open(StudentDialogComponent)
+      .afterClosed()
+      .subscribe({
+        next: (value) => {
+          if (value['email']) {
+            value['id'] = ++this.idIndex;
+            value['subscribedStudents'] = [];
+            this.dataSource = [...this.dataSource, value];
+          };
         }
-      }
-    })
-  }
+      });
+  };
 
   editStudent(student: Student) {
     this.matDialog
-    .open(StudentDialogComponent, { data: student })
-    .afterClosed()
-    .subscribe({
-      next: (value) => {
-        if (!!value) {
-          this.dataSource = this.dataSource.map((el)=>el.id === student.id ? value : el)
+      .open(StudentDialogComponent, { data: student })
+      .afterClosed()
+      .subscribe({
+        next: (value) => {
+          if (!!value) {
+            this.dataSource = this.dataSource.map((el) => el.id === student.id ? value : el)
+          };
         }
-      }
-    });
-  }
+      });
+  };
 
   deleteStudentById(id: string | number) {
-    this.dataSource = this.dataSource.filter(el => el.id != id)
-  }
-}
+    this.dataSource = this.dataSource.filter(el => el.id != id);
+  };
+};

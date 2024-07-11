@@ -5,11 +5,16 @@ import { Component, EventEmitter, Output } from '@angular/core';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
+
 export class DashboardComponent {
   showFiller = false;
-  main: string = "start"
+
+  // variable temporal que define que componente se muestra en el main del dashboard
+  main: string = "start";
+
   @Output() logOut = new EventEmitter;
+
   changeTheme() {
-    alert('modo oscuro aún no implementado')
-  }
-}
+    alert('modo oscuro aún no implementado');
+  };
+};

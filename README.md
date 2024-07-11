@@ -1,5 +1,11 @@
 # CHAngularMaksemchuk
 
+Primer preentrega del proyecto para el curso Angular de CoderGouse comisión 57210
+
+
+
+## Angular CLI
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
 
 ## Development server

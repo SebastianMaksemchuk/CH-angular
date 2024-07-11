@@ -35,4 +35,5 @@ import { MatTableModule } from '@angular/material/table';
   ],
   exports: [CoursesComponent]
 })
-export class CoursesModule { }
+
+export class CoursesModule { };

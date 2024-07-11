@@ -1,15 +1,18 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+
+import { Course } from '../../global/interfaces/course';
 import { CourseDialogComponent } from './components/course-dialog/course-dialog.component';
-import { Course } from '../../global/interfaces/courses';
+
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'cha-courses',
   templateUrl: './courses.component.html',
   styleUrl: './courses.component.scss'
 })
+
 export class CoursesComponent {
-  dataSource: Course[] = []
+  dataSource: Course[] = [];
   idIndex: number = 0;
   displayedColumns: string[] = ['id', 'name', 'startDate', 'endDate', 'spots', 'details', 'edit', 'delete'];
 
@@ -42,8 +45,8 @@ export class CoursesComponent {
         studentQuota: 100,
         subscribedStudents: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
       }
-    ]
-  }
+    ];
+  };
 
   openDialog(): void {
     this.matDialog
@@ -55,10 +58,10 @@ export class CoursesComponent {
             value['id'] = ++this.idIndex
             value['subscribedStudents'] = []
             this.dataSource = [...this.dataSource, value]
-          }
+          };
         }
       })
-  }
+  };
 
   editCourse(course: Course) {
     this.matDialog
@@ -67,13 +70,13 @@ export class CoursesComponent {
       .subscribe({
         next: (value) => {
           if (!!value) {
-            this.dataSource = this.dataSource.map((el) => el.id === course.id ? value : el)
-          }
+            this.dataSource = this.dataSource.map((el) => el.id === course.id ? value : el);
+          };
         }
       });
-  }
+  };
 
   deleteCourseById(id: string | number) {
-    this.dataSource = this.dataSource.filter(el => el.id != id)
-  }
-}
+    this.dataSource = this.dataSource.filter(el => el.id != id);
+  };
+};
