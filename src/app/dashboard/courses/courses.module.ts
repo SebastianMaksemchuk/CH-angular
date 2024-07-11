@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CoursesRoutingModule } from './courses-routing.module';
 import { CoursesComponent } from './courses.component';
 
+import { GlobalModule } from '../../global/global.module';
 import { CourseDialogComponent } from './components/course-dialog/course-dialog.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -26,6 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     CoursesRoutingModule,
     ReactiveFormsModule,
+    GlobalModule,
     MatIconModule,
     MatButtonModule,
     MatDialogModule,

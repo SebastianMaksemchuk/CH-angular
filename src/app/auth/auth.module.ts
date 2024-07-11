@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AuthRoutingModule } from './auth-routing.module';
 
+import { GlobalModule } from '../global/global.module';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
@@ -24,6 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
   imports: [
     CommonModule,
     AuthRoutingModule,
+    GlobalModule,
     ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,

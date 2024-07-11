@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { first } from 'rxjs';
 
 @Pipe({
   name: 'fullName'

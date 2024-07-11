@@ -15,7 +15,7 @@
       <button (click)="drawer.toggle()" mat-icon-button class="icon" aria-label="Example icon-button with menu icon" matTooltip="Menú">
         <mat-icon>menu</mat-icon>
       </button>
-      <span [ngSwitch]="main">
+      <span chaTitle [ngSwitch]="main">
         <span *ngSwitchCase="'start'">Incio</span>
         <span *ngSwitchCase="'courses'">Listado de cursos</span>
         <span *ngSwitchCase="'students'">Listado de alumnos</span>
