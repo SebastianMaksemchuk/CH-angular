@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { StudentsRoutingModule } from './students-routing.module';
 import { StudentsComponent } from './students.component';
 
+import { GlobalModule } from '../../global/global.module';
 import { StudentDialogComponent } from './components/student-dialog/student-dialog.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +15,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -24,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     CommonModule,
     StudentsRoutingModule,
+    GlobalModule,
     ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
@@ -32,8 +33,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     MatDatepickerModule,
     MatTableModule,
-    MatTooltipModule
+    MatInputModule
   ],
-  exports:[StudentsComponent]
+  exports: [StudentsComponent]
 })
 export class StudentsModule { }
