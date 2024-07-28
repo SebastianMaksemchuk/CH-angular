@@ -5,6 +5,7 @@ import { CourseDialogComponent } from './components/course-dialog/course-dialog.
 import { MatDialog } from '@angular/material/dialog';
 import { Course } from '../../../shared/interfaces/course';
 import { CoursesService } from '../../../core/services/courses.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'cha-courses',
@@ -14,13 +15,18 @@ import { CoursesService } from '../../../core/services/courses.service';
 
 export class CoursesComponent {
   displayedColumns: string[] = ['id', 'name', 'startDate', 'endDate', 'spots', 'details', 'edit', 'delete'];
+
+  courses: Course[] = [];
+  courses$: Observable<Course[]>;
   dataSource: Course[] = [];
 
   isLoading = false;
 
   constructor(
     private matDialog: MatDialog,
-    private coursesService: CoursesService) {
+    private coursesService: CoursesService
+  ) {
+    this.courses$ = this.coursesService.getCourses();
   }
 
   ngOnInit(): void {
@@ -31,7 +37,9 @@ export class CoursesComponent {
     this.isLoading = true;
     this.coursesService.getCourses().subscribe({
       next: (courses) => {
-        this.dataSource = courses;
+        this.courses = courses;
+        this.updateDataSource()
+        console.log(this.dataSource)
       },
       complete: () => {
         this.isLoading = false;
@@ -39,19 +47,33 @@ export class CoursesComponent {
     });
   }
 
+  updateDataSource() {
+    this.dataSource = this.courses.map(course => ({
+      id: course.id,
+      comision: course.comision,
+      name: course.name,
+      startDate: course.startDate,
+      endDate: course.endDate,
+      studentQuota: course.studentQuota,
+      enrolledStudents: course.enrolledStudents
+    }));
+  }
+
   openDialog(): void {
     this.matDialog
       .open(CourseDialogComponent)
       .afterClosed()
-      .subscribe({
-        next: (value) => {
-          if (value['comision']) {
-            value['id'] = this.dataSource.length + 1;
-            value['enrolledStudents'] = [];
-            this.dataSource = [...this.dataSource, value];
-          };
+      .subscribe(result => {
+        if (result) {
+          this.coursesService.addCourse(result).subscribe({
+            next: (updatedCourses) => {
+              this.courses = updatedCourses;
+              this.updateDataSource();
+            }
+          })
         }
-      })
+      }
+      )
   };
 
   editCourse(course: Course) {
@@ -61,7 +83,8 @@ export class CoursesComponent {
       .subscribe({
         next: (value) => {
           if (!!value) {
-            this.dataSource = this.dataSource.map((el) => el.id === course.id ? value : el);
+            this.courses = this.courses.map((el) => el.id === course.id ? value : el);
+            this.updateDataSource()
           };
         }
       });

@@ -1,1 +1,12 @@
-<h2>Curso de {{ (curso$ | async)?.name }}</h2>
+<div *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!isLoading && course">
+  <h2>{{ course.name }}</h2>
+  <p><strong>Fecha inicio:</strong> {{ course.startDate | date: 'dd/MM/YYYY' }}</p>
+  <p><strong>Fecha fin:</strong> {{ course.endDate | date: 'dd/MM/YYYY' }}</p>
+  <p><strong>Cupo:</strong> {{ course.studentQuota }}</p>
+  <p><strong>Inscriptos:</strong> {{ course.enrolledStudents.length }}</p>
+</div>
+
+<button mat-button [routerLink]="['/dashboard/courses']">Volver a lista de cursos</button>

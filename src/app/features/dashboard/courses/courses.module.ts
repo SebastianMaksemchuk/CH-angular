@@ -17,7 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CourseDialogComponent } from './components/course-dialog/course-dialog.component';
 
 import { SharedModule } from '../../../shared/shared.module';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 
 
@@ -40,7 +40,7 @@ import { CourseDetailComponent } from './components/course-detail/course-detail.
     MatDatepickerModule,
     MatTableModule,
     MatTooltipModule,
-    MatProgressSpinner
+    MatProgressSpinnerModule
   ],
   exports: [CoursesComponent]
 })

@@ -9,16 +9,14 @@ const routes: Routes = [
     component: LoginComponent,
     loadChildren: () =>
       import('./features/auth/auth.module').then(
-        (referenciaAlArchivo) => referenciaAlArchivo.AuthModule
+        (m) => m.AuthModule
       )
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
     loadChildren: () =>
-      import('./features/dashboard/dashboard.module').then(
-        (m) => m.DashboardModule
-      ),
+      import('./features/dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
   {
     path: '**',

@@ -1,12 +1,38 @@
-<h1>Inscripciones</h1>
-<hr />
-
 @if (isLoading) {
-<p>Cargando....</p>
-} @else {
+  <mat-spinner></mat-spinner>
+  } @else {
+  
+  <button mat-flat-button (click)="openAddEnrollmentDialog()"><mat-icon>add</mat-icon>Añadir un nuevo curso</button>
+  
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef chaTitle> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="student">
+      <th mat-header-cell *matHeaderCellDef chaTitle> Alumno</th>
+      <td mat-cell *matCellDef="let element"> {{element.student}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="course">
+      <th mat-header-cell *matHeaderCellDef chaTitle> Curso</th>
+      <td mat-cell *matCellDef="let element"> {{element.course}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef chaTitle> Eliminar</th>
+      <td mat-cell *matCellDef="let element">
+        <button (click)="deleteEnrollmentById(element.id)" mat-icon-button matTooltip="Eliminar curso" matTooltipPosition="above">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 
-<button (click)="addEnrollment()">+</button>
-
-<pre>{{ enrollments | json }}</pre>
-
-}
+  <pre>{{dataSource | json}}</pre>
+  }

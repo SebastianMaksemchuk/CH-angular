@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { delay, map, Observable } from 'rxjs';
 import { Course } from '../../shared/interfaces/course';
 
 @Injectable({
@@ -49,14 +49,25 @@ export class CoursesService {
     return this.getCourses().pipe(map((allCourses) => allCourses.find((el) => el.id === id)));
   }
 
-  addCourse(course: Course): Observable<Course[]> {
-    this.coursesDatabase.push(course);
+  addCourse(newCourse: Course): Observable<Course[]> {
+    const newId = Math.max(...this.coursesDatabase.map(e => e.id)) + 1;
+    this.coursesDatabase.push(
+      {
+        id: newId,
+        comision: newCourse.comision,
+        name: newCourse.name,
+        startDate: newCourse.startDate,
+        endDate: newCourse.endDate,
+        studentQuota: newCourse.studentQuota,
+        enrolledStudents: []
+      }
+    );
     return this.getCourses();
   }
 
   deleteCourseById(id: number): Observable<Course[]> {
     this.coursesDatabase = this.coursesDatabase.filter((el) => el.id != id);
-    return this.getCourses();
+    return this.getCourses().pipe(delay(400));
   }
 
 }
