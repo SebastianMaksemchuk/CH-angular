@@ -18,12 +18,14 @@ import { CourseDialogComponent } from './components/course-dialog/course-dialog.
 
 import { SharedModule } from '../../../shared/shared.module';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 
 
 @NgModule({
   declarations: [
     CoursesComponent,
-    CourseDialogComponent
+    CourseDialogComponent,
+    CourseDetailComponent
   ],
   imports: [
     CommonModule,
