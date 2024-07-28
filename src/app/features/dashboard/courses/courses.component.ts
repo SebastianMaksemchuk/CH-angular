@@ -47,7 +47,7 @@ export class CoursesComponent {
         next: (value) => {
           if (value['comision']) {
             value['id'] = this.dataSource.length + 1;
-            value['subscribedStudents'] = [];
+            value['enrolledStudents'] = [];
             this.dataSource = [...this.dataSource, value];
           };
         }

@@ -28,7 +28,7 @@
 
   <ng-container matColumnDef="spots">
     <th mat-header-cell *matHeaderCellDef chaTitle> Cupos </th>
-    <td mat-cell *matCellDef="let element"> {{element.studentQuota - element.subscribedStudents.length}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.studentQuota - element.enrolledStudents.length}} </td>
   </ng-container>
 
   <ng-container matColumnDef="details">

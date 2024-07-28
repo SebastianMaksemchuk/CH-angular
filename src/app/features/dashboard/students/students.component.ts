@@ -47,7 +47,7 @@ export class StudentsComponent {
         next: (value) => {
           if (value['email']) {
             value['id'] = this.dataSource.length + 1;
-            value['subscribedStudents'] = [];
+            value['enrolledStudents'] = [];
             this.dataSource = [...this.dataSource, value];
           };
         }

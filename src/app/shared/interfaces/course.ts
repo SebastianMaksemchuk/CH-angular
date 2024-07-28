@@ -5,5 +5,5 @@ export interface Course {
   startDate: Date;
   endDate: Date;
   studentQuota: number;
-  subscribedStudents: any;
+  enrolledStudents: any;
 };
