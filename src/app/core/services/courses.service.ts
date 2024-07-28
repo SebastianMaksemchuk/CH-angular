@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { delay, map, Observable } from 'rxjs';
 import { Course } from '../../shared/interfaces/course';
+import { EnrollmentsService } from './enrollment.service';
 
 @Injectable({
   providedIn: 'root'
@@ -81,6 +82,8 @@ export class CoursesService {
     }
   ]
 
+  constructor( private enrollmentsService: EnrollmentsService){}
+
   getCourses(): Observable<Course[]> {
     return new Observable((observer) => {
       setTimeout(() => {
@@ -111,7 +114,8 @@ export class CoursesService {
   }
 
   deleteCourseById(id: number): Observable<Course[]> {
-    this.coursesDatabase = this.coursesDatabase.filter((el) => el.id != id);
+    this.coursesDatabase = this.coursesDatabase.filter((el) => el.id !== id);
+    this.enrollmentsService.deleteEnrollmentsByCourse(id).subscribe();
     return this.getCourses().pipe(delay(400));
   }
 

@@ -7,56 +7,31 @@ import { Enrollment } from '../../shared/interfaces/enrollment';
 })
 export class EnrollmentsService {
   private enrollmentDatabase: Enrollment[] = [
-    {
-      id: 1,
-      studentId: 7,
-      courseId: 2,
-    },
-    {
-      id: 2,
-      studentId: 3,
-      courseId: 4,
-    },
-    {
-      id: 3,
-      studentId: 5,
-      courseId: 1,
-    },
-    {
-      id: 4,
-      studentId: 2,
-      courseId: 6,
-    },
-    {
-      id: 5,
-      studentId: 1,
-      courseId: 6,
-    },
-    {
-      id: 6,
-      studentId: 2,
-      courseId: 5,
-    },
-    {
-      id: 7,
-      studentId: 3,
-      courseId: 7,
-    },
-    {
-      id: 8,
-      studentId: 7,
-      courseId: 3,
-    },
-    {
-      id: 9,
-      studentId: 5,
-      courseId: 6,
-    },
-    {
-      id: 10,
-      studentId: 3,
-      courseId: 5,
-    }
+    { id: 1, studentId: 1, courseId: 2 },
+    { id: 2, studentId: 2, courseId: 3 },
+    { id: 3, studentId: 8, courseId: 4 },
+    { id: 4, studentId: 3, courseId: 5 },
+    { id: 5, studentId: 4, courseId: 6 },
+    { id: 6, studentId: 5, courseId: 7 },
+    { id: 7, studentId: 6, courseId: 8 },
+    { id: 8, studentId: 1, courseId: 3 },
+    { id: 9, studentId: 2, courseId: 4 },
+    { id: 10, studentId: 3, courseId: 6 },
+    { id: 11, studentId: 4, courseId: 7 },
+    { id: 12, studentId: 5, courseId: 8 },
+    { id: 13, studentId: 7, courseId: 1 },
+    { id: 14, studentId: 1, courseId: 5 },
+    { id: 15, studentId: 2, courseId: 6 },
+    { id: 16, studentId: 3, courseId: 8 },
+    { id: 17, studentId: 4, courseId: 1 },
+    { id: 18, studentId: 5, courseId: 2 },
+    { id: 19, studentId: 6, courseId: 3 },
+    { id: 20, studentId: 2, courseId: 7 },
+    { id: 21, studentId: 8, courseId: 6 },
+    { id: 22, studentId: 3, courseId: 2 },
+    { id: 23, studentId: 7, courseId: 5 },
+    { id: 24, studentId: 5, courseId: 4 },
+    { id: 25, studentId: 8, courseId: 8 }
   ];
 
   getEnrollments(): Observable<Enrollment[]> {
@@ -81,7 +56,7 @@ export class EnrollmentsService {
   }
 
   addEnrollment(newEnrollment: { studentId: number, courseId: number }): Observable<Enrollment[]> {
-    const exists = this.enrollmentDatabase.some(enrollment => 
+    const exists = this.enrollmentDatabase.some(enrollment =>
       enrollment.studentId === newEnrollment.studentId && enrollment.courseId === newEnrollment.courseId
     );
 
@@ -101,6 +76,16 @@ export class EnrollmentsService {
 
   deleteEnrollment(id: number): Observable<Enrollment[]> {
     this.enrollmentDatabase = this.enrollmentDatabase.filter(enrollment => enrollment.id !== id);
+    return of(this.enrollmentDatabase).pipe(delay(400));
+  }
+
+  deleteEnrollmentsByCourse(courseId: number): Observable<Enrollment[]> {
+    this.enrollmentDatabase = this.enrollmentDatabase.filter(enrollment => enrollment.courseId !== courseId);
+    return of(this.enrollmentDatabase).pipe(delay(400));
+  }
+
+  deleteEnrollmentsByStudent(studentId: number): Observable<Enrollment[]> {
+    this.enrollmentDatabase = this.enrollmentDatabase.filter(enrollment => enrollment.studentId !== studentId);
     return of(this.enrollmentDatabase).pipe(delay(400));
   }
 }
