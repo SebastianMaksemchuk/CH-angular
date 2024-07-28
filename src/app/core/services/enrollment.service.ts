@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { delay, Observable, of } from 'rxjs';
+import { delay, map, Observable, of } from 'rxjs';
 import { Enrollment } from '../../shared/interfaces/enrollment';
 
 @Injectable({
@@ -31,6 +31,18 @@ export class EnrollmentsService {
         observer.complete();
       }, 400)
     })
+  }
+
+  getEnrollmentById(id: number): Observable<Enrollment | undefined> {
+    return this.getEnrollments().pipe(map((allEnrollments) => allEnrollments.find((el) => el.id === id)));
+  }
+
+  getEnrollmentsByCourse(courseId: number): Observable<Enrollment[] | undefined> {
+    return this.getEnrollments().pipe(map((allEnrollments) => allEnrollments.filter((el) => el.courseId === courseId)));
+  }
+
+  getEnrollmentsByStudent(studentId: number): Observable<Enrollment[] | undefined> {
+    return this.getEnrollments().pipe(map((allEnrollments) => allEnrollments.filter((el) => el.studentId === studentId)));
   }
 
   addEnrollment(newEnrollment: { studentId: number, courseId: number }): Observable<Enrollment[]> {

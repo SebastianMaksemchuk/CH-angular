@@ -1,25 +1,30 @@
-<h1 mat-dialog-title>Add Enrollment</h1>
-<div mat-dialog-content>
+<h1 mat-dialog-title>Generar inscripción</h1>
+
+<mat-dialog-content>
   <form [formGroup]="enrollmentForm">
+
     <mat-form-field>
-      <mat-label>Student</mat-label>
+      <mat-label>Alumno</mat-label>
       <mat-select formControlName="studentId">
         <mat-option *ngFor="let student of students$ | async" [value]="student.id">
           {{ student.firstName }} {{ student.lastName }}
         </mat-option>
       </mat-select>
     </mat-form-field>
+
     <mat-form-field>
-      <mat-label>Course</mat-label>
+      <mat-label>Curso</mat-label>
       <mat-select formControlName="courseId">
         <mat-option *ngFor="let course of courses$ | async" [value]="course.id">
           {{ course.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
+
   </form>
-</div>
-<div mat-dialog-actions>
+</mat-dialog-content>
+
+<mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>
   <button mat-button (click)="onSubmit()" [disabled]="!enrollmentForm.valid">Add</button>
-</div>
+</mat-dialog-actions>

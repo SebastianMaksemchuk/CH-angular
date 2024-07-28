@@ -12,6 +12,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatDialogModule
   ],
   exports: [
     EnrollmentsComponent

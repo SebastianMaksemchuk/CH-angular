@@ -5,6 +5,7 @@ import { StudentDialogComponent } from './components/student-dialog/student-dial
 import { MatDialog } from '@angular/material/dialog';
 import { Student } from '../../../shared/interfaces/student';
 import { StudentsService } from '../../../core/services/students.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'cha-students',
@@ -14,13 +15,18 @@ import { StudentsService } from '../../../core/services/students.service';
 
 export class StudentsComponent {
   displayedColumns: string[] = ['id', 'name', 'email', 'DOB', 'details', 'edit', 'delete'];
+
+  students: Student[] = [];
+  students$: Observable<Student[]>;
   dataSource: Student[] = [];
 
   isLoading = false;
 
   constructor(
     private matDialog: MatDialog,
-    private studentsService: StudentsService) {
+    private studentsService: StudentsService
+  ) {
+    this.students$ = this.studentsService.getStudents();
   }
 
   ngOnInit(): void {
@@ -31,7 +37,8 @@ export class StudentsComponent {
     this.isLoading = true;
     this.studentsService.getStudents().subscribe({
       next: (students) => {
-        this.dataSource = students;
+        this.students = students;
+        this.updateDataSource()
       },
       complete: () => {
         this.isLoading = false;
@@ -39,19 +46,32 @@ export class StudentsComponent {
     });
   }
 
+  updateDataSource() {
+    this.dataSource = this.students.map(student => ({
+      id: student.id,
+      firstName: student.firstName,
+      lastName: student.lastName,
+      DOB: student.DOB,
+      email: student.email,
+      enrolledCourses: []
+    }));
+  }
+
   newStudent(): void {
     this.matDialog
       .open(StudentDialogComponent)
       .afterClosed()
-      .subscribe({
-        next: (value) => {
-          if (value['email']) {
-            value['id'] = this.dataSource.length + 1;
-            value['enrolledStudents'] = [];
-            this.dataSource = [...this.dataSource, value];
-          };
+      .subscribe(result => {
+        if (result) {
+          this.studentsService.addStudent(result).subscribe({
+            next: (updatedStudents) => {
+              this.students = updatedStudents;
+              this.updateDataSource();
+            }
+          })
         }
-      });
+      }
+      );
   };
 
   editStudent(student: Student) {
@@ -61,15 +81,25 @@ export class StudentsComponent {
       .subscribe({
         next: (value) => {
           if (!!value) {
-            this.dataSource = this.dataSource.map((el) => el.id === student.id ? value : el)
+            this.students = this.students.map((el) => el.id === student.id ? value : el);
+            this.updateDataSource()
           };
         }
       });
   };
 
-  deleteStudentById(id: string | number) {
-    if (confirm('¿Está seguro que desea elminiar este curso?')) {
-      this.dataSource = this.dataSource.filter(el => el.id != id);
+  deleteStudentById(id: number) {
+    if (confirm('¿Está seguro que desea elminiar este alumno?')) {
+      this.isLoading = true;
+      this.studentsService.deleteStudentById(id).subscribe({
+        next: (updatedStudents) => {
+          this.students = updatedStudents;
+          this.updateDataSource();
+        },
+        complete: () => {
+          this.isLoading = false;
+        }
+      });
     }
-  };
-};
+  }
+}

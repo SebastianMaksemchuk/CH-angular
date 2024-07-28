@@ -77,14 +77,12 @@ export class EnrollmentsComponent {
   }
 
   openAddEnrollmentDialog(): void {
-    const dialogRef = this.dialog.open(EnrollmentDialogComponent, {
+    this.dialog.open(EnrollmentDialogComponent, {
       data: {
         courses$: this.courses$,
         students$: this.students$
       }
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
+    }).afterClosed().subscribe(result => {
       if (result) {
         this.enrollmentsService.addEnrollment(result).subscribe({
           next: (updatedEnrollments) => {

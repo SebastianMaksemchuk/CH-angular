@@ -17,11 +17,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from '../../../shared/shared.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { StudentDetailComponent } from './components/student-detail/student-detail.component';
 
 @NgModule({
   declarations: [
     StudentsComponent,
-    StudentDialogComponent
+    StudentDialogComponent,
+    StudentDetailComponent
   ],
   imports: [
     CommonModule,

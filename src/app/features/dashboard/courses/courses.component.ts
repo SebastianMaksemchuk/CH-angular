@@ -39,7 +39,6 @@ export class CoursesComponent {
       next: (courses) => {
         this.courses = courses;
         this.updateDataSource()
-        console.log(this.dataSource)
       },
       complete: () => {
         this.isLoading = false;
@@ -90,9 +89,18 @@ export class CoursesComponent {
       });
   };
 
-  deleteCourseById(id: string | number) {
-    if (confirm('¿Está seguro que desea elminiar este curso?')) {
-      this.dataSource = this.dataSource.filter(el => el.id != id);
+  deleteCourseById(id: number) {
+    if (confirm('¿Desea elminiar este curso?')) {
+      this.isLoading = true;
+      this.coursesService.deleteCourseById(id).subscribe({
+        next: (updatedCourses) => {
+          this.courses = updatedCourses;
+          this.updateDataSource();
+        },
+        complete: () => {
+          this.isLoading = false;
+        }
+      });
     }
-  };
-};
+  }
+}

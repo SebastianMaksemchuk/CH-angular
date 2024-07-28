@@ -3,5 +3,6 @@ export interface Student {
   firstName: string;
   lastName: string;
   DOB: Date;
-  email: string;  
+  email: string;
+  enrolledCourses: any
 };

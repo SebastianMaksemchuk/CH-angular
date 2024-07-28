@@ -1,0 +1,17 @@
+<div *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!isLoading && student">
+  <h2>Detalles del Alumno: {{ student | fullName}}</h2>
+  <p><strong>Correo electrónico:</strong> {{ student.email }}</p>
+  <p><strong>Fecha de nacimiento:</strong> {{ student.DOB| date: 'dd/MM/YYYY' }}</p>
+  <h3>Inscripciones:</h3>
+  <ul>
+    <li *ngFor="let enrollment of filteredEnrollments">
+      {{ getCourse(enrollment.courseId) }}
+      <button mat-button (click)="deleteEnrollment(enrollment.id)">Eliminar</button>
+    </li>
+  </ul>
+</div>
+
+<button mat-button [routerLink]="['/dashboard/students']">Volver a lista de alumnos</button>
