@@ -5,10 +5,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { DashboardModule } from './dashboard/dashboard.module';
-import { AuthModule } from './auth/auth.module';
-
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
@@ -17,13 +16,16 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    DashboardModule,
-    AuthModule
+    CoreModule
   ],
   providers: [
     provideAnimationsAsync(),
-    provideNativeDateAdapter()
-    ],
+    provideNativeDateAdapter(),
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline' }
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

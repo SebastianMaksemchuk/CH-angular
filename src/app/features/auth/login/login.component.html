@@ -1,0 +1,42 @@
+<div class="login-container">
+  <mat-card>
+
+    <mat-card-header>
+      <h2 chaTitle>Iniciar Sesion</h2>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="logInForm" class="mb-8">
+
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Correo electrónico</mat-label>
+          <input formControlName="email" matInput>
+          <mat-error *ngIf="logInForm.get('email')?.hasError('required')">El campo es requerido</mat-error>
+          <mat-error *ngIf="logInForm.get('email')?.hasError('email')">Ingrese una dirección de correo electrónico</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Contraseña</mat-label>
+          <input formControlName="password" matInput type="password">
+          <mat-error *ngIf="logInForm.get('password')?.hasError('required')">El campo es requerido</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('upperCase')">La contraseña debe tener al menos una letra mayúscula</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('lowerCase')">La contraseña debe tener al menos una letra minúscula</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('numeric')">La contraseña debe tener al menos un número</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('specialChar')">La contraseña debe tener al menos un símbolo</mat-error>
+          <mat-error *ngIf="logInForm.get('password')?.hasError('minLength')">La contraseña debe tener al menos 8 caracteres</mat-error>
+        </mat-form-field>
+
+      </form>
+
+      <div style="display: flex; justify-content: space-around;align-items: center;">
+        <button mat-flat-button routerLink="/dashboard"> Ingresar</button>
+        <button mat-flat-button (click)="openRegisterDialog()">Registrarse</button>
+      </div>
+
+    </mat-card-content>
+
+    <p>La funcionalidad de registro y login aún no ha sido implementada, solo están armados los formularios.
+      Se puede ingresar a la app clickeando el botón Ingresar.</p>
+
+  </mat-card>
+</div>
