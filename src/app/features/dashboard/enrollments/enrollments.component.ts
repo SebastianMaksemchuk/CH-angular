@@ -25,7 +25,7 @@ export class EnrollmentsComponent {
   students$: Observable<Student[]>;
   enrollments$: Observable<Enrollment[]>;
 
-  displayedColumns: string[] = ['id', 'student', 'course', 'delete']
+  displayedColumns: string[] = ['student', 'course', 'delete']
   dataSource: { id: number, student: string, course: string }[] = []
 
   ngOnInit(): void {
@@ -50,19 +50,19 @@ export class EnrollmentsComponent {
   updateDataSource() {
     this.dataSource = this.enrollments.map(enrollment => ({
       id: enrollment.id,
-      student: this.getStudentName(enrollment.studentId as number),
-      course: this.getCourseName(enrollment.courseId as number),
+      student: this.getStudent(enrollment.studentId as number),
+      course: this.getCourse(enrollment.courseId as number),
     }));
   }
 
-  getStudentName(studentId: number): string {
+  getStudent(studentId: number): string {
     const student = this.students.find(s => s.id === studentId);
-    return student ? `${student.firstName} ${student.lastName}` : '';
+    return student ? `(${student.id}) ${student.firstName} ${student.lastName}` : '';
   }
 
-  getCourseName(courseId: number): string {
+  getCourse(courseId: number): string {
     const course = this.courses.find(c => c.id === courseId);
-    return course ? course.name : '';
+    return course ? `(${course.comision}) ${course.name}` : '';
   }
 
   constructor(

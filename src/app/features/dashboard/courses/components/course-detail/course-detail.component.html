@@ -5,7 +5,7 @@
   <h2>Detalles del Curso: {{ course.name }}</h2>
   <p><strong>Inicio:</strong> {{ course.startDate | date: 'dd/MM/yyyy' }}</p>
   <p><strong>Fin:</strong> {{ course.endDate | date: 'dd/MM/yyyy' }}</p>
-  <h3>Estudiantes Inscritos</h3>
+  <h3>Estudiantes Inscriptos</h3>
   <ul>
     <li *ngFor="let enrollment of filteredEnrollments">
       {{ getStudentName(enrollment.studentId) }}

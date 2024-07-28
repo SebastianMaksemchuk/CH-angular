@@ -46,13 +46,22 @@ export class EnrollmentsService {
   }
 
   addEnrollment(newEnrollment: { studentId: number, courseId: number }): Observable<Enrollment[]> {
-    const newId = Math.max(...this.enrollmentDatabase.map(e => e.id)) + 1;
-    this.enrollmentDatabase.push({
-      id: newId,
-      studentId: newEnrollment.studentId,
-      courseId: newEnrollment.courseId
-    });
-    return of(this.enrollmentDatabase).pipe(delay(400));
+    const exists = this.enrollmentDatabase.some(enrollment => 
+      enrollment.studentId === newEnrollment.studentId && enrollment.courseId === newEnrollment.courseId
+    );
+
+    if (exists) {
+      alert('La inscripción ya existe.')
+      return of(this.enrollmentDatabase).pipe(delay(400));
+    } else {
+      const newId = Math.max(...this.enrollmentDatabase.map(e => e.id)) + 1;
+      this.enrollmentDatabase.push({
+        id: newId,
+        studentId: newEnrollment.studentId,
+        courseId: newEnrollment.courseId
+      });
+      return of(this.enrollmentDatabase).pipe(delay(400));
+    }
   }
 
   deleteEnrollment(id: number): Observable<Enrollment[]> {
