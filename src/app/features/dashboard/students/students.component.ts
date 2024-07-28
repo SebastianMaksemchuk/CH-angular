@@ -5,7 +5,9 @@ import { StudentDialogComponent } from './components/student-dialog/student-dial
 import { MatDialog } from '@angular/material/dialog';
 import { Student } from '../../../shared/interfaces/student';
 import { StudentsService } from '../../../core/services/students.service';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
+import { Enrollment } from '../../../shared/interfaces/enrollment';
+import { EnrollmentsService } from '../../../core/services/enrollment.service';
 
 @Component({
   selector: 'cha-students',
@@ -14,19 +16,23 @@ import { Observable } from 'rxjs';
 })
 
 export class StudentsComponent {
-  displayedColumns: string[] = ['id', 'name', 'email', 'DOB', 'details', 'edit', 'delete'];
-
+  displayedColumns: string[] = ['id', 'name', 'email', 'enrolledCoursesCount', 'details', 'edit', 'delete'];
+  
   students: Student[] = [];
+  enrollments: Enrollment[] = [];
   students$: Observable<Student[]>;
-  dataSource: Student[] = [];
+  enrollments$: Observable<Enrollment[]>;
+  dataSource: any[] = [];
 
   isLoading = false;
 
   constructor(
     private matDialog: MatDialog,
-    private studentsService: StudentsService
+    private studentsService: StudentsService,
+    private enrollmentsService: EnrollmentsService
   ) {
     this.students$ = this.studentsService.getStudents();
+    this.enrollments$ = this.enrollmentsService.getEnrollments();
   }
 
   ngOnInit(): void {
@@ -35,10 +41,11 @@ export class StudentsComponent {
 
   loadStudents() {
     this.isLoading = true;
-    this.studentsService.getStudents().subscribe({
-      next: (students) => {
+    forkJoin([this.students$, this.enrollments$]).subscribe({
+      next: ([students, enrollments]) => {
         this.students = students;
-        this.updateDataSource()
+        this.enrollments = enrollments;
+        this.updateDataSource();
       },
       complete: () => {
         this.isLoading = false;
@@ -47,14 +54,16 @@ export class StudentsComponent {
   }
 
   updateDataSource() {
-    this.dataSource = this.students.map(student => ({
-      id: student.id,
-      firstName: student.firstName,
-      lastName: student.lastName,
-      DOB: student.DOB,
-      email: student.email,
-      enrolledCourses: []
-    }));
+    this.dataSource = this.students.map(student => {
+      const enrolledCoursesCount = this.enrollments.filter(enrollment => enrollment.studentId === student.id).length;
+      return {
+        id: student.id,
+        firstName: student.firstName,
+        lastName: student.lastName,
+        email: student.email,
+        enrolledCoursesCount: enrolledCoursesCount
+      };
+    });
   }
 
   newStudent(): void {

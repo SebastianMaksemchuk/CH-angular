@@ -20,9 +20,9 @@
     <td mat-cell *matCellDef="let element"> {{element.email}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="DOB">
-    <th mat-header-cell *matHeaderCellDef chaTitle> Fecha de nacimiento </th>
-    <td mat-cell *matCellDef="let element"> {{element.DOB | date: 'dd/MM/YYYY'}} </td>
+  <ng-container matColumnDef="enrolledCoursesCount">
+    <th mat-header-cell *matHeaderCellDef chaTitle> Cursos Inscriptos </th>
+    <td mat-cell *matCellDef="let element"> {{element.enrolledCoursesCount}} </td>
   </ng-container>
 
   <ng-container matColumnDef="details">

@@ -5,7 +5,9 @@ import { CourseDialogComponent } from './components/course-dialog/course-dialog.
 import { MatDialog } from '@angular/material/dialog';
 import { Course } from '../../../shared/interfaces/course';
 import { CoursesService } from '../../../core/services/courses.service';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
+import { Enrollment } from '../../../shared/interfaces/enrollment';
+import { EnrollmentsService } from '../../../core/services/enrollment.service';
 
 @Component({
   selector: 'cha-courses',
@@ -14,19 +16,23 @@ import { Observable } from 'rxjs';
 })
 
 export class CoursesComponent {
-  displayedColumns: string[] = ['id', 'name', 'startDate', 'endDate', 'spots', 'details', 'edit', 'delete'];
+  displayedColumns: string[] = ['id', 'name', 'startDate', 'endDate', 'enrolledCount', 'details', 'edit', 'delete'];
 
   courses: Course[] = [];
   courses$: Observable<Course[]>;
-  dataSource: Course[] = [];
+  enrollments: Enrollment[] = [];
+  enrollments$: Observable<Enrollment[]>;
+  dataSource: any[] = [];
 
   isLoading = false;
 
   constructor(
     private matDialog: MatDialog,
-    private coursesService: CoursesService
+    private coursesService: CoursesService,
+    private enrollmentsService: EnrollmentsService
   ) {
     this.courses$ = this.coursesService.getCourses();
+    this.enrollments$ = this.enrollmentsService.getEnrollments();
   }
 
   ngOnInit(): void {
@@ -35,10 +41,11 @@ export class CoursesComponent {
 
   loadCourses() {
     this.isLoading = true;
-    this.coursesService.getCourses().subscribe({
-      next: (courses) => {
+    forkJoin([this.courses$, this.enrollments$]).subscribe({
+      next: ([courses, enrollments]) => {
         this.courses = courses;
-        this.updateDataSource()
+        this.enrollments = enrollments;
+        this.updateDataSource();
       },
       complete: () => {
         this.isLoading = false;
@@ -47,15 +54,16 @@ export class CoursesComponent {
   }
 
   updateDataSource() {
-    this.dataSource = this.courses.map(course => ({
-      id: course.id,
-      comision: course.comision,
-      name: course.name,
-      startDate: course.startDate,
-      endDate: course.endDate,
-      studentQuota: course.studentQuota,
-      enrolledStudents: course.enrolledStudents
-    }));
+    this.dataSource = this.courses.map(course => {
+      const enrolledCount = this.enrollments.filter(enrollment => enrollment.courseId === course.id).length;
+      return {
+        id: course.id,
+        name: course.name,
+        startDate: course.startDate,
+        endDate: course.endDate,
+        enrolledCount: enrolledCount
+      };
+    });
   }
 
   openDialog(): void {

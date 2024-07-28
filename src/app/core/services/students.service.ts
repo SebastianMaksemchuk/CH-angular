@@ -38,6 +38,38 @@ export class StudentsService {
       DOB: new Date('1992-03-08'),
       email: 'dibu@martinez.com.ar',
       enrolledCourses: []
+    },
+    {
+      id: 5,
+      firstName: 'Lionel',
+      lastName: 'Messi',
+      DOB: new Date('1987-06-24'),
+      email: 'lio@messi.com.ar',
+      enrolledCourses: []
+    },
+    {
+      id: 6,
+      firstName: 'Ángel',
+      lastName: 'Di María',
+      DOB: new Date('1988-02-14'),
+      email: 'fideo@dimaria.com.ar',
+      enrolledCourses: []
+    },
+    {
+      id: 7,
+      firstName: 'Julián',
+      lastName: 'Álvarez',
+      DOB: new Date('2000-01-31'),
+      email: 'julian@alvarez.com.ar',
+      enrolledCourses: []
+    },
+    {
+      id: 8,
+      firstName: 'Enzo',
+      lastName: 'Fernández',
+      DOB: new Date('2001-07-17'),
+      email: 'enzo@fernandez.com.ar',
+      enrolledCourses: []
     }
   ]
 
