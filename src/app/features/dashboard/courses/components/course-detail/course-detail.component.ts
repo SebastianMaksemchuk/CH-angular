@@ -79,15 +79,15 @@ export class CourseDetailComponent implements OnInit {
   deleteEnrollment(enrollmentId: number) {
     if (confirm('¿Desea elminiar esta inscripción?')) {
       this.isLoading = true;
-    this.enrollmentsService.deleteEnrollment(enrollmentId).subscribe({
-      next: (updatedEnrollments) => {
-        this.enrollments = updatedEnrollments;
-        this.updateCourse();
-      },
-      complete: () => {
-        this.isLoading = false;
-      }
-    });
-  }
+      this.enrollmentsService.deleteEnrollment(enrollmentId).subscribe({
+        next: (updatedEnrollments) => {
+          this.enrollments = updatedEnrollments;
+          this.updateCourse();
+        },
+        complete: () => {
+          this.isLoading = false;
+        }
+      });
+    }
   }
 }

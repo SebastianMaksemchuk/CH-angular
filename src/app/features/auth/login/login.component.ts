@@ -12,10 +12,9 @@ import { MatDialog } from '@angular/material/dialog';
 })
 
 export class LoginComponent {
-  // @Output() logIn = new EventEmitter();
 
   logInForm: FormGroup;
-  
+
   constructor(private formBuilder: FormBuilder, private matDialog: MatDialog) {
 
     this.logInForm = this.formBuilder.group({

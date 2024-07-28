@@ -31,7 +31,7 @@ export class StudentDialogComponent {
       this.studentForm.patchValue(this.student);
     }
   }
-  
+
   onSubmit(): void {
     this.matDialogRef.close(this.studentForm.value);
     console.log(this.studentForm.value);

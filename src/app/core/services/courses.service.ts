@@ -82,7 +82,7 @@ export class CoursesService {
     }
   ]
 
-  constructor( private enrollmentsService: EnrollmentsService){}
+  constructor(private enrollmentsService: EnrollmentsService) { }
 
   getCourses(): Observable<Course[]> {
     return new Observable((observer) => {

@@ -28,7 +28,7 @@ export class EnrollmentDialogComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onSubmit() {
     if (this.enrollmentForm.valid) {

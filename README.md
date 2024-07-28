@@ -1,8 +1,6 @@
 # CHAngularMaksemchuk
 
-Primer preentrega del proyecto para el curso Angular de CoderHouse comisión 57210
-
-
+Segunda preentrega del proyecto para el curso Angular de CoderHouse comisión 57210
 
 ## Angular CLI
 

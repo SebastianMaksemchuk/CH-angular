@@ -17,7 +17,7 @@ import { EnrollmentsService } from '../../../core/services/enrollment.service';
 
 export class StudentsComponent {
   displayedColumns: string[] = ['id', 'name', 'email', 'enrolledCoursesCount', 'details', 'edit', 'delete'];
-  
+
   students: Student[] = [];
   enrollments: Enrollment[] = [];
   students$: Observable<Student[]>;

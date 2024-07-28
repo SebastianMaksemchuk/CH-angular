@@ -74,7 +74,7 @@ export class StudentsService {
     }
   ]
 
-  constructor(private enrollmentsService: EnrollmentsService){}
+  constructor(private enrollmentsService: EnrollmentsService) { }
 
   getStudents(): Observable<Student[]> {
     return new Observable((observer) => {
