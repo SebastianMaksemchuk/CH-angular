@@ -97,7 +97,7 @@ export class StudentsComponent {
       });
   };
 
-  deleteStudentById(id: number) {
+  deleteStudentById(id: string) {
     if (confirm('¿Está seguro que desea elminiar este alumno?')) {
       this.isLoading = true;
       this.studentsService.deleteStudentById(id).subscribe({

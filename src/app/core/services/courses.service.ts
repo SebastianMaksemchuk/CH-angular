@@ -1,122 +1,52 @@
 import { Injectable } from '@angular/core';
-import { delay, map, Observable } from 'rxjs';
+import { concatMap, delay, map, Observable, switchMap } from 'rxjs';
 import { Course } from '../../shared/interfaces/course';
 import { EnrollmentsService } from './enrollment.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoursesService {
-  private coursesDatabase = [
-    {
-      id: 1,
-      comision: 60160,
-      name: 'Desarrollo Web',
-      startDate: new Date('2023-08-28'),
-      endDate: new Date('2023-11-01'),
-      studentQuota: 120,
-      enrolledStudents: []
-    },
-    {
-      id: 2,
-      comision: 57210,
-      name: 'JavaScript',
-      startDate: new Date('2024-01-22'),
-      endDate: new Date('2024-03-25'),
-      studentQuota: 110,
-      enrolledStudents: []
-    },
-    {
-      id: 3,
-      comision: 57210,
-      name: 'Angular',
-      startDate: new Date('2024-06-10'),
-      endDate: new Date('2024-08-12'),
-      studentQuota: 100,
-      enrolledStudents: []
-    },
-    {
-      id: 4,
-      comision: 57300,
-      name: 'React Js',
-      startDate: new Date('2024-08-05'),
-      endDate: new Date('2024-09-23'),
-      studentQuota: 100,
-      enrolledStudents: []
-    },
-    {
-      id: 5,
-      comision: 58010,
-      name: 'Data Science I',
-      startDate: new Date('2024-08-03'),
-      endDate: new Date('2024-10-05'),
-      studentQuota: 100,
-      enrolledStudents: []
-    },
-    {
-      id: 6,
-      comision: 51111,
-      name: 'Data Science II',
-      startDate: new Date('2024-08-13'),
-      endDate: new Date('2024-11-26'),
-      studentQuota: 100,
-      enrolledStudents: []
-    },
-    {
-      id: 7,
-      comision: 52222,
-      name: 'Blockchain',
-      startDate: new Date('2024-09-09'),
-      endDate: new Date('2024-10-21'),
-      studentQuota: 100,
-      enrolledStudents: []
-    },
-    {
-      id: 8,
-      comision: 53333,
-      name: 'Looker Studio',
-      startDate: new Date('2024-09-12'),
-      endDate: new Date('2024-09-23'),
-      studentQuota: 100,
-      enrolledStudents: []
-    }
-  ]
+  private coursesUrl: string = environment.apiUrl + 'courses';
 
-  constructor(private enrollmentsService: EnrollmentsService) { }
+  constructor(private enrollmentsService: EnrollmentsService, private httpClient: HttpClient) { }
 
   getCourses(): Observable<Course[]> {
-    return new Observable((observer) => {
-      setTimeout(() => {
-        observer.next(this.coursesDatabase);
-        observer.complete();
-      }, 500);
-    });
+    return this.httpClient.get<Course[]>(this.coursesUrl).pipe(
+      map(courses => courses.map(course => ({
+        ...course,
+        startDate: new Date(course.startDate),
+        endDate: new Date(course.endDate)
+      })))
+    );
   }
 
-  getCourseById(id: number): Observable<Course | undefined> {
+  getCourseById(id: string): Observable<Course | undefined> {
     return this.getCourses().pipe(map((allCourses) => allCourses.find((el) => el.id === id)));
   }
 
   addCourse(newCourse: Course): Observable<Course[]> {
-    const newId = Math.max(...this.coursesDatabase.map(e => e.id)) + 1;
-    this.coursesDatabase.push(
-      {
-        id: newId,
-        comision: newCourse.comision,
-        name: newCourse.name,
-        startDate: newCourse.startDate,
-        endDate: newCourse.endDate,
-        studentQuota: newCourse.studentQuota,
-        enrolledStudents: []
-      }
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.getCourses().pipe(
+      map(courses => {
+        const maxId = courses.length > 0 ? Math.max(...courses.map(course => parseInt(course.id))) : 0;
+        newCourse.id = (maxId + 1).toString();
+        return newCourse;
+      }),
+      switchMap(courseWithId => 
+        this.httpClient.post<Course>(this.coursesUrl, courseWithId, { headers })
+      ),
+      switchMap(() => this.getCourses())
     );
-    return this.getCourses();
   }
 
-  deleteCourseById(id: number): Observable<Course[]> {
-    this.coursesDatabase = this.coursesDatabase.filter((el) => el.id !== id);
-    this.enrollmentsService.deleteEnrollmentsByCourse(id).subscribe();
-    return this.getCourses().pipe(delay(400));
+  deleteCourseById(id: string): Observable<Course[]> {
+    return this.enrollmentsService.deleteEnrollmentsByCourse(id).pipe(
+      concatMap(() => this.httpClient.delete(`${this.coursesUrl}/${id}`)),
+      switchMap(() => this.getCourses())
+    );
   }
 
 }

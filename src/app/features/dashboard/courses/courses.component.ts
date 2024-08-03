@@ -97,7 +97,7 @@ export class CoursesComponent {
       });
   };
 
-  deleteCourseById(id: number) {
+  deleteCourseById(id: string) {
     if (confirm('¿Desea elminiar este curso?')) {
       this.isLoading = true;
       this.coursesService.deleteCourseById(id).subscribe({

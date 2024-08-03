@@ -41,24 +41,29 @@ export class CourseDetailComponent implements OnInit {
 
   loadCourseDetails() {
     this.isLoading = true;
-    const courseId = Number(this.route.snapshot.paramMap.get('id'));
-    this.coursesService.getCourseById(courseId).subscribe({
-      next: (course) => {
-        this.course = course;
-      },
-      complete: () => {
-        forkJoin([this.students$, this.enrollments$]).subscribe({
-          next: (results) => {
-            this.students = results[0];
-            this.enrollments = results[1];
-            this.updateCourse();
-          },
-          complete: () => {
-            this.isLoading = false;
-          }
-        })
-      }
-    });
+    const courseId = this.route.snapshot.paramMap.get('id');
+    if (courseId !== null) {
+      this.coursesService.getCourseById(courseId).subscribe({
+        next: (course) => {
+          this.course = course;
+        },
+        complete: () => {
+          forkJoin([this.students$, this.enrollments$]).subscribe({
+            next: (results) => {
+              this.students = results[0];
+              this.enrollments = results[1];
+              this.updateCourse();
+            },
+            complete: () => {
+              this.isLoading = false;
+            }
+          });
+        }
+      });
+    } else {
+      this.isLoading = false;
+      console.error('No existe el id del curso');
+    }
   }
 
   updateCourse() {
@@ -71,12 +76,12 @@ export class CourseDetailComponent implements OnInit {
     }
   }
 
-  getStudentName(studentId: number | string): string {
+  getStudentName(studentId: string): string {
     const student = this.students.find(s => s.id === studentId);
     return student ? `${student.id} - ${student.firstName} ${student.lastName}` : 'Unknown';
   }
 
-  deleteEnrollment(enrollmentId: number) {
+  deleteEnrollment(enrollmentId: string) {
     if (confirm('¿Desea elminiar esta inscripción?')) {
       this.isLoading = true;
       this.enrollmentsService.deleteEnrollment(enrollmentId).subscribe({

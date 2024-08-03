@@ -1,6 +1,9 @@
 # CHAngularMaksemchuk
 
-Segunda preentrega del proyecto para el curso Angular de CoderHouse comisión 57210
+Tercer preentrega del proyecto para el curso Angular de CoderHouse comisión 57210.
+
+## Json server
+Run `json-server db.json --watch` (http://localhost:3000/) to start json server.
 
 ## Angular CLI
 

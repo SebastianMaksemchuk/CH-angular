@@ -43,7 +43,8 @@ export class StudentDetailComponent implements OnInit {
 
   loadStudentDetails() {
     this.isLoading = true;
-    const studentId = Number(this.route.snapshot.paramMap.get('id'));
+    const studentId = this.route.snapshot.paramMap.get('id');
+    if (studentId !== null) {
     this.studentsService.getStudentById(studentId).subscribe({
       next: (student) => {
         this.student = student;
@@ -58,11 +59,14 @@ export class StudentDetailComponent implements OnInit {
           complete: () => {
             this.isLoading = false;
           }
-        })
+        });
       }
     });
+  } else {
+    this.isLoading = false;
+    console.error('No existe el id del estudiante');
   }
-
+}
   updateStudent() {
     if (this.student) {
       this.filteredEnrollments = this.enrollments.filter(enrollment => enrollment.studentId === this.student?.id);
@@ -78,7 +82,7 @@ export class StudentDetailComponent implements OnInit {
     return course ? `${course.comision} - ${course.name}` : 'Unknown';
   }
 
-  deleteEnrollment(enrollmentId: number) {
+  deleteEnrollment(enrollmentId: string) {
     if (confirm('¿Desea elminiar esta inscripción?')) {
       this.isLoading = true;
       this.enrollmentsService.deleteEnrollment(enrollmentId).subscribe({

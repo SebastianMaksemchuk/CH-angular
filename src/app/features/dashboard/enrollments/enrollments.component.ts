@@ -26,7 +26,7 @@ export class EnrollmentsComponent {
   enrollments$: Observable<Enrollment[]>;
 
   displayedColumns: string[] = ['student', 'course', 'delete']
-  dataSource: { id: number, student: string, course: string }[] = []
+  dataSource: { id: string, student: string, course: string }[] = []
 
   ngOnInit(): void {
     this.loadEnrollments()
@@ -50,17 +50,17 @@ export class EnrollmentsComponent {
   updateDataSource() {
     this.dataSource = this.enrollments.map(enrollment => ({
       id: enrollment.id,
-      student: this.getStudent(enrollment.studentId as number),
-      course: this.getCourse(enrollment.courseId as number),
+      student: this.getStudent(enrollment.studentId),
+      course: this.getCourse(enrollment.courseId),
     }));
   }
 
-  getStudent(studentId: number): string {
+  getStudent(studentId: string): string {
     const student = this.students.find(s => s.id === studentId);
     return student ? `(${student.id}) ${student.firstName} ${student.lastName}` : '';
   }
 
-  getCourse(courseId: number): string {
+  getCourse(courseId: string): string {
     const course = this.courses.find(c => c.id === courseId);
     return course ? `(${course.comision}) ${course.name}` : '';
   }
@@ -94,7 +94,7 @@ export class EnrollmentsComponent {
     });
   }
 
-  deleteEnrollmentById(id: number) {
+  deleteEnrollmentById(id: string) {
     if (confirm('¿Está seguro que desea elminiar esta inscripción?')) {
       this.isLoading = true;
       this.enrollmentsService.deleteEnrollment(id).subscribe({
