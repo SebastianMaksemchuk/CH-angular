@@ -1,13 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnrollmentDialogComponent } from './enrollment-dialog.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MockProvider } from 'ng-mocks';
 import { Observable, of } from 'rxjs';
 import { Course } from '../../../../../shared/interfaces/course';
 import { Student } from '../../../../../shared/interfaces/student';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { SharedModule } from '../../../../../shared/shared.module';
+import { EnrollmentsRoutingModule } from '../../enrollments-routing.module';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
-xdescribe('EnrollmentDialogComponent', () => {
+describe('EnrollmentDialogComponent', () => {
   let component: EnrollmentDialogComponent;
   let fixture: ComponentFixture<EnrollmentDialogComponent>;
   let dialogRef: MatDialogRef<EnrollmentDialogComponent>;
@@ -38,10 +48,23 @@ xdescribe('EnrollmentDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EnrollmentDialogComponent],
-      imports: [ReactiveFormsModule, FormsModule],
+      imports: [
+        CommonModule,
+        SharedModule,
+        ReactiveFormsModule,
+        EnrollmentsRoutingModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatTableModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatDialogModule
+      ],
       providers: [
         MockProvider(MatDialogRef),
-        { provide: MAT_DIALOG_DATA, useValue: { courses$: mockCourses$, students$: mockStudents$ } }
+        { provide: MAT_DIALOG_DATA, useValue: { courses$: mockCourses$, students$: mockStudents$ } },
+        provideAnimationsAsync(),
       ]
     }).compileComponents();
 

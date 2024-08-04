@@ -1,14 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { EnrollmentsComponent } from './enrollments.component';
 import { EnrollmentsService } from '../../../core/services/enrollments.service';
 import { CoursesService } from '../../../core/services/courses.service';
 import { StudentsService } from '../../../core/services/students.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { EnrollmentDialogComponent } from './components/enrollment-dialog/enrollment-dialog.component';
 import { Enrollment } from '../../../shared/interfaces/enrollment';
 import { Course } from '../../../shared/interfaces/course';
 import { Student } from '../../../shared/interfaces/student';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { SharedModule } from '../../../shared/shared.module';
+import { EnrollmentsRoutingModule } from './enrollments-routing.module';
 
 xdescribe('EnrollmentsComponent', () => {
   let component: EnrollmentsComponent;
@@ -26,6 +36,19 @@ xdescribe('EnrollmentsComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [EnrollmentsComponent],
+      imports: [
+        CommonModule,
+        SharedModule,
+        ReactiveFormsModule,
+        EnrollmentsRoutingModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatTableModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatDialogModule
+      ],
       providers: [
         { provide: EnrollmentsService, useValue: enrollmentsServiceSpy },
         { provide: CoursesService, useValue: coursesServiceSpy },
@@ -33,15 +56,14 @@ xdescribe('EnrollmentsComponent', () => {
         { provide: MatDialog, useValue: matDialogSpy }
       ]
     }).compileComponents();
-
+  
     fixture = TestBed.createComponent(EnrollmentsComponent);
     component = fixture.componentInstance;
     enrollmentsService = TestBed.inject(EnrollmentsService) as jasmine.SpyObj<EnrollmentsService>;
     coursesService = TestBed.inject(CoursesService) as jasmine.SpyObj<CoursesService>;
     studentsService = TestBed.inject(StudentsService) as jasmine.SpyObj<StudentsService>;
     matDialog = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
-
-    // Set up test data
+  
     const testEnrollments: Enrollment[] = [
       { id: '1', studentId: '1', courseId: '1' }
     ];
@@ -51,16 +73,15 @@ xdescribe('EnrollmentsComponent', () => {
     const testStudents: Student[] = [
       { id: '1', firstName: 'John', lastName: 'Doe', DOB: new Date(), email: 'john.doe@example.com', enrolledCourses: [] }
     ];
-
-    // Configure spies
+  
     enrollmentsService.getEnrollments.and.returnValue(of(testEnrollments));
     coursesService.getCourses.and.returnValue(of(testCourses));
     studentsService.getStudents.and.returnValue(of(testStudents));
-
+  
     const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
     matDialog.open.and.returnValue(dialogRefSpy);
     dialogRefSpy.afterClosed.and.returnValue(of(testEnrollments));
-
+  
     fixture.detectChanges();
   });
 
@@ -68,13 +89,15 @@ xdescribe('EnrollmentsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load enrollments, courses, and students on init', () => {
+  it('should load enrollments, courses, and students on init', fakeAsync(() => {
     component.ngOnInit();
-    expect(component.isLoading).toBeTrue();
+    tick();
+    fixture.detectChanges();
+    expect(component.isLoading).toBeFalse();
     expect(component.enrollments.length).toBe(1);
     expect(component.courses.length).toBe(1);
     expect(component.students.length).toBe(1);
-  });
+  }));
 
   it('should update data source correctly', () => {
     component.updateDataSource();

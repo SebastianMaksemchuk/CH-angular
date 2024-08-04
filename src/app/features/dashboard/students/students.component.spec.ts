@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { of, throwError } from 'rxjs';
 import { StudentsComponent } from './students.component';
 import { StudentsService } from '../../../core/services/students.service';
@@ -9,6 +9,18 @@ import { Enrollment } from '../../../shared/interfaces/enrollment';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { MockProvider, MockService } from 'ng-mocks';
 import { StudentDialogComponent } from './components/student-dialog/student-dialog.component';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SharedModule } from '../../../shared/shared.module';
+import { StudentsRoutingModule } from './students-routing.module';
 
 xdescribe('StudentsComponent', () => {
   let component: StudentsComponent;
@@ -20,7 +32,22 @@ xdescribe('StudentsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [
+        HttpClientTestingModule,
+        CommonModule,
+        StudentsRoutingModule,
+        SharedModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatTableModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule
+      ],
       declarations: [StudentsComponent, StudentDialogComponent],
       providers: [
         MockProvider(StudentsService),

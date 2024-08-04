@@ -2,10 +2,22 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { DashboardComponent } from './dashboard.component';
 import { AuthService } from '../../core/services/auth.service';
-import { User } from '../../shared/interfaces/user';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SharedModule } from '../../shared/shared.module';
+import { CoursesModule } from './courses/courses.module';
+import { DashboardRoutingModule } from './dashboard-routing.module';
+import { StudentsModule } from './students/students.module';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { ActivatedRoute } from '@angular/router';
 
-xdescribe('DashboardComponent', () => {
+describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
   let authService: jasmine.SpyObj<AuthService>;
@@ -14,11 +26,33 @@ xdescribe('DashboardComponent', () => {
     const authServiceSpy = jasmine.createSpyObj('AuthService', ['logOut']);
     authServiceSpy.authUser$ = of(null); // Simula que no hay usuario autenticado
 
+    const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['snapshot']);
+    activatedRouteSpy.snapshot = {
+      paramMap: {
+        get: jasmine.createSpy().and.returnValue('1')
+      }
+    } as any;
+
     await TestBed.configureTestingModule({
       declarations: [DashboardComponent],
+      imports: [
+        CommonModule,
+        DashboardRoutingModule,
+        SharedModule,
+        CoursesModule,
+        StudentsModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatListModule,
+        MatTooltipModule
+      ],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
-        MatDialog
+        { provide: ActivatedRoute, useValue: activatedRouteSpy },
+        MatDialog,
+        provideAnimationsAsync()
       ]
     }).compileComponents();
 
