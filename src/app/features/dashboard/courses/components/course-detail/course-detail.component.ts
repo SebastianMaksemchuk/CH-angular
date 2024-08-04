@@ -4,7 +4,7 @@ import { Course } from '../../../../../shared/interfaces/course';
 import { CoursesService } from '../../../../../core/services/courses.service';
 import { ActivatedRoute } from '@angular/router';
 import { StudentsService } from '../../../../../core/services/students.service';
-import { EnrollmentsService } from '../../../../../core/services/enrollment.service';
+import { EnrollmentsService } from '../../../../../core/services/enrollments.service';
 import { Student } from '../../../../../shared/interfaces/student';
 import { Enrollment } from '../../../../../shared/interfaces/enrollment';
 

@@ -7,7 +7,7 @@ import { Course } from '../../../shared/interfaces/course';
 import { CoursesService } from '../../../core/services/courses.service';
 import { forkJoin, Observable } from 'rxjs';
 import { Enrollment } from '../../../shared/interfaces/enrollment';
-import { EnrollmentsService } from '../../../core/services/enrollment.service';
+import { EnrollmentsService } from '../../../core/services/enrollments.service';
 
 @Component({
   selector: 'cha-courses',
@@ -16,7 +16,7 @@ import { EnrollmentsService } from '../../../core/services/enrollment.service';
 })
 
 export class CoursesComponent {
-  displayedColumns: string[] = ['id', 'name', 'startDate', 'endDate', 'enrolledCount', 'details', 'edit', 'delete'];
+  displayedColumns: string[] = ['comision', 'course', 'startDate', 'endDate', 'enrolledCount', 'details', 'edit', 'delete'];
 
   courses: Course[] = [];
   courses$: Observable<Course[]>;
@@ -58,6 +58,7 @@ export class CoursesComponent {
       const enrolledCount = this.enrollments.filter(enrollment => enrollment.courseId === course.id).length;
       return {
         id: course.id,
+        comision: course.comision,
         name: course.name,
         startDate: course.startDate,
         endDate: course.endDate,

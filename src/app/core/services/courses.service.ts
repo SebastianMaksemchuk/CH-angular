@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { concatMap, delay, map, Observable, switchMap } from 'rxjs';
 import { Course } from '../../shared/interfaces/course';
-import { EnrollmentsService } from './enrollment.service';
+import { EnrollmentsService } from './enrollments.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 

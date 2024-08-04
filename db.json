@@ -1,5 +1,33 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "1",
+      "firstName": "Sebastian",
+      "lastName": "Maksemchuk",
+      "email": "sebastian@netio.com.ar",
+      "role": "ADMIN",
+      "password": "Admin1234!",
+      "token": "asdfen37o2"
+    },
+    {
+      "id": "2",
+      "firstName": "Josue",
+      "lastName": "Baez",
+      "email": "jbaez@mail.com",
+      "role": "TEACHER",
+      "password": "Jbaez0!!!",
+      "token": "123132smib"
+    },
+    {
+      "id": "3",
+      "firstName": "Lionel",
+      "lastName": "Messi",
+      "email": "lio@messi.com",
+      "role": "STUDENT",
+      "password": "Campeon2024!",
+      "token": "asdnhuei93"
+    }
+  ],
   "courses": [
     {
       "id": "1",

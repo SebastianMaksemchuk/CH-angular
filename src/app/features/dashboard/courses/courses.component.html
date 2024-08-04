@@ -6,13 +6,13 @@
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef chaTitle> ID </th>
-    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  <ng-container matColumnDef="comision">
+    <th mat-header-cell *matHeaderCellDef chaTitle> Comisión </th>
+    <td mat-cell *matCellDef="let element"> {{element.comision}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef chaTitle> Name </th>
+  <ng-container matColumnDef="course">
+    <th mat-header-cell *matHeaderCellDef chaTitle> Curso </th>
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
   </ng-container>
 

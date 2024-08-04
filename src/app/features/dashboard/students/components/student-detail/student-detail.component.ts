@@ -5,7 +5,7 @@ import { StudentsService } from '../../../../../core/services/students.service';
 import { Course } from '../../../../../shared/interfaces/course';
 import { Enrollment } from '../../../../../shared/interfaces/enrollment';
 import { forkJoin, Observable } from 'rxjs';
-import { EnrollmentsService } from '../../../../../core/services/enrollment.service';
+import { EnrollmentsService } from '../../../../../core/services/enrollments.service';
 import { CoursesService } from '../../../../../core/services/courses.service';
 
 @Component({

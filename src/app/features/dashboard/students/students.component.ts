@@ -7,7 +7,7 @@ import { Student } from '../../../shared/interfaces/student';
 import { StudentsService } from '../../../core/services/students.service';
 import { forkJoin, Observable } from 'rxjs';
 import { Enrollment } from '../../../shared/interfaces/enrollment';
-import { EnrollmentsService } from '../../../core/services/enrollment.service';
+import { EnrollmentsService } from '../../../core/services/enrollments.service';
 
 @Component({
   selector: 'cha-students',

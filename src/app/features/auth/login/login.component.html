@@ -25,18 +25,18 @@
           <mat-error *ngIf="logInForm.get('password')?.hasError('specialChar')">La contraseña debe tener al menos un símbolo</mat-error>
           <mat-error *ngIf="logInForm.get('password')?.hasError('minLength')">La contraseña debe tener al menos 8 caracteres</mat-error>
         </mat-form-field>
-
       </form>
 
       <div style="display: flex; justify-content: space-around;align-items: center;">
-        <button mat-flat-button routerLink="/dashboard"> Ingresar</button>
-        <button mat-flat-button (click)="openRegisterDialog()">Registrarse</button>
+        <button mat-flat-button type="submit" (click)="onSubmit()"> Ingresar</button>
+        <button mat-flat-button type="button" (click)="openRegisterDialog()">Registrarse</button>
       </div>
 
     </mat-card-content>
 
-    <p>La funcionalidad de registro y login aún no ha sido implementada, solo están armados los formularios.
-      Se puede ingresar a la app clickeando el botón Ingresar.</p>
+    <p>La funcionalidad de registro aún no ha sido implementada.</p>
+    <p>Se puede ingresar con sebastian&#64;netio.com.ar - Admin1234! (modo ADMIN)</p>
+    <p>O con jbaez&#64;mail.com - Jbaez0!!! (modo TEACHER)</p>
 
   </mat-card>
 </div>

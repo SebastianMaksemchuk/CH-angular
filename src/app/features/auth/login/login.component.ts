@@ -4,6 +4,7 @@ import { RegisterComponent } from '../register/register.component';
 
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'cha-login',
@@ -15,8 +16,11 @@ export class LoginComponent {
 
   logInForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private matDialog: MatDialog) {
-
+  constructor(
+    private formBuilder: FormBuilder,
+    private matDialog: MatDialog,
+    private authService: AuthService
+  ) {
     this.logInForm = this.formBuilder.group({
       email: [null, { validators: [Validators.required, Validators.email], updateOn: 'blur' }],
       password: [null, { validators: [Validators.required, this.passwordValidator()], updateOn: 'blur' }],
@@ -34,6 +38,18 @@ export class LoginComponent {
       if (!/[!@#$%^&*(),.?":{}|<>]+/.test(value)) { errors.specialChar = true; };
       if (value.length < 8) { errors.minLength = true; };
       return Object.keys(errors).length ? errors : null;
+    }
+  }
+
+  onSubmit() {
+    if (this.logInForm.invalid) {
+      alert('El formulario no es valido');
+    } else {
+      const data = {
+        email: this.logInForm.get('email')?.value,
+        password: this.logInForm.get('password')?.value,
+      };
+      this.authService.logIn(data);
     }
   }
 
