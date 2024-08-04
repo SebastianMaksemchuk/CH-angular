@@ -17,20 +17,24 @@ export class AuthService {
   constructor(private httpClient: HttpClient, private router: Router) { }
   logIn(data: { email: string; password: string }) {
     let params = new HttpParams()
-      .set('email', data.email)
-      .set('password', data.password);
-
+      .set('email', data.email);
+  
     this.httpClient.get<User[]>(this.usersUrl, { params }).pipe(
       map(response => {
         if (response && response.length > 0) {
           const authUser = response[0];
-          if (authUser.token) {
-            localStorage.setItem('token', authUser.token);
-            this._authUser$.next(authUser);
-            this.router.navigate(['dashboard', 'home']);
+          if (authUser.password === data.password) {
+            if (authUser.token) {
+              localStorage.setItem('token', authUser.token);
+              this._authUser$.next(authUser);
+              this.router.navigate(['dashboard', 'home']);
+            } else {
+              console.error("Token no encontrado en la respuesta");
+              alert("Error en el inicio de sesión");
+            }
           } else {
-            console.error("Token no encontrado en la respuesta");
-            alert("Error en el inicio de sesión");
+            console.log("Correo o contraseña incorrecta");
+            alert("Correo o contraseña incorrecta");
           }
         } else {
           console.log("Correo o contraseña incorrecta");
