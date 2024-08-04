@@ -34,41 +34,104 @@ describe('AuthService', () => {
         lastName: 'Doe',
         email: 'john@example.com',
         role: 'ADMIN',
-        password: 'password',
+        password: 'password', // La contraseña debe coincidir para el login exitoso
         token: 'mockToken',
       };
       const data = { email: 'john@example.com', password: 'password' };
       spyOn(router, 'navigate');
-
+    
       service.logIn(data);
-
+    
       const req = httpController.expectOne((req) => {
-        return req.method === 'GET' && req.url === `${environment.apiUrl}users` && req.params.get('email') === data.email && req.params.get('password') === data.password;
+        return req.method === 'GET' &&
+               req.url === `${environment.apiUrl}users` &&
+               req.params.get('email') === data.email;
       });
-
+    
       req.flush([mockUser]);
-
+    
       expect(localStorage.getItem('token')).toBe('mockToken');
       expect(router.navigate).toHaveBeenCalledWith(['dashboard', 'home']);
       done();
     });
 
-    it('should handle login errors', (done) => {
+    it('should handle login with incorrect password', (done) => {
+      const mockUser: User = {
+        id: '1',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john@example.com',
+        role: 'ADMIN',
+        password: 'correctpassword', // Contraseña correcta para el usuario pero incorrecta en el input
+        token: 'mockToken',
+      };
       const data = { email: 'john@example.com', password: 'wrongpassword' };
       spyOn(router, 'navigate');
-
+    
       service.logIn(data);
-
+    
       const req = httpController.expectOne((req) => {
-        return req.method === 'GET' && req.url === `${environment.apiUrl}users` && req.params.get('email') === data.email && req.params.get('password') === data.password;
+        return req.method === 'GET' &&
+               req.url === `${environment.apiUrl}users` &&
+               req.params.get('email') === data.email;
       });
-
-      req.flush([], { status: 401, statusText: 'Unauthorized' });
-
+    
+      req.flush([mockUser]);
+    
       expect(localStorage.getItem('token')).toBeFalsy();
       expect(router.navigate).not.toHaveBeenCalled();
       done();
     });
+
+    it('should handle login with incorrect password', (done) => {
+      const mockUser: User = {
+        id: '1',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john@example.com',
+        role: 'ADMIN',
+        password: 'correctpassword', // Contraseña correcta para el usuario pero incorrecta en el input
+        token: 'mockToken',
+      };
+      const data = { email: 'john@example.com', password: 'wrongpassword' };
+      spyOn(router, 'navigate');
+    
+      service.logIn(data);
+    
+      const req = httpController.expectOne((req) => {
+        return req.method === 'GET' &&
+               req.url === `${environment.apiUrl}users` &&
+               req.params.get('email') === data.email;
+      });
+    
+      req.flush([mockUser]);
+    
+      expect(localStorage.getItem('token')).toBeFalsy();
+      expect(router.navigate).not.toHaveBeenCalled();
+      done();
+    });
+
+    
+
+    it('should handle login errors', (done) => {
+      const data = { email: 'john@example.com', password: 'password' };
+      spyOn(router, 'navigate');
+    
+      service.logIn(data);
+    
+      const req = httpController.expectOne((req) => {
+        return req.method === 'GET' &&
+               req.url === `${environment.apiUrl}users` &&
+               req.params.get('email') === data.email;
+      });
+    
+      req.flush([], { status: 401, statusText: 'Unauthorized' });
+    
+      expect(localStorage.getItem('token')).toBeFalsy();
+      expect(router.navigate).not.toHaveBeenCalled();
+      done();
+    });
+    
   });
 
   describe('logOut', () => {

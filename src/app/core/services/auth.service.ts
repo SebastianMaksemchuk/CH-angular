@@ -29,20 +29,24 @@ export class AuthService {
               this._authUser$.next(authUser);
               this.router.navigate(['dashboard', 'home']);
             } else {
+              localStorage.removeItem('token');
               console.error("Token no encontrado en la respuesta");
               alert("Error en el inicio de sesión");
             }
           } else {
+            localStorage.removeItem('token');
             console.log("Correo o contraseña incorrecta");
             alert("Correo o contraseña incorrecta");
           }
         } else {
+          localStorage.removeItem('token');
           console.log("Correo o contraseña incorrecta");
           alert("Correo o contraseña incorrecta");
         }
       }),
       catchError(err => {
         console.error(err);
+        localStorage.removeItem('token');
         alert("Error en el inicio de sesión");
         return of(null);
       })
