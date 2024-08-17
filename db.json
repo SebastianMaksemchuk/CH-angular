@@ -5,18 +5,18 @@
       "firstName": "admin",
       "lastName": "",
       "email": "admin@angular.com",
-      "role": "ADMIN",
       "password": "Admin00!",
+      "role": "ADMIN",
       "token": "adminadmin"
     },
     {
-      "id": "e852",
-      "firstName": "a",
-      "lastName": "sd",
-      "email": "dsf@jaf.com",
-      "password": "asd@#$sg243ADS",
+      "id": "2107",
+      "firstName": "Josue",
+      "lastName": "Baez",
+      "email": "jbaez@mail.com",
+      "password": "Jbaez123!",
       "role": "TEACHER",
-      "token": "8O6mv92gC5"
+      "token": "qrb19Buq2L"
     }
   ],
   "courses": [

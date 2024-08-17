@@ -8,12 +8,14 @@ export const usersFeatureKey = 'users';
 export interface State {
   isLoading: boolean,
   users: User[],
+  selectedUser: User | null,
   error: unknown
 }
 
 export const initialState: State = {
   isLoading: false,
   users: [],
+  selectedUser: null,
   error: null
 };
 
@@ -35,6 +37,10 @@ export const reducer = createReducer(
   on(UsersActions.deleteUser, (state) => { return { ...state, isLoading: true } }),
   on(UsersActions.deleteUserSuccess, (state, action) => { return { ...state, isLoading: false, error: null, users: state.users.filter((user) => user.id !== action.data.id) } }),
   on(UsersActions.deleteUserFailure, (state, action) => { return { ...state, isLoading: false, error: action.error } }),
+
+  on(UsersActions.loadUserById, (state) => { return { ...state, isLoading: true, }; }),
+  on(UsersActions.loadUserByIdSuccess, (state, action) => { return { ...state, isLoading: false, error: null, selectedUser: action.data } }),
+  on(UsersActions.loadUserByIdFailure, (state, action) => { return { ...state, isLoading: false, error: action.error } }),
 
   on(UsersActions.unsetUsersState, () => { return initialState },));
 

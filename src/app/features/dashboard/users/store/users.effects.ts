@@ -57,6 +57,17 @@ export class UsersEffects {
     )
   })
 
+  loadUserById$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(UsersActions.loadUserById),
+      concatMap((action) =>
+        this.usersService.getUserById(action.id).pipe(
+          map(data => UsersActions.loadUserByIdSuccess({ data })),
+          catchError(error => of(UsersActions.loadUserByIdFailure({ error })))
+        )
+      )
+    );
+  });
 
   constructor(private actions$: Actions, private usersService: UsersService) { }
 }

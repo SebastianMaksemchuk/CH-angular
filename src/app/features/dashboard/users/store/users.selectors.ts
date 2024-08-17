@@ -8,3 +8,4 @@ export const selectUsersState = createFeatureSelector<fromUsers.State>(
 export const selectUsers = createSelector(selectUsersState, (state)=> state.users)
 export const selectUsersIsLoading = createSelector(selectUsersState, (state)=> state.isLoading)
 export const selectUsersError = createSelector(selectUsersState, (state)=> state.error)
+export const selectSelectedUser = createSelector(selectUsersState, (state)=> state.selectedUser)

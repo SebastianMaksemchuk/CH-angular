@@ -28,7 +28,7 @@
       <mat-label>Rol</mat-label>
       <mat-select matNativeControl formControlName="role">
         <mat-option *ngFor="let role of userRoles" [value]="role">
-          {{ { role: role } | roleName }}
+          {{ role  | roleName }}
         </mat-option>
       </mat-select>
       <mat-error>Debe seleccionar un rol</mat-error>
@@ -46,7 +46,7 @@
     </mat-form-field>
 
     <mat-dialog-actions>
-      <button mat-button mat-dialog-close>Cancelar</button>
+      <button mat-button (click)="matDialogRef.close()">Cancelar</button>
       <button type="submit" (click)="onSubmit()" mat-button [disabled]="userForm.invalid">Confirmar</button>
     </mat-dialog-actions>
 

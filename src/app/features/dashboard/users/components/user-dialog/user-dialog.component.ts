@@ -14,7 +14,7 @@ export class UserDialogComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private matDialogRef: MatDialogRef<UserDialogComponent>,
+    public matDialogRef: MatDialogRef<UserDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public user?: User
   ) {
     this.userForm = this.formBuilder.group({

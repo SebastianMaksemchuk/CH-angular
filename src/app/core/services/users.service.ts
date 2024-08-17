@@ -35,6 +35,10 @@ export class UsersService {
     return result;
   }
 
+  getUserById(id:string): Observable<User> {
+    return this.httpClient.get<User>(`${this.usersUrl}/${id}`)
+  }
+
   editUserById(id:string, editedUser: User): Observable<User> {
     return this.httpClient.put<User>(`${this.usersUrl}/${id}`, editedUser)
   }

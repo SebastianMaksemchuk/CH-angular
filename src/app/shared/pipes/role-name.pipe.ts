@@ -6,8 +6,11 @@ import { UserRole } from '../interfaces/user';
 })
 export class RoleNamePipe implements PipeTransform {
 
-  transform(value: { role: UserRole }): unknown {
-    switch (value.role) {
+  transform(value: UserRole | undefined): string {
+    if (!value) {
+      return 'Error en roleNamePipe';
+    }
+    switch (value) {
       case 'ADMIN':
         return 'Administrador';
       case 'TEACHER':
@@ -15,7 +18,7 @@ export class RoleNamePipe implements PipeTransform {
       case 'STUDENT':
         return 'Alumno';
       default:
-        return 'Indefinido'
+        return 'Indefinido';
     }
   }
 }

@@ -16,6 +16,9 @@ export const UsersActions = createActionGroup({
     'Delete User': props<{ id: string}>(),
     'Delete User Success': props<{ data: User }>(),
     'Delete User Failure': props<{ error: unknown }>(),
+    'Load User By Id': props<{ id: string}>(),
+    'Load User By Id Success': props<{ data: User }>(),
+    'Load User By Id Failure': props<{ error: unknown }>(),
     'Unset Users State': emptyProps(),
   }
 });

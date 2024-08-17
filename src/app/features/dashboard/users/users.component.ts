@@ -36,9 +36,9 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.store.dispatch(
-    //   UsersActions.unsetUsersState()
-    // );
+    this.store.dispatch(
+      UsersActions.unsetUsersState()
+    );
   }
 
   reloadPage() {
@@ -51,11 +51,9 @@ export class UsersComponent implements OnInit, OnDestroy {
     .afterClosed()
     .subscribe( result => {
       if (!usuario && result) {
-        console.log(result)
         this.store.dispatch(UsersActions.createUser({payload: result}))
       }
       if (usuario) {
-        console.log(result)
         this.store.dispatch(UsersActions.editUser({id: result.id, payload: result}))
       }
     })
