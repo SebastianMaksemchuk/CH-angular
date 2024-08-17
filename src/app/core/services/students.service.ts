@@ -12,9 +12,8 @@ export class StudentsService {
   private studentsUrl: string = environment.apiUrl + 'students';
 
   constructor(
-    private enrollmentsService: EnrollmentsService,
-    private httpClient: HttpClient) {
-    }
+    private httpClient: HttpClient
+  ) { }
 
   getStudents(): Observable<Student[]> {
     return this.httpClient.get<Student[]>(this.studentsUrl).pipe(
@@ -24,40 +23,22 @@ export class StudentsService {
       }))));
   }
 
+  getStudentById(id: string): Observable<Student> {
+    return this.httpClient.get<Student>(`${this.studentsUrl}/${id}`)
+  }
+
+  createStudent(payload: Student): Observable<Student> {
+    const { id, ...student } = payload;
+    return this.httpClient.post<Student>(this.studentsUrl, student);
+  }
+
+  editStudentById(id: string, editedStudent: Student): Observable<Student> {
+    return this.httpClient.put<Student>(`${this.studentsUrl}/${id}`, editedStudent)
+  }
+  
   deleteStudentById(id: string): Observable<Student> {
     return this.httpClient.delete<Student>(`${this.studentsUrl}/${id}`)
   }
-
-
-
-
-
-  
-  getStudentById(id: string): Observable<Student | undefined> {
-    return this.getStudents().pipe(map((allStudents) => allStudents.find((el) => el.id === id)));
-  }
-
-  addStudent(newStudent: Student): Observable<Student[]> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.getStudents().pipe(
-      map(students => {
-        const maxId = students.length > 0 ? Math.max(...students.map(student => parseInt(student.id))) : 0;
-        newStudent.id = (maxId + 1).toString();
-        return newStudent;
-      }),
-      switchMap(studentWithId => 
-        this.httpClient.post<Student>(this.studentsUrl, studentWithId, { headers })
-      ),
-      switchMap(() => this.getStudents())
-    );
-  }
-
-  // deleteStudentById(id: string): Observable<Student[]> {
-  //   return this.enrollmentsService.deleteEnrollmentsByStudent(id).pipe(
-  //     concatMap(() => this.httpClient.delete(`${this.studentsUrl}/${id}`)),
-  //     switchMap(() => this.getStudents())
-  //   );
-  // }
 
 }
 

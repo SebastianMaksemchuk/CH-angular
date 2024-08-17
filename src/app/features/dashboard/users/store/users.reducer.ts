@@ -1,7 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { UsersActions } from './users.actions';
-import { User } from '../../../../shared/interfaces/user';
-import { state } from '@angular/animations';
+import { User } from '../../../../shared/interfaces/user';;
 
 export const usersFeatureKey = 'users';
 

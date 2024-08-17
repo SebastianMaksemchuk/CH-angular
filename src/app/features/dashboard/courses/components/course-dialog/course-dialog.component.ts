@@ -37,4 +37,8 @@ export class CourseDialogComponent {
     this.matDialogRef.close(this.courseForm.value)
     console.log(this.courseForm.value)
   };
+
+  onCancel(): void {
+    this.matDialogRef.close();
+  }
 };

@@ -6,5 +6,6 @@ export const selectStudentsState = createFeatureSelector<fromStudents.State>(
 );
 
 export const selectStudents = createSelector(selectStudentsState, (state)=> state.students)
+export const selectSelecterStudent = createSelector(selectStudentsState, (state)=> state.selectedStudent)
 export const selectStudentsIsLoading = createSelector(selectStudentsState, (state)=> state.isLoading)
 export const selectStudentsError = createSelector(selectStudentsState, (state)=> state.error)

@@ -30,38 +30,34 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(
-      UsersActions.loadUsers()
-    )
+    this.store.dispatch(UsersActions.loadUsers())
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(
-      UsersActions.unsetUsersState()
-    );
+    this.store.dispatch(UsersActions.unsetUsersState());
   }
 
   reloadPage() {
     location.reload()
   }
 
-  openUserDialog(usuario?: User) : void {
+  openUserDialog(user?: User): void {
     this.matDialog
-    .open(UserDialogComponent, {data: usuario})
-    .afterClosed()
-    .subscribe( result => {
-      if (!usuario && result) {
-        this.store.dispatch(UsersActions.createUser({payload: result}))
-      }
-      if (usuario) {
-        this.store.dispatch(UsersActions.editUser({id: result.id, payload: result}))
-      }
-    })
+      .open(UserDialogComponent, { data: user })
+      .afterClosed()
+      .subscribe(result => {
+        if (!user && result) {
+          this.store.dispatch(UsersActions.createUser({ payload: result }))
+        };
+        if (user) {
+          this.store.dispatch(UsersActions.editUser({ id: result.id, payload: result }))
+        };
+      })
   }
 
   deleteUserById(id: string) {
     if (confirm('¿Está seguro que desea elminiar este usuario?')) {
-      this.store.dispatch(UsersActions.deleteUser({id: id}))
+      this.store.dispatch(UsersActions.deleteUser({ id: id }))
     }
   }
 

@@ -3,24 +3,45 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, concatMap } from 'rxjs/operators';
 import { Observable, EMPTY, of } from 'rxjs';
 import { EnrollmentsActions } from './enrollments.actions';
+import { EnrollmentsService } from '../../../../core/services/enrollments.service';
 
 
 @Injectable()
 export class EnrollmentsEffects {
 
-  loadEnrollmentss$ = createEffect(() => {
+  loadEnrollments$ = createEffect(() => {
     return this.actions$.pipe(
-
-      ofType(EnrollmentsActions.loadEnrollmentss),
+      ofType(EnrollmentsActions.loadEnrollments),
       concatMap(() =>
-        /** An EMPTY observable only emits completion. Replace with your own observable API request */
-        EMPTY.pipe(
-          map(data => EnrollmentsActions.loadEnrollmentssSuccess({ data })),
-          catchError(error => of(EnrollmentsActions.loadEnrollmentssFailure({ error }))))
+        this.enrollmentsService.getEnrollments().pipe(
+          map(data => EnrollmentsActions.loadEnrollmentsSuccess({ data })),
+          catchError(error => of(EnrollmentsActions.loadEnrollmentsFailure({ error }))))
+      )
+    );
+  });
+
+  CreateEnrollment$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(EnrollmentsActions.createEnrollment),
+      concatMap((action) =>
+        this.enrollmentsService.createEnrollment(action.payload).pipe(
+          map(data => EnrollmentsActions.createEnrollmentSuccess({ data })),
+          catchError(error => of(EnrollmentsActions.createEnrollmentFailure({ error }))))
+      )
+    );
+  });
+
+  deleteEnrollment$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(EnrollmentsActions.deleteEnrollment),
+      concatMap((action) =>
+        this.enrollmentsService.deleteEnrollmentById(action.id).pipe(
+          map(data => EnrollmentsActions.deleteEnrollmentSuccess({ data })),
+          catchError(error => of(EnrollmentsActions.deleteEnrollmentFailure({ error }))))
       )
     );
   });
 
 
-  constructor(private actions$: Actions) {}
+  constructor(private actions$: Actions, private enrollmentsService: EnrollmentsService) {}
 }

@@ -35,6 +35,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button (click)="onCancel()">Cancelar</button>
   <button (click)="onSubmit()" mat-button [disabled]="studentForm.invalid">Guardar</button>
 </mat-dialog-actions>

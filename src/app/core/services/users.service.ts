@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { catchError, map, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { User } from '../../shared/interfaces/user';
 
 @Injectable({
@@ -35,15 +35,15 @@ export class UsersService {
     return result;
   }
 
-  getUserById(id:string): Observable<User> {
+  getUserById(id: string): Observable<User> {
     return this.httpClient.get<User>(`${this.usersUrl}/${id}`)
   }
 
-  editUserById(id:string, editedUser: User): Observable<User> {
+  editUserById(id: string, editedUser: User): Observable<User> {
     return this.httpClient.put<User>(`${this.usersUrl}/${id}`, editedUser)
   }
 
-  deleteUserById(id:string): Observable<User> {
+  deleteUserById(id: string): Observable<User> {
     return this.httpClient.delete<User>(`${this.usersUrl}/${id}`)
   }
 }

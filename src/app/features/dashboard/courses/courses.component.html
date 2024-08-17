@@ -1,10 +1,13 @@
-@if (isLoading) {
+@if (isLoading$ |async ) {
 <mat-spinner></mat-spinner>
+} @else if (error$ | async) {
+<p>Ocurrió un error inesperado.</p>
+<button mat-flat-button (click)="reloadPage()">Recargar</button>
 } @else {
 
-<button mat-flat-button (click)="openDialog()"><mat-icon>add</mat-icon>Añadir un nuevo curso</button>
+<button mat-flat-button (click)="openCourseDialog()"><mat-icon>add</mat-icon>Añadir un nuevo curso</button>
 
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<table mat-table [dataSource]="courses$" class="mat-elevation-z8">
 
   <ng-container matColumnDef="comision">
     <th mat-header-cell *matHeaderCellDef chaTitle> Comisión </th>
@@ -26,11 +29,6 @@
     <td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/MM/YYYY'}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="enrolledCount">
-    <th mat-header-cell *matHeaderCellDef chaTitle> Inscriptos </th>
-    <td mat-cell *matCellDef="let element"> {{element.enrolledCount}} </td>
-  </ng-container>
-
   <ng-container matColumnDef="details">
     <th mat-header-cell *matHeaderCellDef chaTitle> Detalles </th>
     <td mat-cell *matCellDef="let element">
@@ -43,7 +41,7 @@
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef chaTitle> Editar</th>
     <td mat-cell *matCellDef="let element">
-      <button (click)="editCourse(element)" mat-icon-button matTooltip="Editar curso" matTooltipPosition="above">
+      <button (click)="openCourseDialog(element)" mat-icon-button matTooltip="Editar curso" matTooltipPosition="above">
         <mat-icon>edit</mat-icon>
       </button>
     </td>
