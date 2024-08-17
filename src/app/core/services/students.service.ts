@@ -11,16 +11,28 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class StudentsService {
   private studentsUrl: string = environment.apiUrl + 'students';
 
-  constructor(private enrollmentsService: EnrollmentsService, private httpClient: HttpClient) { }
+  constructor(
+    private enrollmentsService: EnrollmentsService,
+    private httpClient: HttpClient) {
+    }
 
   getStudents(): Observable<Student[]> {
     return this.httpClient.get<Student[]>(this.studentsUrl).pipe(
-      map(courses => courses.map(course => ({
-        ...course,
-        DOB: new Date(course.DOB),
+      map(students => students.map(student => ({
+        ...student,
+        DOB: new Date(student.DOB),
       }))));
   }
 
+  deleteStudentById(id: string): Observable<Student> {
+    return this.httpClient.delete<Student>(`${this.studentsUrl}/${id}`)
+  }
+
+
+
+
+
+  
   getStudentById(id: string): Observable<Student | undefined> {
     return this.getStudents().pipe(map((allStudents) => allStudents.find((el) => el.id === id)));
   }
@@ -40,12 +52,12 @@ export class StudentsService {
     );
   }
 
-  deleteStudentById(id: string): Observable<Student[]> {
-    return this.enrollmentsService.deleteEnrollmentsByStudent(id).pipe(
-      concatMap(() => this.httpClient.delete(`${this.studentsUrl}/${id}`)),
-      switchMap(() => this.getStudents())
-    );
-  }
+  // deleteStudentById(id: string): Observable<Student[]> {
+  //   return this.enrollmentsService.deleteEnrollmentsByStudent(id).pipe(
+  //     concatMap(() => this.httpClient.delete(`${this.studentsUrl}/${id}`)),
+  //     switchMap(() => this.getStudents())
+  //   );
+  // }
 
 }
 

@@ -5,6 +5,8 @@ import { EnrollmentsRoutingModule } from './enrollments-routing.module';
 import { EnrollmentsComponent } from './enrollments.component';
 import { EnrollmentDialogComponent } from './components/enrollment-dialog/enrollment-dialog.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { EffectsModule } from '@ngrx/effects';
+import { EnrollmentsEffects } from './store/enrollments.effects';
 
 
 
@@ -17,6 +19,7 @@ import { SharedModule } from '../../../shared/shared.module';
     CommonModule,
     SharedModule,
     EnrollmentsRoutingModule,
+    EffectsModule.forFeature([EnrollmentsEffects]),
   ],
   exports: [
     EnrollmentsComponent

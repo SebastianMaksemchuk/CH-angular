@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { StudentDialogComponent } from './components/student-dialog/student-dialog.component';
 
@@ -8,6 +8,9 @@ import { StudentsService } from '../../../core/services/students.service';
 import { forkJoin, Observable } from 'rxjs';
 import { Enrollment } from '../../../shared/interfaces/enrollment';
 import { EnrollmentsService } from '../../../core/services/enrollments.service';
+import { Store } from '@ngrx/store';
+import { StudentsActions } from './store/students.actions';
+import { selectStudents, selectStudentsError, selectStudentsIsLoading } from './store/students.selectors';
 
 @Component({
   selector: 'cha-students',
@@ -15,12 +18,15 @@ import { EnrollmentsService } from '../../../core/services/enrollments.service';
   styleUrl: './students.component.scss'
 })
 
-export class StudentsComponent {
+export class StudentsComponent implements OnInit, OnDestroy{
   displayedColumns: string[] = ['id', 'name', 'email', 'enrolledCoursesCount', 'details', 'edit', 'delete'];
-
+  
+  students$: Observable<Student[]>;
+  isLoading$: Observable<boolean>;
+  error$:Observable<any>
+  
   students: Student[] = [];
   enrollments: Enrollment[] = [];
-  students$: Observable<Student[]>;
   enrollments$: Observable<Enrollment[]>;
   dataSource: any[] = [];
 
@@ -29,16 +35,30 @@ export class StudentsComponent {
   constructor(
     private matDialog: MatDialog,
     private studentsService: StudentsService,
-    private enrollmentsService: EnrollmentsService
+    private enrollmentsService: EnrollmentsService,
+    private store: Store
   ) {
-    this.students$ = this.studentsService.getStudents();
+    this.students$ = this.store.select(selectStudents);
+    this.isLoading$ = this.store.select(selectStudentsIsLoading);
+    this.error$ = this.store.select(selectStudentsError);
+
     this.enrollments$ = this.enrollmentsService.getEnrollments();
   }
 
+
   ngOnInit(): void {
-    this.loadStudents()
+    // this.loadStudents()
+    this.store.dispatch(StudentsActions.loadStudents())
   }
 
+  ngOnDestroy(): void {
+    this.store.dispatch(StudentsActions.unsetStudentsStore())
+  }
+
+  reloadPage() {
+    location.reload()
+  }
+  
   loadStudents() {
     this.isLoading = true;
     forkJoin([this.students$, this.enrollments$]).subscribe({
@@ -99,16 +119,7 @@ export class StudentsComponent {
 
   deleteStudentById(id: string) {
     if (confirm('¿Está seguro que desea elminiar este alumno?')) {
-      this.isLoading = true;
-      this.studentsService.deleteStudentById(id).subscribe({
-        next: (updatedStudents) => {
-          this.students = updatedStudents;
-          this.updateDataSource();
-        },
-        complete: () => {
-          this.isLoading = false;
-        }
-      });
+      this.store.dispatch(StudentsActions.deleteStudent({id: id}))
     }
   }
 }

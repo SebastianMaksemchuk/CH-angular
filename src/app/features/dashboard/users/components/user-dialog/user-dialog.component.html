@@ -1,0 +1,54 @@
+<h2 mat-dialog-title chaTitle>{{ user ? 'Editando usuario' : 'Nuevo Usuario' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="userForm">
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Nombre/s</mat-label>
+      <input formControlName="firstName" matInput>
+      <mat-error *ngIf="userForm.get('firstName')?.hasError('required')">El nombre es requerido</mat-error>
+      <mat-error *ngIf="userForm.get('firstName')?.hasError('pattern')">Solo puede ingresar letras</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Apellido/s</mat-label>
+      <input formControlName="lastName" matInput>
+      <mat-error *ngIf="userForm.get('lastName')?.hasError('required')">El nombre es requerido</mat-error>
+      <mat-error *ngIf="userForm.get('lastName')?.hasError('pattern')">Solo puede ingresar letras</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Correo electrónico</mat-label>
+      <input formControlName="email" matInput>
+      <mat-error *ngIf="userForm.get('email')?.hasError('required')">El correo es requerido</mat-error>
+      <mat-error *ngIf="userForm.get('email')?.hasError('email')">Ingrese una dirección de correo electrónico</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Rol</mat-label>
+      <mat-select matNativeControl formControlName="role">
+        <mat-option *ngFor="let role of userRoles" [value]="role">
+          {{ { role: role } | roleName }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Debe seleccionar un rol</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Contraseña</mat-label>
+      <input formControlName="password" matInput type="password">
+      <mat-error *ngIf="userForm.get('password')?.hasError('required')">Debe crear una contraseña</mat-error>
+      <mat-error *ngIf="userForm.get('password')?.hasError('upperCase')">La contraseña debe tener al menos una letra mayúscula</mat-error>
+      <mat-error *ngIf="userForm.get('password')?.hasError('lowerCase')">La contraseña debe tener al menos una letra minúscula</mat-error>
+      <mat-error *ngIf="userForm.get('password')?.hasError('numeric')">La contraseña debe tener al menos un número</mat-error>
+      <mat-error *ngIf="userForm.get('password')?.hasError('specialChar')">La contraseña debe tener al menos un símbolo</mat-error>
+      <mat-error *ngIf="userForm.get('password')?.hasError('minLength')">La contraseña debe tener al menos 8 caracteres</mat-error>
+    </mat-form-field>
+
+    <mat-dialog-actions>
+      <button mat-button mat-dialog-close>Cancelar</button>
+      <button type="submit" (click)="onSubmit()" mat-button [disabled]="userForm.invalid">Confirmar</button>
+    </mat-dialog-actions>
+
+  </form>
+</mat-dialog-content>

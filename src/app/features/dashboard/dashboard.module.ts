@@ -7,6 +7,8 @@ import { DashboardComponent } from './dashboard.component';
 import { CoursesModule } from './courses/courses.module';
 import { StudentsModule } from './students/students.module';
 import { SharedModule } from '../../shared/shared.module';
+import { UsersModule } from './users/users.module';
+import { EnrollmentsModule } from './enrollments/enrollments.module';
 
 @NgModule({
   declarations: [DashboardComponent],
@@ -16,6 +18,8 @@ import { SharedModule } from '../../shared/shared.module';
     SharedModule,
     CoursesModule,
     StudentsModule,
+    UsersModule,
+    EnrollmentsModule
   ],
   exports: [DashboardComponent]
 })

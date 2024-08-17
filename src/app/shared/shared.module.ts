@@ -4,12 +4,14 @@ import { CommonModule } from '@angular/common';
 import { FullNamePipe } from './pipes/full-name.pipe';
 import { TitleDirective } from './directives/title.directive';
 import { SharedImportsModule } from './utils/shared-imports.module';
+import { RoleNamePipe } from './pipes/role-name.pipe';
 
 
 @NgModule({
   declarations: [
     FullNamePipe,
-    TitleDirective
+    TitleDirective,
+    RoleNamePipe
   ],
   imports: [
     CommonModule,
@@ -17,6 +19,7 @@ import { SharedImportsModule } from './utils/shared-imports.module';
   ],
   exports: [
     FullNamePipe,
+    RoleNamePipe,
     TitleDirective,
     SharedImportsModule
   ]

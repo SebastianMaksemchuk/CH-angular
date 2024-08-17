@@ -7,6 +7,10 @@ import { StudentsComponent } from './students.component';
 import { StudentDialogComponent } from './components/student-dialog/student-dialog.component';
 import { StudentDetailComponent } from './components/student-detail/student-detail.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { EffectsModule } from '@ngrx/effects';
+import { StudentsEffects } from './store/students.effects';
+import { StoreModule } from '@ngrx/store';
+import { studentsFeature } from './store/students.reducer';
 
 @NgModule({
   declarations: [
@@ -17,7 +21,9 @@ import { SharedModule } from '../../../shared/shared.module';
   imports: [
     CommonModule,
     StudentsRoutingModule,
-    SharedModule
+    SharedModule,
+    StoreModule.forFeature(studentsFeature),
+    EffectsModule.forFeature([StudentsEffects])
   ],
   exports: [StudentsComponent]
 })

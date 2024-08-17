@@ -1,9 +1,12 @@
-@if (isLoading) {
-<mat-spinner></mat-spinner>
-} @else {
+@if (isLoading$ |async ) {
+  <mat-spinner></mat-spinner>
+  } @else if (error$ | async) {
+    <p>Ocurrió un error inesperado.</p>
+    <button mat-flat-button (click)="reloadPage()">Recargar</button>
+  } @else {
 <button mat-flat-button (click)="newStudent()"><mat-icon>add</mat-icon>Ingresar un nuevo alumno</button>
 
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<table mat-table [dataSource]="students$" class="mat-elevation-z8">
 
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef chaTitle> ID </th>

@@ -1,0 +1,12 @@
+@if (isLoading$ |async ) {
+  <mat-spinner></mat-spinner>
+  } @else if (error$ | async) {
+    <p>Ocurrió un error inesperado.</p>
+    <button mat-flat-button (click)="reloadPage()">Recargar</button>
+  } @else {
+    <div>
+      <!-- <h2>Detalles del Usuario: {{ user | fullName}}</h2> -->
+    </div>
+    
+    <button mat-button [routerLink]="['/dashboard/students']">Volver a lista de alumnos</button>
+  }  

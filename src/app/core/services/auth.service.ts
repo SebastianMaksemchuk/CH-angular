@@ -89,31 +89,4 @@ export class AuthService {
       })
     );
   }
-
-  registerUser(user: User): Observable<User | null> {
-    user.role = undefined;
-    user.token = this.generateToken(10);
-
-    return this.httpClient.post<User>(this.usersUrl, user).pipe(
-      map(response => {
-        console.log('Usuario registrado con éxito:', response);
-        return response;
-      }),
-      catchError(err => {
-        console.error(err);
-        alert("Error en el registro de usuario");
-        return of(null);
-      })
-    );
-  }
-
-  private generateToken(length: number): string {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
 }

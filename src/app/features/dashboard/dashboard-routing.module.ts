@@ -25,13 +25,11 @@ const routes: Routes = [
     path: 'enrollments',
     loadChildren: () =>
       import('./enrollments/enrollments.module').then((m) => m.EnrollmentsModule),
-    component: EnrollmentsComponent
   },
   {
     path: 'users',
     loadChildren: () =>
       import('./users/users.module').then((m) => m.UsersModule),
-    component: UsersComponent,
     canActivate: [adminGuard]
   },
   {
