@@ -1,0 +1,8 @@
+@if (isLoading$ |async ) {
+<mat-spinner></mat-spinner>
+} @else if (error$ | async) {
+  <p>Ocurrió un error inesperado.</p>
+  <button mat-flat-button (click)="reloadPage()">Recargar</button>
+} @else {
+<pre>{{ users$ | async | json}}</pre>
+}

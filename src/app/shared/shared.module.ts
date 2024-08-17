@@ -17,7 +17,8 @@ import { SharedImportsModule } from './utils/shared-imports.module';
   ],
   exports: [
     FullNamePipe,
-    TitleDirective
+    TitleDirective,
+    SharedImportsModule
   ]
 })
 export class SharedModule { }

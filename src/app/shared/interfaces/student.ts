@@ -6,3 +6,10 @@ export interface Student {
   email: string;
   enrolledCourses: any
 };
+
+export interface StudentV2 {
+  id: string;
+  firstName: string;
+  lastName: string;
+  enrolledCourses: string[]
+};

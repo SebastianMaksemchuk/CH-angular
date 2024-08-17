@@ -4,6 +4,9 @@ import { environment } from '../../../environments/environment';
 import { User } from '../../shared/interfaces/user';
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { RootState } from '../store/store';
+import { setAuthUser, unsetAuthUser } from '../store/auth/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +14,13 @@ import { Router } from '@angular/router';
 export class AuthService {
   private usersUrl: string = environment.apiUrl + 'users';
 
-  private _authUser$ = new BehaviorSubject<User | null>(null);
-  authUser$ = this._authUser$.asObservable();
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router,
+    private store: Store<RootState>,
+  ) { }
 
-  constructor(private httpClient: HttpClient, private router: Router) { }
+
   logIn(data: { email: string; password: string }) {
     let params = new HttpParams()
       .set('email', data.email);
@@ -26,7 +32,7 @@ export class AuthService {
           if (authUser.password === data.password) {
             if (authUser.token) {
               localStorage.setItem('token', authUser.token);
-              this._authUser$.next(authUser);
+              this.store.dispatch(setAuthUser({payload: authUser}))
               this.router.navigate(['dashboard', 'home']);
             } else {
               localStorage.removeItem('token');
@@ -55,7 +61,7 @@ export class AuthService {
 
   logOut() {
     localStorage.removeItem('token');
-    this._authUser$.next(null);
+    this.store.dispatch(unsetAuthUser());
     this.router.navigate(['auth', 'login']);
   }
 
@@ -71,7 +77,7 @@ export class AuthService {
           const authUser = response[0];
           if (authUser.token) {
             localStorage.setItem('token', authUser.token);
-            this._authUser$.next(authUser);
+            this.store.dispatch(setAuthUser({payload: authUser}))
             return true;
           }
         }

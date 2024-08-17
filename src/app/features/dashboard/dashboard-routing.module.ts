@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { StudentsComponent } from './students/students.component';
 import { EnrollmentsComponent } from './enrollments/enrollments.component';
+import { UsersComponent } from './users/users.component';
+import { adminGuard } from '../../core/guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -24,6 +26,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./enrollments/enrollments.module').then((m) => m.EnrollmentsModule),
     component: EnrollmentsComponent
+  },
+  {
+    path: 'users',
+    loadChildren: () =>
+      import('./users/users.module').then((m) => m.UsersModule),
+    component: UsersComponent,
+    canActivate: [adminGuard]
   },
   {
     path: '**',
