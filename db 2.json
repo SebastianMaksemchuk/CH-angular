@@ -1,0 +1,17 @@
+{
+  "users": [
+    {
+      "id": "feee",
+      "firstName": "admin",
+      "lastName": "",
+      "email": "admin@angular.com",
+      "role": "ADMIN",
+      "password": "Admin00!",
+      "token": "adminadmin"
+    }
+  ],
+  "courses": [],
+  "classes": [],
+  "students": [],
+  "enrollments": []
+}

@@ -15,7 +15,9 @@ import { Student } from '../../../../../shared/interfaces/student';
 export class StudentDialogComponent {
 
   studentForm: FormGroup;
-  constructor(private formBuilder: FormBuilder, private matDialogRef: MatDialogRef<StudentDialogComponent>, private dateAdapter: DateAdapter<Date>,
+  constructor(
+    private formBuilder: FormBuilder,
+    private matDialogRef: MatDialogRef<StudentDialogComponent>, private dateAdapter: DateAdapter<Date>,
     @Inject(MAT_DIALOG_DATA) public student?: Student
   ) {
     this.dateAdapter.setLocale('es-AR');
@@ -34,6 +36,9 @@ export class StudentDialogComponent {
 
   onSubmit(): void {
     this.matDialogRef.close(this.studentForm.value);
-    console.log(this.studentForm.value);
   };
+
+  onCancel(): void {
+    this.matDialogRef.close();
+  }
 };

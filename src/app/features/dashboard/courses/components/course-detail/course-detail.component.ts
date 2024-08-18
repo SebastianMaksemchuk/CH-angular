@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, map, Observable } from 'rxjs';
 import { Course } from '../../../../../shared/interfaces/course';
-import { CoursesService } from '../../../../../core/services/courses.service';
 import { ActivatedRoute } from '@angular/router';
-import { StudentsService } from '../../../../../core/services/students.service';
-import { EnrollmentsService } from '../../../../../core/services/enrollments.service';
-import { Student } from '../../../../../shared/interfaces/student';
 import { Enrollment } from '../../../../../shared/interfaces/enrollment';
+import { Store } from '@ngrx/store';
+import { RootState } from '../../../../../core/store/store';
+import { selectCourses, selectCoursesError, selectCoursesIsLoading, selectSelectedCourse } from '../../store/courses.selectors';
+import { selectEnrollments } from '../../../enrollments/store/enrollments.selectors';
+import { CoursesActions } from '../../store/courses.actions';
+import { EnrollmentsActions } from '../../../enrollments/store/enrollments.actions';
 
 @Component({
   selector: 'cha-course-detail',
@@ -14,85 +16,56 @@ import { Enrollment } from '../../../../../shared/interfaces/enrollment';
   styleUrl: './course-detail.component.scss'
 })
 
-export class CourseDetailComponent implements OnInit {
+export class CourseDetailComponent implements OnInit, OnDestroy {
 
-  course: Course | undefined;
-  students: Student[] = [];
-  enrollments: Enrollment[] = [];
-  filteredEnrollments: Enrollment[] = [];
-  students$: Observable<Student[]>;
+  courses$: Observable<Course[]>;
+  isLoading$: Observable<boolean>;
+  error$: Observable<any>;
+  selectedCourse$: Observable<Course | null>;
   enrollments$: Observable<Enrollment[]>;
-
-  isLoading = true;
+  filteredEnrollments$: Observable<any>;
 
   constructor(
+    private store: Store<RootState>,
     private route: ActivatedRoute,
-    private coursesService: CoursesService,
-    private studentsService: StudentsService,
-    private enrollmentsService: EnrollmentsService
   ) {
-    this.students$ = this.studentsService.getStudents();
-    this.enrollments$ = this.enrollmentsService.getEnrollments()
+    this.courses$ = this.store.select(selectCourses);
+    this.isLoading$ = this.store.select(selectCoursesIsLoading);
+    this.error$ = this.store.select(selectCoursesError);
+    this.selectedCourse$ = this.store.select(selectSelectedCourse);
+    this.enrollments$ = this.store.select(selectEnrollments);
+    this.filteredEnrollments$ = combineLatest([
+      this.enrollments$,
+      this.selectedCourse$
+    ]).pipe(
+      map(([enrollments, selectedCourse]) =>
+        enrollments.filter(enrollment => enrollment.courseId === selectedCourse?.id)
+      )
+    );
   }
 
   ngOnInit(): void {
-    this.loadCourseDetails()
+    this.store.dispatch(
+      CoursesActions.loadCourses()
+    );
+    this.store.dispatch(CoursesActions.loadCourseById({ id: this.route.snapshot.paramMap.get('id') ?? "" }));
+    this.store.dispatch(EnrollmentsActions.loadEnrollments());
   }
 
-  loadCourseDetails() {
-    this.isLoading = true;
-    const courseId = this.route.snapshot.paramMap.get('id');
-    if (courseId !== null) {
-      this.coursesService.getCourseById(courseId).subscribe({
-        next: (course) => {
-          this.course = course;
-        },
-        complete: () => {
-          forkJoin([this.students$, this.enrollments$]).subscribe({
-            next: (results) => {
-              this.students = results[0];
-              this.enrollments = results[1];
-              this.updateCourse();
-            },
-            complete: () => {
-              this.isLoading = false;
-            }
-          });
-        }
-      });
-    } else {
-      this.isLoading = false;
-      console.error('No existe el id del curso');
+  ngOnDestroy(): void {
+    this.store.dispatch(
+      CoursesActions.unsetCoursesStore()
+    );
+  }
+
+  reloadPage() {
+    location.reload()
+  }
+
+  deleteEnrollmentById(id: string) {
+    if (confirm('¿Está seguro que desea elminar esta inscripción?')) {
+      this.store.dispatch(EnrollmentsActions.deleteEnrollment({ id: id }))
     }
   }
 
-  updateCourse() {
-    if (this.course) {
-      this.filteredEnrollments = this.enrollments.filter(enrollment => enrollment.courseId === this.course?.id);
-      const enrolledStudents = this.filteredEnrollments.map(enrollment => {
-        return this.students.find(student => student.id === enrollment.studentId);
-      }).filter(student => student !== undefined) as Student[];
-      this.course.enrolledStudents = enrolledStudents;
-    }
-  }
-
-  getStudentName(studentId: string): string {
-    const student = this.students.find(s => s.id === studentId);
-    return student ? `${student.id} - ${student.firstName} ${student.lastName}` : 'Unknown';
-  }
-
-  deleteEnrollment(enrollmentId: string) {
-    if (confirm('¿Desea elminiar esta inscripción?')) {
-      this.isLoading = true;
-      this.enrollmentsService.deleteEnrollment(enrollmentId).subscribe({
-        next: (updatedEnrollments) => {
-          this.enrollments = updatedEnrollments;
-          this.updateCourse();
-        },
-        complete: () => {
-          this.isLoading = false;
-        }
-      });
-    }
-  }
 }

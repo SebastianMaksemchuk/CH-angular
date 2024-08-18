@@ -1,248 +1,168 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
-import { MockProvider } from 'ng-mocks';
 import { AuthService } from './auth.service';
+import { Store } from '@ngrx/store';
 import { User } from '../../shared/interfaces/user';
 import { environment } from '../../../environments/environment';
+import { AuthActions } from '../store/auth/auth.actions';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let router: Router;
-  let httpController: HttpTestingController;
+  let httpMock: HttpTestingController;
+  let routerSpy: jasmine.SpyObj<Router>;
+  let storeSpy: jasmine.SpyObj<Store>;
+  let mockUser: User;
 
   beforeEach(() => {
+    const router = jasmine.createSpyObj('Router', ['navigate']);
+    const store = jasmine.createSpyObj('Store', ['dispatch']);
+
+    mockUser = {
+      id: 'abcd',
+      email: 'test@example.com',
+      password: 'Password123!',
+      token: 'fakeToken',
+      firstName: 'John',
+      lastName: 'Doe',
+      role: 'ADMIN'
+    };
+
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [MockProvider(Router)],
+      providers: [
+        AuthService,
+        { provide: Router, useValue: router },
+        { provide: Store, useValue: store },
+      ]
     });
 
-    httpController = TestBed.inject(HttpTestingController);
     service = TestBed.inject(AuthService);
-    router = TestBed.inject(Router);
+    httpMock = TestBed.inject(HttpTestingController);
+    routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
   });
 
   afterEach(() => {
-    httpController.verify();
+    httpMock.verify();
+    localStorage.clear();
   });
 
-  describe('logIn', () => {
-    it('should log in and navigate to dashboard on successful login', (done) => {
-      const mockUser: User = {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@example.com',
-        role: 'ADMIN',
-        password: 'password', // La contraseña debe coincidir para el login exitoso
-        token: 'mockToken',
-      };
-      const data = { email: 'john@example.com', password: 'password' };
-      spyOn(router, 'navigate');
-    
-      service.logIn(data);
-    
-      const req = httpController.expectOne((req) => {
-        return req.method === 'GET' &&
-               req.url === `${environment.apiUrl}users` &&
-               req.params.get('email') === data.email;
-      });
-    
-      req.flush([mockUser]);
-    
-      expect(localStorage.getItem('token')).toBe('mockToken');
-      expect(router.navigate).toHaveBeenCalledWith(['dashboard', 'home']);
-      done();
-    });
-
-    it('should handle login with incorrect password', (done) => {
-      const mockUser: User = {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@example.com',
-        role: 'ADMIN',
-        password: 'correctpassword', // Contraseña correcta para el usuario pero incorrecta en el input
-        token: 'mockToken',
-      };
-      const data = { email: 'john@example.com', password: 'wrongpassword' };
-      spyOn(router, 'navigate');
-    
-      service.logIn(data);
-    
-      const req = httpController.expectOne((req) => {
-        return req.method === 'GET' &&
-               req.url === `${environment.apiUrl}users` &&
-               req.params.get('email') === data.email;
-      });
-    
-      req.flush([mockUser]);
-    
-      expect(localStorage.getItem('token')).toBeFalsy();
-      expect(router.navigate).not.toHaveBeenCalled();
-      done();
-    });
-
-    it('should handle login with incorrect password', (done) => {
-      const mockUser: User = {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@example.com',
-        role: 'ADMIN',
-        password: 'correctpassword', // Contraseña correcta para el usuario pero incorrecta en el input
-        token: 'mockToken',
-      };
-      const data = { email: 'john@example.com', password: 'wrongpassword' };
-      spyOn(router, 'navigate');
-    
-      service.logIn(data);
-    
-      const req = httpController.expectOne((req) => {
-        return req.method === 'GET' &&
-               req.url === `${environment.apiUrl}users` &&
-               req.params.get('email') === data.email;
-      });
-    
-      req.flush([mockUser]);
-    
-      expect(localStorage.getItem('token')).toBeFalsy();
-      expect(router.navigate).not.toHaveBeenCalled();
-      done();
-    });
-
-    
-
-    it('should handle login errors', (done) => {
-      const data = { email: 'john@example.com', password: 'password' };
-      spyOn(router, 'navigate');
-    
-      service.logIn(data);
-    
-      const req = httpController.expectOne((req) => {
-        return req.method === 'GET' &&
-               req.url === `${environment.apiUrl}users` &&
-               req.params.get('email') === data.email;
-      });
-    
-      req.flush([], { status: 401, statusText: 'Unauthorized' });
-    
-      expect(localStorage.getItem('token')).toBeFalsy();
-      expect(router.navigate).not.toHaveBeenCalled();
-      done();
-    });
-    
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
-  describe('logOut', () => {
-    it('should log out and navigate to login', () => {
-      localStorage.setItem('token', 'mockToken');
-      spyOn(router, 'navigate');
+  describe('#logIn', () => {
+    it('should log in the user with valid credentials and navigate to dashboard', () => {
+      const loginData = { email: mockUser.email, password: mockUser.password };
+      service.logIn(loginData);
 
-      service.logOut();
+      const req = httpMock.expectOne(`${environment.apiUrl}users?email=${mockUser.email}`);
+      expect(req.request.method).toBe('GET');
+      req.flush([mockUser]);
+
+      expect(localStorage.getItem('token')).toBe(mockUser.token);
+      expect(storeSpy.dispatch).toHaveBeenCalledWith(AuthActions.setAuthUser({ payload: mockUser }));
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['dashboard', 'home']);
+    });
+
+    it('should alert when credentials are incorrect', () => {
+      spyOn(window, 'alert');
+      const loginData = { email: mockUser.email, password: 'wrongPassword' };
+      service.logIn(loginData);
+
+      const req = httpMock.expectOne(`${environment.apiUrl}users?email=${mockUser.email}`);
+      expect(req.request.method).toBe('GET');
+      req.flush([mockUser]);
 
       expect(localStorage.getItem('token')).toBeNull();
-      expect(router.navigate).toHaveBeenCalledWith(['auth', 'login']);
+      expect(window.alert).toHaveBeenCalledWith('Correo o contraseña incorrecta');
+    });
+
+    it('should alert when the user does not exist', () => {
+      spyOn(window, 'alert');
+      const loginData = { email: 'notfound@example.com', password: mockUser.password };
+      service.logIn(loginData);
+
+      const req = httpMock.expectOne(`${environment.apiUrl}users?email=notfound@example.com`);
+      expect(req.request.method).toBe('GET');
+      req.flush([]);
+
+      expect(localStorage.getItem('token')).toBeNull();
+      expect(window.alert).toHaveBeenCalledWith('Correo o contraseña incorrecta');
+    });
+
+    it('should alert on login error', () => {
+      spyOn(window, 'alert');
+      const loginData = { email: mockUser.email, password: mockUser.password };
+      service.logIn(loginData);
+
+      const req = httpMock.expectOne(`${environment.apiUrl}users?email=${mockUser.email}`);
+      expect(req.request.method).toBe('GET');
+      req.error(new ErrorEvent('network error'));
+
+      expect(localStorage.getItem('token')).toBeNull();
+      expect(window.alert).toHaveBeenCalledWith('Error en el inicio de sesión');
     });
   });
 
-  describe('verifyToken', () => {
-    it('should return true for a valid token', (done) => {
-      const mockUser: User = {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@example.com',
-        role: 'ADMIN',
-        password: 'password',
-        token: 'mockToken',
-      };
-      localStorage.setItem('token', 'mockToken');
+  describe('#logOut', () => {
+    it('should clear the token and navigate to login', () => {
+      localStorage.setItem('token', 'fakeToken');
+      service.logOut();
+      expect(localStorage.getItem('token')).toBeNull();
+      expect(storeSpy.dispatch).toHaveBeenCalledWith(AuthActions.unsetAuthUser());
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['auth', 'login']);
+    });
+  });
 
+  describe('#verifyToken', () => {
+    it('should verify token and set auth user when valid', () => {
+      localStorage.setItem('token', mockUser.token);
       service.verifyToken().subscribe(isValid => {
         expect(isValid).toBeTrue();
-        done();
       });
 
-      const req = httpController.expectOne((req) => {
-        return req.method === 'GET' && req.url === `${environment.apiUrl}users` && req.params.get('token') === 'mockToken';
-      });
-
+      const req = httpMock.expectOne(`${environment.apiUrl}users?token=${mockUser.token}`);
+      expect(req.request.method).toBe('GET');
       req.flush([mockUser]);
+
+      expect(storeSpy.dispatch).toHaveBeenCalledWith(AuthActions.setAuthUser({ payload: mockUser }));
     });
 
-    it('should return false for an invalid token', (done) => {
+    it('should return false if token is invalid', () => {
       localStorage.setItem('token', 'invalidToken');
-
       service.verifyToken().subscribe(isValid => {
         expect(isValid).toBeFalse();
-        done();
       });
 
-      const req = httpController.expectOne((req) => {
-        return req.method === 'GET' && req.url === `${environment.apiUrl}users` && req.params.get('token') === 'invalidToken';
-      });
-
+      const req = httpMock.expectOne(`${environment.apiUrl}users?token=invalidToken`);
+      expect(req.request.method).toBe('GET');
       req.flush([]);
+
+      expect(storeSpy.dispatch).not.toHaveBeenCalled();
     });
 
-    it('should return false if no token is present', (done) => {
-      localStorage.removeItem('token');
-
+    it('should return false if there is an error during verification', () => {
+      localStorage.setItem('token', mockUser.token);
       service.verifyToken().subscribe(isValid => {
         expect(isValid).toBeFalse();
-        done();
-      });
-    });
-  });
-
-  describe('registerUser', () => {
-    it('should register a user and return the user', (done) => {
-      const mockUser: User = {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@example.com',
-        role: 'ADMIN',
-        password: 'password',
-        token: 'mockToken',
-      };
-
-      service.registerUser(mockUser).subscribe(user => {
-        expect(user).toEqual(mockUser);
-        done();
       });
 
-      const req = httpController.expectOne({
-        url: `${environment.apiUrl}users`,
-        method: 'POST',
-      });
+      const req = httpMock.expectOne(`${environment.apiUrl}users?token=${mockUser.token}`);
+      expect(req.request.method).toBe('GET');
+      req.error(new ErrorEvent('network error'));
 
-      req.flush(mockUser);
+      expect(storeSpy.dispatch).not.toHaveBeenCalled();
     });
 
-    it('should handle registration errors', (done) => {
-      const mockUser: User = {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@example.com',
-        role: 'ADMIN',
-        password: 'password',
-        token: 'mockToken',
-      };
-
-      service.registerUser(mockUser).subscribe(user => {
-        expect(user).toBeNull();
-        done();
+    it('should return false if no token is present', () => {
+      localStorage.removeItem('token');
+      service.verifyToken().subscribe(isValid => {
+        expect(isValid).toBeFalse();
       });
 
-      const req = httpController.expectOne({
-        url: `${environment.apiUrl}users`,
-        method: 'POST',
-      });
-
-      req.flush({}, { status: 400, statusText: 'Bad Request' });
+      httpMock.expectNone(`${environment.apiUrl}users`);
     });
   });
 });

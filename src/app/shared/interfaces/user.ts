@@ -1,11 +1,11 @@
-export type UserRole = 'ADMIN' | 'TEACHER' | 'STUDENT' | undefined
+export type UserRole = 'ADMIN' | 'TEACHER' | 'STUDENT'
 
 export interface User {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-  role: UserRole;
   password: string;
+  role: UserRole;
   token: string
 };

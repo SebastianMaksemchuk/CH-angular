@@ -2,8 +2,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { User } from '../../shared/interfaces/user';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { RootState } from '../store/store';
+import { AuthActions } from '../store/auth/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +14,17 @@ import { Router } from '@angular/router';
 export class AuthService {
   private usersUrl: string = environment.apiUrl + 'users';
 
-  private _authUser$ = new BehaviorSubject<User | null>(null);
-  authUser$ = this._authUser$.asObservable();
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router,
+    private store: Store<RootState>,
+  ) { }
 
-  constructor(private httpClient: HttpClient, private router: Router) { }
+
   logIn(data: { email: string; password: string }) {
     let params = new HttpParams()
       .set('email', data.email);
-  
+
     this.httpClient.get<User[]>(this.usersUrl, { params }).pipe(
       map(response => {
         if (response && response.length > 0) {
@@ -26,26 +32,22 @@ export class AuthService {
           if (authUser.password === data.password) {
             if (authUser.token) {
               localStorage.setItem('token', authUser.token);
-              this._authUser$.next(authUser);
+              this.store.dispatch(AuthActions.setAuthUser({ payload: authUser }))
               this.router.navigate(['dashboard', 'home']);
             } else {
               localStorage.removeItem('token');
-              console.error("Token no encontrado en la respuesta");
               alert("Error en el inicio de sesión");
             }
           } else {
             localStorage.removeItem('token');
-            console.log("Correo o contraseña incorrecta");
             alert("Correo o contraseña incorrecta");
           }
         } else {
           localStorage.removeItem('token');
-          console.log("Correo o contraseña incorrecta");
           alert("Correo o contraseña incorrecta");
         }
       }),
       catchError(err => {
-        console.error(err);
         localStorage.removeItem('token');
         alert("Error en el inicio de sesión");
         return of(null);
@@ -55,7 +57,7 @@ export class AuthService {
 
   logOut() {
     localStorage.removeItem('token');
-    this._authUser$.next(null);
+    this.store.dispatch(AuthActions.unsetAuthUser());
     this.router.navigate(['auth', 'login']);
   }
 
@@ -71,7 +73,7 @@ export class AuthService {
           const authUser = response[0];
           if (authUser.token) {
             localStorage.setItem('token', authUser.token);
-            this._authUser$.next(authUser);
+            this.store.dispatch(AuthActions.setAuthUser({ payload: authUser }))
             return true;
           }
         }
@@ -82,32 +84,5 @@ export class AuthService {
         return of(false);
       })
     );
-  }
-
-  registerUser(user: User): Observable<User | null> {
-    user.role = undefined;
-    user.token = this.generateToken(10);
-
-    return this.httpClient.post<User>(this.usersUrl, user).pipe(
-      map(response => {
-        console.log('Usuario registrado con éxito:', response);
-        return response;
-      }),
-      catchError(err => {
-        console.error(err);
-        alert("Error en el registro de usuario");
-        return of(null);
-      })
-    );
-  }
-
-  private generateToken(length: number): string {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
   }
 }

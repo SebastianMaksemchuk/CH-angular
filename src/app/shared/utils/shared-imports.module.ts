@@ -11,7 +11,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatListModule } from '@angular/material/list';
 
 
 @NgModule({
@@ -29,7 +32,27 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatSelectModule,
     MatTableModule,
     MatTooltipModule,
-    MatProgressSpinner
+    MatProgressSpinnerModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule
+  ],  exports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule
   ],
 })
 export class SharedImportsModule { }

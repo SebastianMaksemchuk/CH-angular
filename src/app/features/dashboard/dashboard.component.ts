@@ -1,7 +1,12 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { User } from '../../shared/interfaces/user';
+import { Store } from '@ngrx/store';
+import { RootState } from '../../core/store/store';
+import { selectAuthUser } from '../../core/store/auth/auth.selectors';
+import { DashboardActions } from '../../core/store/dashboard/dashboard.actions';
+import { selectDashboardMainFeature } from '../../core/store/dashboard/dashboard.selectors';
 
 @Component({
   selector: 'cha-dashboard',
@@ -11,16 +16,19 @@ import { User } from '../../shared/interfaces/user';
 
 export class DashboardComponent {
   showFiller = false;
-  main: string = "start";
+  currentFeature$: Observable<string>;
   authUser$: Observable<User | null>;
 
-  constructor(private authService: AuthService) {
-    this.authUser$ = this.authService.authUser$.pipe(tap(console.log));
+  constructor(
+    private authService: AuthService,
+    private store: Store<RootState>) {
+    this.authUser$ = this.store.select(selectAuthUser)
+    this.currentFeature$ = this.store.select(selectDashboardMainFeature)
   }
 
-  changeTheme() {
-    alert('modo oscuro aún no implementado');
-  };
+  changeFeatuerTitle(featureTitle: string) {
+    this.store.dispatch(DashboardActions.setDashboardMainFeature({payload: featureTitle}))
+  }
 
   logOut() {
     this.authService.logOut();

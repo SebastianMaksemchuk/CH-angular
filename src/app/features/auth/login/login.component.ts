@@ -1,9 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-
-import { RegisterComponent } from '../register/register.component';
+import { Component } from '@angular/core';
 
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -18,7 +15,6 @@ export class LoginComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private matDialog: MatDialog,
     private authService: AuthService
   ) {
     this.logInForm = this.formBuilder.group({
@@ -53,13 +49,4 @@ export class LoginComponent {
     }
   }
 
-  openRegisterDialog(): void {
-    this.matDialog
-      .open(RegisterComponent)
-      .afterClosed()
-      .subscribe({
-        next: (value) => {
-        }
-      });
-  };
 };

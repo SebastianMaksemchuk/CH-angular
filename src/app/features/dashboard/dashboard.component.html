@@ -2,11 +2,12 @@
 
   <mat-drawer [opened]="true" #drawer class="sidenav" mode="side">
     <mat-nav-list>
-      <a mat-list-item (click)="main='home'" routerLink="home" routerLinkActive #homeRouter="routerLinkActive" [activated]="homeRouter.isActive"><mat-icon>home</mat-icon> Inicio</a>
-      <a mat-list-item (click)="main='courses'" routerLink="courses" routerLinkActive #coursesRouter="routerLinkActive" [activated]="coursesRouter.isActive"><mat-icon>school</mat-icon> Cursos</a>
-      <a mat-list-item (click)="main='students'" routerLink="students" routerLinkActive #studentsRouter="routerLinkActive" [activated]="studentsRouter.isActive"><mat-icon>group</mat-icon> Alumnos</a>
-      <a mat-list-item (click)="main='enrollments'" routerLink="enrollments" routerLinkActive #enrollmentsRouter="routerLinkActive" [activated]="enrollmentsRouter.isActive"><mat-icon>edit_calendar</mat-icon> Inscripciones</a>
-      <a *ngIf="(authUser$ | async)?.role === 'ADMIN'" mat-list-item (click)="main='users'" routerLink="users" routerLinkActive #usersRouter="routerLinkActive" [activated]="usersRouter.isActive"><mat-icon>group</mat-icon> Usuarios</a>
+      <a mat-list-item (click)="changeFeatuerTitle('home')" routerLink="home" routerLinkActive #homeRouter="routerLinkActive" [activated]="homeRouter.isActive"><mat-icon>home</mat-icon> Inicio</a>
+      <a mat-list-item (click)="changeFeatuerTitle('courses')" routerLink="courses" routerLinkActive #coursesRouter="routerLinkActive" [activated]="coursesRouter.isActive"><mat-icon>school</mat-icon> Cursos</a>
+      <a mat-list-item (click)="changeFeatuerTitle('student')" routerLink="students" routerLinkActive #studentsRouter="routerLinkActive" [activated]="studentsRouter.isActive"><mat-icon>group</mat-icon> Alumnos</a>
+      <a mat-list-item (click)="changeFeatuerTitle('enrollments')" routerLink="enrollments" routerLinkActive #enrollmentsRouter="routerLinkActive" [activated]="enrollmentsRouter.isActive"><mat-icon>edit_calendar</mat-icon> Inscripciones</a>
+      <a *ngIf="(authUser$ | async)?.role === 'ADMIN'" mat-list-item (click)="changeFeatuerTitle('users')" routerLink="users" routerLinkActive #usersRouter="routerLinkActive" [activated]="usersRouter.isActive"><mat-icon>group</mat-icon> Usuarios</a>
+      <a mat-list-item (click)="logOut()"><mat-icon>logout</mat-icon> Cerrar sesión</a>
     </mat-nav-list>
   </mat-drawer>
 
@@ -16,30 +17,19 @@
       <button (click)="drawer.toggle()" mat-icon-button class="icon" aria-label="Example icon-button with menu icon" matTooltip="Menú">
         <mat-icon>menu</mat-icon>
       </button>
-      <span chaTitle [ngSwitch]="main">
-        <span *ngSwitchCase="'home'">Incio</span>
-        <span *ngSwitchCase="'courses'">Listado de cursos</span>
-        <span *ngSwitchCase="'students'">Listado de alumnos</span>
-        <span *ngSwitchCase="'enrollments'">Inscripciones</span>
-        <span *ngSwitchCase="'users'">Usuarios</span>
-      </span>
-
+      <span>{{currentFeature$ | async | featureName}}</span>
       <span class="spacer"></span>
-
+      <span chaTitle>Proyecto Final Angular</span>
+      <span class="spacer"></span>
       @if (authUser$ | async; as user) {
-        <div>
-          {{ user.firstName + " " + user.lastName }}
-        </div>
-        }
-      <button (click)="changeTheme()" mat-icon-button class="icon favorite-icon" matTooltip="Modo oscuro">
-        <mat-icon>sunny</mat-icon>
-      </button>
+      <div>
+        {{ user.firstName + " " + user.lastName }}
+      </div>
+      }
       <button mat-icon-button class="icon" matTooltip="Salir" (click)="logOut()">
         <mat-icon>logout</mat-icon>
       </button>
     </mat-toolbar>
-
-
 
     <main>
       <router-outlet />

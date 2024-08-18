@@ -1,73 +1,75 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { LoginComponent } from './login.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
-import { RegisterComponent } from '../register/register.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { LoginComponent } from './login.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedModule } from '../../../shared/shared.module';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: jasmine.SpyObj<AuthService>;
-  let matDialog: jasmine.SpyObj<MatDialog>;
 
   beforeEach(async () => {
     const authServiceSpy = jasmine.createSpyObj('AuthService', ['logIn']);
-    const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
       declarations: [LoginComponent],
-      providers: [
-        FormBuilder,
-        { provide: AuthService, useValue: authServiceSpy },
-        { provide: MatDialog, useValue: matDialogSpy }
+      imports: [
+        ReactiveFormsModule,
+        NoopAnimationsModule,
+        SharedModule
       ],
-      schemas: [NO_ERRORS_SCHEMA] // Ignore unknown elements and attributes in the template
+      providers: [
+        { provide: AuthService, useValue: authServiceSpy }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    matDialog = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a valid form when fields are correctly filled', () => {
-    component.logInForm.controls['email'].setValue('test@example.com');
-    component.logInForm.controls['password'].setValue('Valid123!');
-    expect(component.logInForm.valid).toBeTrue();
+  it('should initialize the form with email and password fields', () => {
+    const logInForm = component.logInForm;
+    expect(logInForm).toBeTruthy();
+    expect(logInForm.get('email')).toBeTruthy();
+    expect(logInForm.get('password')).toBeTruthy();
   });
 
-  it('should have an invalid form when fields are incorrectly filled', () => {
-    component.logInForm.controls['email'].setValue('invalidemail');
-    component.logInForm.controls['password'].setValue('short');
+  it('should mark form as invalid when fields are empty', () => {
+    component.logInForm.setValue({ email: '', password: '' });
     expect(component.logInForm.invalid).toBeTrue();
   });
 
-  it('should call authService.logIn on submit when form is valid', () => {
-    component.logInForm.controls['email'].setValue('test@example.com');
-    component.logInForm.controls['password'].setValue('Valid123!');
-    component.onSubmit();
-    expect(authService.logIn).toHaveBeenCalledWith({
-      email: 'test@example.com',
-      password: 'Valid123!'
-    });
-  });
-
-  it('should not call authService.logIn on submit when form is invalid', () => {
-    component.logInForm.controls['email'].setValue('');
-    component.logInForm.controls['password'].setValue('');
+  it('should display an alert if the form is invalid on submit', () => {
     spyOn(window, 'alert');
+    component.logInForm.setValue({ email: '', password: '' });
     component.onSubmit();
-    expect(authService.logIn).not.toHaveBeenCalled();
     expect(window.alert).toHaveBeenCalledWith('El formulario no es valido');
   });
 
+  it('should call authService.logIn when the form is valid on submit', () => {
+    const loginData = { email: 'test@example.com', password: 'Password123!' };
+    component.logInForm.setValue(loginData);
+    component.onSubmit();
+    expect(authService.logIn).toHaveBeenCalledWith(loginData);
+  });
+
+  it('should have the correct password validation errors', () => {
+    const passwordControl = component.logInForm.get('password');
+    passwordControl?.setValue('pass');
+    expect(passwordControl?.errors?.['upperCase']).toBeTrue();
+    expect(passwordControl?.errors?.['numeric']).toBeTrue();
+    expect(passwordControl?.errors?.['specialChar']).toBeTrue();
+    expect(passwordControl?.errors?.['minLength']).toBeTrue();
+
+    passwordControl?.setValue('Pass123!');
+    expect(passwordControl?.errors).toBeNull();
+  });
 });

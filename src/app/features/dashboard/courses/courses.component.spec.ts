@@ -1,143 +1,123 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 import { CoursesComponent } from './courses.component';
-import { CoursesService } from '../../../core/services/courses.service';
-import { EnrollmentsService } from '../../../core/services/enrollments.service';
 import { CourseDialogComponent } from './components/course-dialog/course-dialog.component';
+import { CoursesActions } from './store/courses.actions';
+import { RootState } from '../../../core/store/store';
 import { Course } from '../../../shared/interfaces/course';
-import { Enrollment } from '../../../shared/interfaces/enrollment';
-import { MockProvider } from 'ng-mocks';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { User } from '../../../shared/interfaces/user';
+import { SharedModule } from '../../../shared/shared.module';
 
 describe('CoursesComponent', () => {
   let component: CoursesComponent;
   let fixture: ComponentFixture<CoursesComponent>;
-  let dialog: jasmine.SpyObj<MatDialog>;
-  let coursesService: jasmine.SpyObj<CoursesService>;
-  let enrollmentsService: jasmine.SpyObj<EnrollmentsService>;
+  let store: MockStore<RootState>;
+  let matDialog: jasmine.SpyObj<MatDialog>;
+  let mockCourse: Course;
+  let mockUser: User;
 
-  const mockCourses: Course[] = [
-    {
-      id: '1',
-      comision: 101,
-      name: 'Course 1',
-      startDate: new Date('2024-01-01'),
-      endDate: new Date('2024-06-30'),
-      studentQuota: 30,
-      enrolledStudents: []
-    }
-  ];
-
-  const mockEnrollments: Enrollment[] = [
-    {
-      id: '1',
-      courseId: '1',
-      studentId: '1'
-    }
-  ];
+  const initialState = {
+    courses: [],
+    coursesError: null,
+    coursesIsLoading: false,
+    authUser: null
+  };
 
   beforeEach(async () => {
     const dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', ['getCourses', 'addCourse', 'deleteCourseById']);
-    const enrollmentsServiceSpy = jasmine.createSpyObj('EnrollmentsService', ['getEnrollments']);
-
-    coursesServiceSpy.getCourses.and.returnValue(of(mockCourses));
-    coursesServiceSpy.addCourse.and.returnValue(of([...mockCourses, mockCourses[0]])); // Mock adding a course
-    coursesServiceSpy.deleteCourseById.and.returnValue(of(mockCourses.slice(1))); // Mock deleting a course
-    enrollmentsServiceSpy.getEnrollments.and.returnValue(of(mockEnrollments));
-    dialogSpy.open.and.returnValue({
-      afterClosed: () => of(mockCourses[0])
-    } as any);
 
     await TestBed.configureTestingModule({
+      imports: [SharedModule],
       declarations: [CoursesComponent],
       providers: [
-        { provide: MatDialog, useValue: dialogSpy },
-        { provide: CoursesService, useValue: coursesServiceSpy },
-        { provide: EnrollmentsService, useValue: enrollmentsServiceSpy }
-      ],
-      schemas: [NO_ERRORS_SCHEMA] // Ignore unknown elements and attributes in the template
+        provideMockStore({ initialState }),
+        { provide: MatDialog, useValue: dialogSpy }
+      ]
     }).compileComponents();
 
+    store = TestBed.inject(MockStore);
+    matDialog = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
+
+    mockCourse = {
+      id: 'efgh',
+      comision: 123567,
+      name: 'Angular Basics',
+      startDate: new Date('2024-01-01'),
+      endDate: new Date('2024-06-01')
+    };
+
+    mockUser = {
+      id: 'abcd',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      password: 'password123',
+      role: 'ADMIN',
+      token: 'abcde12345'
+    };
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(CoursesComponent);
     component = fixture.componentInstance;
-    dialog = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
-    coursesService = TestBed.inject(CoursesService) as jasmine.SpyObj<CoursesService>;
-    enrollmentsService = TestBed.inject(EnrollmentsService) as jasmine.SpyObj<EnrollmentsService>;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load courses and enrollments on initialization', () => {
+  it('should dispatch loadCourses action on ngOnInit', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
     component.ngOnInit();
-    expect(coursesService.getCourses).toHaveBeenCalled();
-    expect(enrollmentsService.getEnrollments).toHaveBeenCalled();
-    expect(component.courses).toEqual(mockCourses);
-    expect(component.enrollments).toEqual(mockEnrollments);
-    expect(component.dataSource).toEqual([
-      {
-        id: '1',
-        comision: 101,
-        name: 'Course 1',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-06-30'),
-        enrolledCount: 1
-      }
-    ]);
+    expect(dispatchSpy).toHaveBeenCalledWith(CoursesActions.loadCourses());
   });
 
-  it('should open the dialog and add a new course', () => {
-    component.openDialog();
-    expect(dialog.open).toHaveBeenCalledWith(CourseDialogComponent);
-    expect(coursesService.addCourse).toHaveBeenCalledWith(mockCourses[0]);
-    expect(component.courses).toEqual([...mockCourses, mockCourses[0]]);
-    expect(component.dataSource).toEqual([
-      {
-        id: '1',
-        comision: 101,
-        name: 'Course 1',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-06-30'),
-        enrolledCount: 1
-      },
-      {
-        id: '1',
-        comision: 101,
-        name: 'Course 1',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-06-30'),
-        enrolledCount: 1
-      }
-    ]);
+  it('should dispatch unsetCoursesStore action on ngOnDestroy', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    component.ngOnDestroy();
+    expect(dispatchSpy).toHaveBeenCalledWith(CoursesActions.unsetCoursesStore());
   });
 
-  it('should open the dialog and edit a course', () => {
-    const courseToEdit = mockCourses[0];
-    component.editCourse(courseToEdit);
-    expect(dialog.open).toHaveBeenCalledWith(CourseDialogComponent, { data: courseToEdit });
-    expect(component.courses).toContain(courseToEdit);
-    expect(component.dataSource).toEqual([
-      {
-        id: '1',
-        comision: 101,
-        name: 'Course 1',
-        startDate: new Date('2024-01-01'),
-        endDate: new Date('2024-06-30'),
-        enrolledCount: 1
-      }
-    ]);
+  it('should open course dialog and dispatch createCourse if no course is provided', () => {
+    const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
+    matDialog.open.and.returnValue(dialogRefSpy);
+
+    dialogRefSpy.afterClosed.and.returnValue(of(mockCourse));
+    const dispatchSpy = spyOn(store, 'dispatch');
+
+    component.openCourseDialog();
+    expect(matDialog.open).toHaveBeenCalledWith(CourseDialogComponent, { data: undefined });
+    expect(dispatchSpy).toHaveBeenCalledWith(CoursesActions.createCourse({ payload: mockCourse }));
   });
 
-  it('should delete a course by ID', () => {
-    spyOn(window, 'confirm').and.returnValue(true); // Mock confirm dialog
-    component.deleteCourseById('1');
-    expect(coursesService.deleteCourseById).toHaveBeenCalledWith('1');
-    expect(component.courses).toEqual(mockCourses.slice(1));
-    expect(component.dataSource).toEqual([]);
+  it('should open course dialog and dispatch editCourse if course is provided', () => {
+    const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
+    matDialog.open.and.returnValue(dialogRefSpy);
+
+    dialogRefSpy.afterClosed.and.returnValue(of(mockCourse));
+    const dispatchSpy = spyOn(store, 'dispatch');
+
+    component.openCourseDialog(mockCourse);
+    expect(matDialog.open).toHaveBeenCalledWith(CourseDialogComponent, { data: mockCourse });
+    expect(dispatchSpy).toHaveBeenCalledWith(CoursesActions.editCourse({ id: mockCourse.id, payload: mockCourse }));
   });
 
+  it('should dispatch deleteCourse action on deleteCourseById', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    spyOn(window, 'confirm').and.returnValue(true);
+
+    component.deleteCourseById(mockCourse.id);
+    expect(dispatchSpy).toHaveBeenCalledWith(CoursesActions.deleteCourse({ id: mockCourse.id }));
+  });
+
+  it('should not dispatch deleteCourse action if confirm returns false', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    spyOn(window, 'confirm').and.returnValue(false);
+
+    component.deleteCourseById(mockCourse.id);
+    expect(dispatchSpy).not.toHaveBeenCalled();
+  });
 });

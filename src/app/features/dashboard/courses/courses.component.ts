@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CourseDialogComponent } from './components/course-dialog/course-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
 import { Course } from '../../../shared/interfaces/course';
-import { CoursesService } from '../../../core/services/courses.service';
 import { forkJoin, Observable } from 'rxjs';
-import { Enrollment } from '../../../shared/interfaces/enrollment';
-import { EnrollmentsService } from '../../../core/services/enrollments.service';
+import { Store } from '@ngrx/store';
+import { RootState } from '../../../core/store/store';
+import { selectCourses, selectCoursesError, selectCoursesIsLoading } from './store/courses.selectors';
+import { CoursesActions } from './store/courses.actions';
+import { selectAuthUser } from '../../../core/store/auth/auth.selectors';
+import { User } from '../../../shared/interfaces/user';
 
 @Component({
   selector: 'cha-courses',
@@ -15,101 +18,55 @@ import { EnrollmentsService } from '../../../core/services/enrollments.service';
   styleUrl: './courses.component.scss'
 })
 
-export class CoursesComponent {
-  displayedColumns: string[] = ['comision', 'course', 'startDate', 'endDate', 'enrolledCount', 'details', 'edit', 'delete'];
+export class CoursesComponent implements OnInit, OnDestroy {
+  authUser$: Observable<User | null>
 
-  courses: Course[] = [];
+  displayedColumns: string[] = ['comision', 'course', 'startDate', 'endDate', 'details', 'edit', 'delete'];
+
   courses$: Observable<Course[]>;
-  enrollments: Enrollment[] = [];
-  enrollments$: Observable<Enrollment[]>;
-  dataSource: any[] = [];
-
-  isLoading = false;
+  isLoading$: Observable<boolean>;
+  error$: Observable<any>;
 
   constructor(
+    private store: Store<RootState>,
     private matDialog: MatDialog,
-    private coursesService: CoursesService,
-    private enrollmentsService: EnrollmentsService
   ) {
-    this.courses$ = this.coursesService.getCourses();
-    this.enrollments$ = this.enrollmentsService.getEnrollments();
+    this.authUser$ = this.store.select(selectAuthUser);
+    this.courses$ = this.store.select(selectCourses);
+    this.isLoading$ = this.store.select(selectCoursesIsLoading);
+    this.error$ = this.store.select(selectCoursesError);
   }
 
   ngOnInit(): void {
-    this.loadCourses()
+    this.store.dispatch(CoursesActions.loadCourses())
+
   }
 
-  loadCourses() {
-    this.isLoading = true;
-    forkJoin([this.courses$, this.enrollments$]).subscribe({
-      next: ([courses, enrollments]) => {
-        this.courses = courses;
-        this.enrollments = enrollments;
-        this.updateDataSource();
-      },
-      complete: () => {
-        this.isLoading = false;
-      },
-    });
+  ngOnDestroy(): void {
+this.store.dispatch(CoursesActions.unsetCoursesStore())
   }
 
-  updateDataSource() {
-    this.dataSource = this.courses.map(course => {
-      const enrolledCount = this.enrollments.filter(enrollment => enrollment.courseId === course.id).length;
-      return {
-        id: course.id,
-        comision: course.comision,
-        name: course.name,
-        startDate: course.startDate,
-        endDate: course.endDate,
-        enrolledCount: enrolledCount
+  reloadPage(): void {
+    location.reload()
+  }
+
+  openCourseDialog(course?: Course): void {
+    this.matDialog
+    .open(CourseDialogComponent, {data: course})
+    .afterClosed()
+    .subscribe(result => {
+      if (!course && result) {
+        this.store.dispatch(CoursesActions.createCourse({payload: result}))
       };
-    });
+      if (course) {
+        this.store.dispatch(CoursesActions.editCourse({id: result.id, payload: result}))
+      }
+    })
   }
 
-  openDialog(): void {
-    this.matDialog
-      .open(CourseDialogComponent)
-      .afterClosed()
-      .subscribe(result => {
-        if (result) {
-          this.coursesService.addCourse(result).subscribe({
-            next: (updatedCourses) => {
-              this.courses = updatedCourses;
-              this.updateDataSource();
-            }
-          })
-        }
-      }
-      )
-  };
-
-  editCourse(course: Course) {
-    this.matDialog
-      .open(CourseDialogComponent, { data: course })
-      .afterClosed()
-      .subscribe({
-        next: (value) => {
-          if (!!value) {
-            this.courses = this.courses.map((el) => el.id === course.id ? value : el);
-            this.updateDataSource()
-          };
-        }
-      });
-  };
-
-  deleteCourseById(id: string) {
-    if (confirm('¿Desea elminiar este curso?')) {
-      this.isLoading = true;
-      this.coursesService.deleteCourseById(id).subscribe({
-        next: (updatedCourses) => {
-          this.courses = updatedCourses;
-          this.updateDataSource();
-        },
-        complete: () => {
-          this.isLoading = false;
-        }
-      });
+  deleteCourseById(id: string): void {
+    if (confirm('¿Está seguro que esea elminiar este curso?')) {
+      this.store.dispatch(CoursesActions.deleteCourse({id:id}))
     }
   }
 }

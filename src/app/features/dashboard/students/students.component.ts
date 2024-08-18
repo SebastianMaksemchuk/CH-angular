@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { StudentDialogComponent } from './components/student-dialog/student-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
 import { Student } from '../../../shared/interfaces/student';
-import { StudentsService } from '../../../core/services/students.service';
-import { forkJoin, Observable } from 'rxjs';
-import { Enrollment } from '../../../shared/interfaces/enrollment';
-import { EnrollmentsService } from '../../../core/services/enrollments.service';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { StudentsActions } from './store/students.actions';
+import { selectStudents, selectStudentsError, selectStudentsIsLoading } from './store/students.selectors';
+import { RootState } from '../../../core/store/store';
+import { User } from '../../../shared/interfaces/user';
+import { selectAuthUser } from '../../../core/store/auth/auth.selectors';
 
 @Component({
   selector: 'cha-students',
@@ -15,100 +18,55 @@ import { EnrollmentsService } from '../../../core/services/enrollments.service';
   styleUrl: './students.component.scss'
 })
 
-export class StudentsComponent {
-  displayedColumns: string[] = ['id', 'name', 'email', 'enrolledCoursesCount', 'details', 'edit', 'delete'];
+export class StudentsComponent implements OnInit, OnDestroy {
+  authUser$: Observable<User | null>
 
-  students: Student[] = [];
-  enrollments: Enrollment[] = [];
+  displayedColumns: string[] = ['name', 'email', 'details', 'edit', 'delete'];
+
   students$: Observable<Student[]>;
-  enrollments$: Observable<Enrollment[]>;
-  dataSource: any[] = [];
-
-  isLoading = false;
+  isLoading$: Observable<boolean>;
+  error$: Observable<any>
 
   constructor(
+    private store: Store<RootState>,
     private matDialog: MatDialog,
-    private studentsService: StudentsService,
-    private enrollmentsService: EnrollmentsService
   ) {
-    this.students$ = this.studentsService.getStudents();
-    this.enrollments$ = this.enrollmentsService.getEnrollments();
+    this.authUser$ = this.store.select(selectAuthUser);
+    this.students$ = this.store.select(selectStudents);
+    this.isLoading$ = this.store.select(selectStudentsIsLoading);
+    this.error$ = this.store.select(selectStudentsError);
   }
+
 
   ngOnInit(): void {
-    this.loadStudents()
+    this.store.dispatch(StudentsActions.loadStudents())
   }
 
-  loadStudents() {
-    this.isLoading = true;
-    forkJoin([this.students$, this.enrollments$]).subscribe({
-      next: ([students, enrollments]) => {
-        this.students = students;
-        this.enrollments = enrollments;
-        this.updateDataSource();
-      },
-      complete: () => {
-        this.isLoading = false;
-      },
-    });
+  ngOnDestroy(): void {
+    this.store.dispatch(StudentsActions.unsetStudentsStore())
   }
 
-  updateDataSource() {
-    this.dataSource = this.students.map(student => {
-      const enrolledCoursesCount = this.enrollments.filter(enrollment => enrollment.studentId === student.id).length;
-      return {
-        id: student.id,
-        firstName: student.firstName,
-        lastName: student.lastName,
-        email: student.email,
-        enrolledCoursesCount: enrolledCoursesCount
-      };
-    });
+  reloadPage(): void {
+    location.reload()
   }
 
-  newStudent(): void {
-    this.matDialog
-      .open(StudentDialogComponent)
-      .afterClosed()
-      .subscribe(result => {
-        if (result) {
-          this.studentsService.addStudent(result).subscribe({
-            next: (updatedStudents) => {
-              this.students = updatedStudents;
-              this.updateDataSource();
-            }
-          })
-        }
-      }
-      );
-  };
-
-  editStudent(student: Student) {
+  openStudentDialog(student?: Student): void {
     this.matDialog
       .open(StudentDialogComponent, { data: student })
       .afterClosed()
-      .subscribe({
-        next: (value) => {
-          if (!!value) {
-            this.students = this.students.map((el) => el.id === student.id ? value : el);
-            this.updateDataSource()
-          };
+      .subscribe(result => {
+        if (!student && result) {
+          this.store.dispatch(StudentsActions.createStudent({ payload: result }))
+        };
+        if (student) {
+          this.store.dispatch(StudentsActions.editStudent({ id: result.id, payload: result }))
         }
-      });
-  };
+      })
+  }
 
-  deleteStudentById(id: string) {
+  deleteStudentById(id: string): void {
     if (confirm('¿Está seguro que desea elminiar este alumno?')) {
-      this.isLoading = true;
-      this.studentsService.deleteStudentById(id).subscribe({
-        next: (updatedStudents) => {
-          this.students = updatedStudents;
-          this.updateDataSource();
-        },
-        complete: () => {
-          this.isLoading = false;
-        }
-      });
+      this.store.dispatch(StudentsActions.deleteStudent({ id: id }))
     }
   }
 }

@@ -1,34 +1,23 @@
 # CHAngularMaksemchuk
 
-Tercer preentrega del proyecto para el curso Angular de CoderHouse comisión 57210.
+Entrega final del proyecto para el curso Angular de CoderHouse comisión 57210.
 
-## Json server
+Para correr la aplicación deben ejecutarse por consola:
 Run `json-server db.json --watch` (http://localhost:3000/) to start json server.
+Run `ng serve -o` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Angular CLI
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
+Para revisar los test unitarios ejecutar por consola:
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+# Explicación general de la app
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Al ejecutarse por primera vez deberá autenticarse con un usuario. En el mismo componente de login se muestran dos usuarios con los que se puede ingresar.
+No se puede acceder a ninguna otra funcionalidad hasta que se haga el login, todo lo demás está protegido por un guard. Una vez autenticado se guarda el usuario en localStorage, para validar el token de usuario. Si se sale de la applicación mediante el botón del toolbar, se borra el usuario guardado.
 
-## Further help
+Hay dos tipos de usuario, Administrador y Profesor.
+El usuario de tipo Administrador puede acceder a todas las funcionalidades. Puede listar, crear, editar, ver detalles y eliminar cursos, alumnos, inscripciones y usuarios.
+El usuario de tipo Profesor solo puede listar y ver detalles de cursos y alumnos. Puede listar, creaer y eliminar inscripciones. No puede crear ni eliminar cursos y alumnos. Tampoco puede acceder a la sección de usuarios.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Se utiliza NgRx para crear y modificar el state durante la ejecución y para realizar la lectura y modificación desde y hacia la base de datos, a través de los servicios que realizan http requests a través de la api de json server.
+
+

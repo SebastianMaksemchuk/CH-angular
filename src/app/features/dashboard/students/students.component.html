@@ -1,14 +1,12 @@
-@if (isLoading) {
+@if (isLoading$ |async ) {
 <mat-spinner></mat-spinner>
+} @else if (error$ | async) {
+<p>Ocurrió un error inesperado.</p>
+<button mat-flat-button (click)="reloadPage()">Recargar</button>
 } @else {
-<button mat-flat-button (click)="newStudent()"><mat-icon>add</mat-icon>Ingresar un nuevo alumno</button>
+<button *ngIf="(authUser$ | async)?.role === 'ADMIN'" mat-flat-button (click)="openStudentDialog()"><mat-icon>add</mat-icon>Ingresar un nuevo alumno</button>
 
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef chaTitle> ID </th>
-    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-  </ng-container>
+<table mat-table [dataSource]="students$" class="mat-elevation-z8">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef chaTitle> Alumno </th>
@@ -18,11 +16,6 @@
   <ng-container matColumnDef="email">
     <th mat-header-cell *matHeaderCellDef chaTitle> email </th>
     <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="enrolledCoursesCount">
-    <th mat-header-cell *matHeaderCellDef chaTitle> Cursos Inscriptos </th>
-    <td mat-cell *matCellDef="let element"> {{element.enrolledCoursesCount}} </td>
   </ng-container>
 
   <ng-container matColumnDef="details">
@@ -37,7 +30,7 @@
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef chaTitle> Editar</th>
     <td mat-cell *matCellDef="let element">
-      <button (click)="editStudent(element)" mat-icon-button matTooltip="Editar alumno" matTooltipPosition="above">
+      <button (click)="openStudentDialog(element)" [disabled]="(authUser$ | async)?.role !== 'ADMIN'" mat-icon-button matTooltip="Editar alumno" matTooltipPosition="above">
         <mat-icon>edit</mat-icon>
       </button>
     </td>
@@ -46,7 +39,7 @@
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef chaTitle> Eliminar</th>
     <td mat-cell *matCellDef="let element">
-      <button (click)="deleteStudentById(element.id)" mat-icon-button matTooltip="Eliminar alumno" matTooltipPosition="above">
+      <button (click)="deleteStudentById(element.id)" [disabled]="(authUser$ | async)?.role !== 'ADMIN'" mat-icon-button matTooltip="Eliminar alumno" matTooltipPosition="above">
         <mat-icon>delete</mat-icon>
       </button>
     </td>
