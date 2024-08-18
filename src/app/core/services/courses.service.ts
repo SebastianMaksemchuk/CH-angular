@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, switchMap } from 'rxjs';
 import { Course } from '../../shared/interfaces/course';
 
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { Enrollment } from '../../shared/interfaces/enrollment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoursesService {
   private coursesUrl: string = environment.apiUrl + 'courses';
+  private enrollmentsUrl: string = environment.apiUrl + 'enrollments';
 
   constructor(
     private httpClient: HttpClient
@@ -39,12 +41,21 @@ export class CoursesService {
 
 
   deleteCourseById(id: string): Observable<Course> {
-    // return this..deleteEnrollmentsByCourse(id).pipe(
-    //   concatMap(() => this.httpClient.delete(`${this.coursesUrl}/${id}`)),
-    //   switchMap(() => this.getCourses())
-    // );
-    return this.httpClient.delete<Course>(`${this.coursesUrl}/${id}`)
+    return this.httpClient.delete<Course>(`${this.coursesUrl}/${id}`).pipe(
+      switchMap(deletedCourse => {
+        return this.httpClient.get<Enrollment[]>(`${this.enrollmentsUrl}?courseId=${id}`).pipe(
+          switchMap(enrollments => {
+            const deleteRequests = enrollments.map(enrollment =>
+              this.httpClient.delete(`${this.enrollmentsUrl}/${enrollment.id}`)
+            );
+            return forkJoin(deleteRequests).pipe(
+              map(() => deletedCourse)
+            )
+          })
+        )
+      })
+    )
   }
-
+  
 }
 

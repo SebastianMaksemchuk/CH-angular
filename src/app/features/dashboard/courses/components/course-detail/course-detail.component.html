@@ -1,16 +1,21 @@
-<div *ngIf="isLoading">
+@if (isLoading$ |async ) {
   <mat-spinner></mat-spinner>
-</div>
-<div *ngIf="!isLoading && course">
-  <h2>Detalles del Curso: {{ course.name }}</h2>
-  <p><strong>Inicio:</strong> {{ course.startDate | date: 'dd/MM/yyyy' }}</p>
-  <p><strong>Fin:</strong> {{ course.endDate | date: 'dd/MM/yyyy' }}</p>
-  <h3>Estudiantes Inscriptos</h3>
+  } @else if (error$ | async) {
+    <p>Ocurrió un error inesperado.</p>
+    <button mat-flat-button (click)="reloadPage()">Recargar</button>
+  } @else {
+<div>
+  <h2>Detalles del Curso: {{ (selectedCourse$ | async)?.name}}</h2>
+  <p><strong>Comisión:</strong> {{ (selectedCourse$ | async)?.comision }}</p>
+  <p><strong>Inicio:</strong> {{ (selectedCourse$ | async)?.startDate | date: 'dd/MM/yyyy' }}</p>
+  <p><strong>Fin:</strong> {{ (selectedCourse$ | async)?.endDate | date: 'dd/MM/yyyy' }}</p>
+  <h3>Alumnos inscriptos:</h3>
   <ul>
-    <li *ngFor="let enrollment of filteredEnrollments">
-      {{ getStudentName(enrollment.studentId) }}
-      <button mat-button (click)="deleteEnrollment(enrollment.id)">Eliminar</button>
+    <li *ngFor="let enrollment of filteredEnrollments$ | async">
+      {{ enrollment.student | fullName}} - {{ enrollment.student.email}}
+      <button mat-button (click)="deleteEnrollmentById(enrollment.id)"><mat-icon>delete</mat-icon></button>
     </li>
-  </ul>
+    </ul>
+  </div>
   <button mat-button [routerLink]="['/dashboard/courses']">Volver a lista de cursos</button>
-</div>
+  }

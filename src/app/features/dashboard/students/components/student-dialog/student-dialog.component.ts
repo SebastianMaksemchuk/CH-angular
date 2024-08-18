@@ -36,7 +36,6 @@ export class StudentDialogComponent {
 
   onSubmit(): void {
     this.matDialogRef.close(this.studentForm.value);
-    console.log(this.studentForm.value);
   };
 
   onCancel(): void {

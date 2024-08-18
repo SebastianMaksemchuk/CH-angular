@@ -14,10 +14,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UserDetailComponent implements OnInit, OnDestroy{
 
-  users$: Observable<User[]>
-  isLoading$: Observable<boolean>
-  error$: Observable<any>
-  selectedUser$: Observable<User | null>
+  users$: Observable<User[]>;
+  isLoading$: Observable<boolean>;
+  error$: Observable<any>;
+  selectedUser$: Observable<User | null>;
 
   constructor(
     private store: Store<RootState>,

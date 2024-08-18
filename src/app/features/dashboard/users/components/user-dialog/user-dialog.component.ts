@@ -10,7 +10,7 @@ import { User, UserRole } from '../../../../../shared/interfaces/user';
 })
 export class UserDialogComponent {
   userForm: FormGroup;
-  userRoles: UserRole[] = ['ADMIN', 'TEACHER', 'STUDENT'];
+  userRoles: UserRole[] = ['ADMIN', 'TEACHER'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -46,6 +46,5 @@ export class UserDialogComponent {
 
   onSubmit(): void {
     this.matDialogRef.close(this.userForm.value);
-    console.log(this.userForm.value);
   };
 }

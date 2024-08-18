@@ -91,15 +91,6 @@
       "endDate": "2024-09-23",
       "studentQuota": 100,
       "enrolledStudents": []
-    },
-    {
-      "id": "f59c",
-      "comision": 12345,
-      "name": "Curso de Prueba",
-      "startDate": "2024-08-01T03:00:00.000Z",
-      "endDate": "2024-08-17T22:11:28.036Z",
-      "studentQuota": 100,
-      "enrolledStudents": null
     }
   ],
   "students": [
@@ -169,14 +160,54 @@
   ],
   "enrollments": [
     {
-      "id": "qqqq",
-      "courseId": "aaaa",
-      "studentId": "pppp"
-    },
-    {
       "id": "072d",
       "studentId": "kkkk",
       "courseId": "eeee"
+    },
+    {
+      "id": "d656",
+      "studentId": "iiii",
+      "courseId": "aaaa"
+    },
+    {
+      "id": "bc7d",
+      "studentId": "jjjj",
+      "courseId": "bbbb"
+    },
+    {
+      "id": "ee5d",
+      "studentId": "nnnn",
+      "courseId": "cccc"
+    },
+    {
+      "id": "1bc0",
+      "studentId": "oooo",
+      "courseId": "hhhh"
+    },
+    {
+      "id": "4aec",
+      "studentId": "pppp",
+      "courseId": "bbbb"
+    },
+    {
+      "id": "c2ac",
+      "studentId": "kkkk",
+      "courseId": "ffff"
+    },
+    {
+      "id": "de95",
+      "studentId": "oooo",
+      "courseId": "dddd"
+    },
+    {
+      "id": "5a59",
+      "studentId": "kkkk",
+      "courseId": "aaaa"
+    },
+    {
+      "id": "3877",
+      "studentId": "kkkk",
+      "courseId": "gggg"
     }
   ]
 }

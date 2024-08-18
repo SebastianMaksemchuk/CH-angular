@@ -1,17 +1,21 @@
-<div *ngIf="isLoading">
+@if (isLoading$ |async ) {
   <mat-spinner></mat-spinner>
-</div>
-<div *ngIf="!isLoading && student">
-  <h2>Detalles del Alumno: {{ student | fullName}}</h2>
-  <p><strong>Correo electrónico:</strong> {{ student.email }}</p>
-  <p><strong>Fecha de nacimiento:</strong> {{ student.DOB| date: 'dd/MM/YYYY' }}</p>
+  } @else if (error$ | async) {
+    <p>Ocurrió un error inesperado.</p>
+    <button mat-flat-button (click)="reloadPage()">Recargar</button>
+  } @else {
+<div>
+  <h2>Detalles del Alumno: {{ (selectedStudent$ | async) | fullName}}</h2>
+  <p><strong>Correo electrónico:</strong> {{ (selectedStudent$ | async)?.email }}</p>
+  <p><strong>Fecha de nacimiento:</strong> {{ (selectedStudent$ | async)?.DOB| date: 'dd/MM/YYYY' }}</p>
   <h3>Inscripciones:</h3>
   <ul>
-    <li *ngFor="let enrollment of filteredEnrollments">
-      {{ getCourse(enrollment.courseId) }}
-      <button mat-button (click)="deleteEnrollment(enrollment.id)">Eliminar</button>
+    <li *ngFor="let enrollment of filteredEnrollments$ | async">
+      {{ enrollment.course.comision}} - {{ enrollment.course.name}}
+      <button mat-button (click)="deleteEnrollmentById(enrollment.id)"><mat-icon>delete</mat-icon></button>
     </li>
-  </ul>
+    </ul>
 </div>
 
 <button mat-button [routerLink]="['/dashboard/students']">Volver a lista de alumnos</button>
+}
