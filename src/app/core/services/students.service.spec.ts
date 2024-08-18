@@ -1,106 +1,134 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { StudentsService } from './students.service';
-import { EnrollmentsService } from './enrollments.service';
 import { environment } from '../../../environments/environment';
 import { Student } from '../../shared/interfaces/student';
-import { of } from 'rxjs';
-import { MockProvider } from 'ng-mocks';
+import { Enrollment } from '../../shared/interfaces/enrollment';
 
 describe('StudentsService', () => {
   let service: StudentsService;
-  let httpController: HttpTestingController;
-  let enrollmentsService: EnrollmentsService;
+  let httpMock: HttpTestingController;
+  const studentsUrl = `${environment.apiUrl}students`;
+  const enrollmentsUrl = `${environment.apiUrl}enrollments`;
+
+  let mockStudent: Student;
+  let mockEnrollment: Enrollment;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [StudentsService, MockProvider(EnrollmentsService)],
+      providers: [StudentsService],
     });
 
     service = TestBed.inject(StudentsService);
-    httpController = TestBed.inject(HttpTestingController);
-    enrollmentsService = TestBed.inject(EnrollmentsService);
+    httpMock = TestBed.inject(HttpTestingController);
+
+    mockStudent = {
+      id: 'abcd',
+      firstName: 'John',
+      lastName: 'Doe',
+      DOB: new Date('2000-01-01'),
+      email: 'john.doe@example.com',
+    };
+
+    mockEnrollment = {
+      id: 'efgh',
+      courseId: 'ijkl',
+      studentId: mockStudent.id
+    } 
   });
 
   afterEach(() => {
-    httpController.verify();
+    httpMock.verify();
   });
 
-  it('should retrieve all students', () => {
-    const mockStudents: Student[] = [
-      { id: '1', firstName: 'John', lastName: 'Doe', DOB: new Date('2000-01-01'), email: 'john@example.com', enrolledCourses: [] },
-      { id: '2', firstName: 'Jane', lastName: 'Smith', DOB: new Date('1999-05-15'), email: 'jane@example.com', enrolledCourses: [] },
-    ];
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 
-    service.getStudents().subscribe(students => {
-      expect(students.length).toBe(2);
-      expect(students[0].firstName).toBe('John');
-      expect(students[1].DOB).toEqual(new Date('1999-05-15'));
+  describe('#getStudents', () => {
+    it('should return an Observable of Students', () => {
+      const mockStudents: Student[] = [mockStudent];
+      service.getStudents().subscribe(students => {
+        expect(students.length).toBe(1);
+        expect(students[0]).toEqual(mockStudent);
+      });
+
+      const req = httpMock.expectOne(studentsUrl);
+      expect(req.request.method).toBe('GET');
+      req.flush(mockStudents);
+    });
+  });
+
+  describe('#getStudentById', () => {
+    it('should return an Observable of a Student by ID', () => {
+      service.getStudentById(mockStudent.id).subscribe(student => {
+        expect(student).toEqual(mockStudent);
+      });
+
+      const req = httpMock.expectOne(`${studentsUrl}/${mockStudent.id}`);
+      expect(req.request.method).toBe('GET');
+      req.flush(mockStudent);
+    });
+  });
+
+  describe('#createStudent', () => {
+    it('should create a new student and return it', () => {
+      service.createStudent(mockStudent).subscribe(student => {
+        expect(student).toEqual(mockStudent);
+      });
+
+      const req = httpMock.expectOne(studentsUrl);
+      expect(req.request.method).toBe('POST');
+      req.flush(mockStudent);
+    });
+  });
+
+  describe('#editStudentById', () => {
+    it('should update a student by ID and return it', () => {
+      service.editStudentById(mockStudent.id, mockStudent).subscribe(student => {
+        expect(student).toEqual(mockStudent);
+      });
+
+      const req = httpMock.expectOne(`${studentsUrl}/${mockStudent.id}`);
+      expect(req.request.method).toBe('PUT');
+      req.flush(mockStudent);
+    });
+  });
+
+  describe('#deleteStudentById', () => {
+    it('should delete a student by ID and remove related enrollments', () => {
+      service.deleteStudentById(mockStudent.id).subscribe(deletedStudent => {
+        expect(deletedStudent).toEqual(mockStudent);
+      });
+
+      const deleteStudentReq = httpMock.expectOne(`${studentsUrl}/${mockStudent.id}`);
+      expect(deleteStudentReq.request.method).toBe('DELETE');
+      deleteStudentReq.flush(mockStudent);
+
+      const deleteEnrollmentReq = httpMock.expectOne(`${enrollmentsUrl}?studentId=${mockStudent.id}`);
+      expect(deleteEnrollmentReq.request.method).toBe('GET');
+      deleteEnrollmentReq.flush([mockEnrollment]);
+
+      const deleteEnrollmentByIdReq = httpMock.expectOne(`${enrollmentsUrl}/${mockEnrollment.id}`);
+      expect(deleteEnrollmentByIdReq.request.method).toBe('DELETE');
+      deleteEnrollmentByIdReq.flush({});
     });
 
-    const req = httpController.expectOne(`${environment.apiUrl}students`);
-    expect(req.request.method).toBe('GET');
-    req.flush(mockStudents);
-  });
+    it('should delete a student even if no enrollments exist', () => {
+      service.deleteStudentById(mockStudent.id).subscribe(deletedStudent => {
+        expect(deletedStudent).toEqual(mockStudent);
+      });
 
-  it('should retrieve a student by ID', () => {
-    const mockStudents: Student[] = [
-      { id: '1', firstName: 'John', lastName: 'Doe', DOB: new Date('2000-01-01'), email: 'john@example.com', enrolledCourses: [] },
-      { id: '2', firstName: 'Jane', lastName: 'Smith', DOB: new Date('1999-05-15'), email: 'jane@example.com', enrolledCourses: [] },
-    ];
+      const deleteStudentReq = httpMock.expectOne(`${studentsUrl}/${mockStudent.id}`);
+      expect(deleteStudentReq.request.method).toBe('DELETE');
+      deleteStudentReq.flush(mockStudent);
 
-    service.getStudentById('1').subscribe(student => {
-      expect(student).toBeDefined();
-      expect(student?.firstName).toBe('John');
+      const enrollmentsReq = httpMock.expectOne(`${enrollmentsUrl}?studentId=${mockStudent.id}`);
+      expect(enrollmentsReq.request.method).toBe('GET');
+      enrollmentsReq.flush([]);
+
+      httpMock.expectNone(`${enrollmentsUrl}/1`);
     });
-
-    const req = httpController.expectOne(`${environment.apiUrl}students`);
-    req.flush(mockStudents);
   });
-
-  it('should add a new student', () => {
-    const mockStudents: Student[] = [
-      { id: '1', firstName: 'John', lastName: 'Doe', DOB: new Date('2000-01-01'), email: 'john@example.com', enrolledCourses: [] },
-    ];
-
-    const newStudent: Student = { id: '', firstName: 'Jane', lastName: 'Smith', DOB: new Date('1999-05-15'), email: 'jane@example.com', enrolledCourses: [] };
-
-    service.addStudent(newStudent).subscribe(students => {
-      expect(students.length).toBe(2);
-      expect(students[1].firstName).toBe('Jane');
-    });
-
-    const getReq = httpController.expectOne(`${environment.apiUrl}students`);
-    getReq.flush(mockStudents);
-
-    const postReq = httpController.expectOne(`${environment.apiUrl}students`);
-    postReq.flush({ ...newStudent, id: '2' });
-
-    const finalGetReq = httpController.expectOne(`${environment.apiUrl}students`);
-    finalGetReq.flush([...mockStudents, { ...newStudent, id: '2' }]);
-  });
-
-  // it('should delete a student by ID', () => {
-  //   const mockStudents: Student[] = [
-  //     { id: '1', firstName: 'John', lastName: 'Doe', DOB: new Date('2000-01-01'), email: 'john@example.com', enrolledCourses: [] },
-  //     { id: '2', firstName: 'Jane', lastName: 'Smith', DOB: new Date('1999-05-15'), email: 'jane@example.com', enrolledCourses: [] },
-  //   ];
-
-  //   spyOn(enrollmentsService, 'deleteEnrollmentsByStudent').and.returnValue(of([]));
-
-  //   service.deleteStudentById('1').subscribe(students => {
-  //     expect(students.length).toBe(1);
-  //     expect(students[0].firstName).toBe('Jane');
-  //   });
-
-  //   const deleteEnrollmentsReq = httpController.expectOne(`${environment.apiUrl}students/1`);
-  //   deleteEnrollmentsReq.flush(null);
-
-  //   const deleteReq = httpController.expectOne(`${environment.apiUrl}students/1`);
-  //   deleteReq.flush(null);
-
-  //   const getReq = httpController.expectOne(`${environment.apiUrl}students`);
-  //   getReq.flush([mockStudents[1]]);
-  // });
 });

@@ -17,27 +17,21 @@
 
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Fecha de inicio</mat-label>
-      <input formControlName="startDate" matInput [matDatepicker]="picker">
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+      <input formControlName="startDate" matInput [matDatepicker]="pickerStart">
+      <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
+      <mat-datepicker #pickerStart></mat-datepicker>
       <mat-hint>Fecha de la primera clase</mat-hint>
       <mat-error>Seleccione una fecha</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Fecha de fin</mat-label>
-      <input formControlName="endDate" matInput [matDatepicker]="picker">
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <input formControlName="endDate" matInput [matDatepicker]="pickerEnd">
+      <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
       <mat-hint>Fecha de la última clase</mat-hint>
-      <mat-datepicker #picker></mat-datepicker>
+      <mat-datepicker #pickerEnd></mat-datepicker>
       <mat-error>Seleccione una fecha</mat-error>
     </mat-form-field>
-
-    <!-- <mat-form-field class="w-full" appearance="outline">
-      <mat-label>Cupos</mat-label>
-      <input type="number" formControlName="studentQuota" matInput>
-      <mat-hint>Cupo máximo de alumnos para el curso</mat-hint>
-    </mat-form-field> -->
 
   </form>
 </mat-dialog-content>

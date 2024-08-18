@@ -24,9 +24,7 @@ export class CourseDialogComponent {
       comision: [null, Validators.required],
       name: [null, Validators.required],
       startDate: [new Date(), Validators.required],
-      endDate: [new Date(), Validators.required],
-      studentQuota: [100, Validators.required],
-      enrolledStudents: []
+      endDate: [new Date(), Validators.required]
     });
     if (this.course) {
       this.courseForm.patchValue(this.course)

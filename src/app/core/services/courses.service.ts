@@ -39,7 +39,6 @@ export class CoursesService {
     return this.httpClient.put<Course>(`${this.coursesUrl}/${id}`, editedCourse)
   }
 
-
   deleteCourseById(id: string): Observable<Course> {
     return this.httpClient.delete<Course>(`${this.coursesUrl}/${id}`).pipe(
       switchMap(deletedCourse => {
@@ -56,6 +55,5 @@ export class CoursesService {
       })
     )
   }
-  
-}
 
+}

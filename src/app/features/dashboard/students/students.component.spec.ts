@@ -1,145 +1,123 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { of, throwError } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { of } from 'rxjs';
 import { StudentsComponent } from './students.component';
-import { StudentsService } from '../../../core/services/students.service';
-import { EnrollmentsService } from '../../../core/services/enrollments.service';
-import { Student } from '../../../shared/interfaces/student';
-import { Enrollment } from '../../../shared/interfaces/enrollment';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { MockProvider, MockService } from 'ng-mocks';
 import { StudentDialogComponent } from './components/student-dialog/student-dialog.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { StudentsActions } from './store/students.actions';
+import { RootState } from '../../../core/store/store';
+import { Student } from '../../../shared/interfaces/student';
+import { User } from '../../../shared/interfaces/user';
 import { SharedModule } from '../../../shared/shared.module';
-import { StudentsRoutingModule } from './students-routing.module';
 
-xdescribe('StudentsComponent', () => {
+describe('StudentsComponent', () => {
   let component: StudentsComponent;
   let fixture: ComponentFixture<StudentsComponent>;
-  let studentsService: StudentsService;
-  let enrollmentsService: EnrollmentsService;
-  let httpController: HttpTestingController;
-  let matDialog: MatDialog;
+  let store: MockStore<RootState>;
+  let matDialog: jasmine.SpyObj<MatDialog>;
+  let mockStudent: Student;
+  let mockUser: User;
+
+  const initialState = {
+    students: [],
+    studentsError: null,
+    studentsIsLoading: false,
+    authUser: null
+  };
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        CommonModule,
-        StudentsRoutingModule,
-        SharedModule,
-        ReactiveFormsModule,
-        MatIconModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDatepickerModule,
-        MatTableModule,
-        MatTooltipModule,
-        MatProgressSpinnerModule
-      ],
-      declarations: [StudentsComponent, StudentDialogComponent],
-      providers: [
-        MockProvider(StudentsService),
-        MockProvider(EnrollmentsService),
-        MockProvider(MatDialog),
-      ]
-    })
-    .compileComponents();
+    const dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
+    await TestBed.configureTestingModule({
+      imports: [SharedModule],
+      declarations: [StudentsComponent],
+      providers: [
+        provideMockStore({ initialState }),
+        { provide: MatDialog, useValue: dialogSpy }
+      ]
+    }).compileComponents();
+
+    store = TestBed.inject(MockStore);
+    matDialog = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
+
+    mockStudent = {
+      id: 'efgh',
+      firstName: 'Jane',
+      lastName: 'Doe',
+      DOB: new Date(),
+      email: 'jane.doe@example.com'
+    };
+
+    mockUser = {
+      id: 'abcd',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      password: 'password123',
+      role: 'ADMIN',
+      token: 'abcde12345'
+    };
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(StudentsComponent);
     component = fixture.componentInstance;
-    studentsService = TestBed.inject(StudentsService);
-    enrollmentsService = TestBed.inject(EnrollmentsService);
-    httpController = TestBed.inject(HttpTestingController);
-    matDialog = TestBed.inject(MatDialog);
-  });
-
-  afterEach(() => {
-    httpController.verify();
-  });
-
-  it('should load students and enrollments on init', () => {
-    const mockStudents: Student[] = [
-      { id: '1', firstName: 'John', lastName: 'Doe', DOB: new Date('2000-01-01'), email: 'john@example.com', enrolledCourses: [] },
-      { id: '2', firstName: 'Jane', lastName: 'Smith', DOB: new Date('1999-05-15'), email: 'jane@example.com', enrolledCourses: [] },
-    ];
-    const mockEnrollments: Enrollment[] = [
-      { id: "1", studentId: '1', courseId: 'course1' }
-    ];
-
-    spyOn(studentsService, 'getStudents').and.returnValue(of(mockStudents));
-    spyOn(enrollmentsService, 'getEnrollments').and.returnValue(of(mockEnrollments));
-
     fixture.detectChanges();
-
-    expect(component.students).toEqual(mockStudents);
-    expect(component.enrollments).toEqual(mockEnrollments);
-    expect(component.dataSource.length).toBe(2);
-    expect(component.dataSource[0].enrolledCoursesCount).toBe(1);
   });
 
-  it('should add a new student', () => {
-    const newStudent: Student = { id: '3', firstName: 'Mark', lastName: 'Brown', DOB: new Date('1998-08-10'), email: 'mark@example.com', enrolledCourses: [] };
-    const updatedStudents: Student[] = [
-      { id: '1', firstName: 'John', lastName: 'Doe', DOB: new Date('2000-01-01'), email: 'john@example.com', enrolledCourses: [] },
-      { id: '2', firstName: 'Jane', lastName: 'Smith', DOB: new Date('1999-05-15'), email: 'jane@example.com', enrolledCourses: [] },
-      newStudent
-    ];
-
-    spyOn(studentsService, 'addStudent').and.returnValue(of(updatedStudents));
-    spyOn(matDialog, 'open').and.returnValue({ afterClosed: () => of(newStudent) } as any);
-
-    component.newStudent();
-    fixture.detectChanges();
-
-    expect(studentsService.addStudent).toHaveBeenCalledWith(newStudent);
-    expect(component.students).toEqual(updatedStudents);
-    expect(component.dataSource.length).toBe(3);
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('should edit a student', () => {
-    const studentToEdit: Student = { id: '1', firstName: 'John', lastName: 'Doe', DOB: new Date('2000-01-01'), email: 'john@example.com', enrolledCourses: [] };
-    const editedStudent: Student = { ...studentToEdit, firstName: 'Johnny' };
-    const updatedStudents: Student[] = [editedStudent, { id: '2', firstName: 'Jane', lastName: 'Smith', DOB: new Date('1999-05-15'), email: 'jane@example.com', enrolledCourses: [] }];
-
-    spyOn(studentsService, 'addStudent').and.returnValue(of(updatedStudents));
-    spyOn(matDialog, 'open').and.returnValue({ afterClosed: () => of(editedStudent) } as any);
-
-    component.editStudent(studentToEdit);
-    fixture.detectChanges();
-
-    expect(component.students).toEqual(updatedStudents);
-    expect(component.dataSource[0].firstName).toBe('Johnny');
+  it('should dispatch loadStudents action on ngOnInit', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    component.ngOnInit();
+    expect(dispatchSpy).toHaveBeenCalledWith(StudentsActions.loadStudents());
   });
 
-  it('should delete a student by ID', () => {
-    const studentsBeforeDeletion: Student[] = [
-      { id: '1', firstName: 'John', lastName: 'Doe', DOB: new Date('2000-01-01'), email: 'john@example.com', enrolledCourses: [] },
-      { id: '2', firstName: 'Jane', lastName: 'Smith', DOB: new Date('1999-05-15'), email: 'jane@example.com', enrolledCourses: [] }
-    ];
-    const studentsAfterDeletion: Student[] = [
-      { id: '2', firstName: 'Jane', lastName: 'Smith', DOB: new Date('1999-05-15'), email: 'jane@example.com', enrolledCourses: [] }
-    ];
+  it('should dispatch unsetStudentsStore action on ngOnDestroy', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    component.ngOnDestroy();
+    expect(dispatchSpy).toHaveBeenCalledWith(StudentsActions.unsetStudentsStore());
+  });
 
-    spyOn(studentsService, 'deleteStudentById').and.returnValue(of(studentsAfterDeletion));
+  it('should open student dialog and dispatch createStudent if no student is provided', () => {
+    const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
+    matDialog.open.and.returnValue(dialogRefSpy);
+
+    dialogRefSpy.afterClosed.and.returnValue(of(mockStudent));
+    const dispatchSpy = spyOn(store, 'dispatch');
+
+    component.openStudentDialog();
+    expect(matDialog.open).toHaveBeenCalledWith(StudentDialogComponent, { data: undefined });
+    expect(dispatchSpy).toHaveBeenCalledWith(StudentsActions.createStudent({ payload: mockStudent }));
+  });
+
+  it('should open student dialog and dispatch editStudent if student is provided', () => {
+    const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
+    matDialog.open.and.returnValue(dialogRefSpy);
+
+    dialogRefSpy.afterClosed.and.returnValue(of(mockStudent));
+    const dispatchSpy = spyOn(store, 'dispatch');
+
+    component.openStudentDialog(mockStudent);
+    expect(matDialog.open).toHaveBeenCalledWith(StudentDialogComponent, { data: mockStudent });
+    expect(dispatchSpy).toHaveBeenCalledWith(StudentsActions.editStudent({ id: mockStudent.id, payload: mockStudent }));
+  });
+
+  it('should dispatch deleteStudent action on deleteStudentById', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
     spyOn(window, 'confirm').and.returnValue(true);
 
-    component.deleteStudentById('1');
-    fixture.detectChanges();
+    component.deleteStudentById(mockStudent.id);
+    expect(dispatchSpy).toHaveBeenCalledWith(StudentsActions.deleteStudent({ id: mockStudent.id }));
+  });
 
-    expect(studentsService.deleteStudentById).toHaveBeenCalledWith('1');
-    expect(component.students).toEqual(studentsAfterDeletion);
-    expect(component.dataSource.length).toBe(1);
+  it('should not dispatch deleteStudent action if confirm returns false', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    spyOn(window, 'confirm').and.returnValue(false);
+
+    component.deleteStudentById(mockStudent.id);
+    expect(dispatchSpy).not.toHaveBeenCalled();
   });
 });

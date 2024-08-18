@@ -2,11 +2,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { User } from '../../shared/interfaces/user';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { RootState } from '../store/store';
-import { AuthActions} from '../store/auth/auth.actions';
+import { AuthActions } from '../store/auth/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class AuthService {
   logIn(data: { email: string; password: string }) {
     let params = new HttpParams()
       .set('email', data.email);
-  
+
     this.httpClient.get<User[]>(this.usersUrl, { params }).pipe(
       map(response => {
         if (response && response.length > 0) {
@@ -32,7 +32,7 @@ export class AuthService {
           if (authUser.password === data.password) {
             if (authUser.token) {
               localStorage.setItem('token', authUser.token);
-              this.store.dispatch(AuthActions.setAuthUser({payload: authUser}))
+              this.store.dispatch(AuthActions.setAuthUser({ payload: authUser }))
               this.router.navigate(['dashboard', 'home']);
             } else {
               localStorage.removeItem('token');
@@ -73,7 +73,7 @@ export class AuthService {
           const authUser = response[0];
           if (authUser.token) {
             localStorage.setItem('token', authUser.token);
-            this.store.dispatch(AuthActions.setAuthUser({payload: authUser}))
+            this.store.dispatch(AuthActions.setAuthUser({ payload: authUser }))
             return true;
           }
         }

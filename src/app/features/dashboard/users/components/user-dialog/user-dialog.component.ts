@@ -47,4 +47,8 @@ export class UserDialogComponent {
   onSubmit(): void {
     this.matDialogRef.close(this.userForm.value);
   };
+
+  onCancel(): void {
+    this.matDialogRef.close();
+  }
 }

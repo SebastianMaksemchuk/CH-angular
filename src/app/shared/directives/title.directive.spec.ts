@@ -17,7 +17,7 @@ describe('TitleDirective', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
-    fixture.detectChanges(); // Trigger the directive
+    fixture.detectChanges();
 
     element = fixture.nativeElement.querySelector('div');
   });

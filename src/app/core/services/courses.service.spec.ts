@@ -1,102 +1,136 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CoursesService } from './courses.service';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
 import { environment } from '../../../environments/environment';
-import { MockProvider } from 'ng-mocks';
-import { EnrollmentsService } from './enrollments.service';
 import { Course } from '../../shared/interfaces/course';
-import { of } from 'rxjs';
+import { Enrollment } from '../../shared/interfaces/enrollment';
 
 describe('CoursesService', () => {
   let service: CoursesService;
-  let enrollmentsService: EnrollmentsService;
-  let httpController: HttpTestingController;
+  let httpMock: HttpTestingController;
+  const coursesUrl = `${environment.apiUrl}courses`;
+  const enrollmentsUrl = `${environment.apiUrl}enrollments`;
 
-  const coursesUrl = environment.apiUrl + 'courses';
+  let mockCourse: Course;
+  let mockEnrollment: Enrollment;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        CoursesService,
-        MockProvider(EnrollmentsService),
-      ],
+      providers: [CoursesService],
     });
+
     service = TestBed.inject(CoursesService);
-    enrollmentsService = TestBed.inject(EnrollmentsService);
-    httpController = TestBed.inject(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
+
+    mockCourse = {
+      id: 'abcd',
+      comision: 12345,
+      name: 'Test Course',
+      startDate: new Date(),
+      endDate: new Date(),
+    };
+
+    mockEnrollment = {
+      id: 'efgh',
+      courseId: mockCourse.id,
+      studentId: 'ijkl',
+    };
   });
 
   afterEach(() => {
-    httpController.verify();
+    httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch courses', () => {
-    const mockCourses: Course[] = [
-      { id: '1', name: 'Course 1', startDate: new Date(), endDate: new Date(), studentQuota: 30, enrolledStudents: [], comision: 1 },
-    ];
+  describe('#getCourses', () => {
+    it('should return an Observable of Courses with dates parsed', () => {
+      const mockCourses: Course[] = [mockCourse];
+      service.getCourses().subscribe(courses => {
+        expect(courses.length).toBe(1);
+        expect(courses[0].name).toBe(mockCourse.name);
+        expect(courses[0].startDate instanceof Date).toBe(true);
+        expect(courses[0].endDate instanceof Date).toBe(true);
+      });
 
-    service.getCourses().subscribe((courses) => {
-      expect(courses).toEqual(mockCourses);
+      const req = httpMock.expectOne(coursesUrl);
+      expect(req.request.method).toBe('GET');
+      req.flush(mockCourses);
     });
-
-    const req = httpController.expectOne(coursesUrl);
-    expect(req.request.method).toBe('GET');
-    req.flush(mockCourses);
   });
 
-  it('should fetch course by ID', () => {
-    const mockCourse: Course = { id: '1', name: 'Course 1', startDate: new Date(), endDate: new Date(), studentQuota: 30, enrolledStudents: [], comision: 1 };
+  describe('#getCourseById', () => {
+    it('should return a specific course by ID', () => {
+      service.getCourseById(mockCourse.id).subscribe(course => {
+        expect(course).toEqual(mockCourse);
+      });
 
-    service.getCourseById('1').subscribe((course) => {
-      expect(course).toEqual(mockCourse);
+      const req = httpMock.expectOne(`${coursesUrl}/${mockCourse.id}`);
+      expect(req.request.method).toBe('GET');
+      req.flush(mockCourse);
     });
-
-    const req = httpController.expectOne(coursesUrl);
-    expect(req.request.method).toBe('GET');
-    req.flush([mockCourse]);
   });
 
-  it('should add a new course', () => {
-    const newCourse: Course = { id: '2', name: 'Course 2', startDate: new Date(), endDate: new Date(), studentQuota: 30, enrolledStudents: [], comision: 2 };
+  describe('#createCourse', () => {
+    it('should create a new course', () => {
+      service.createCourse(mockCourse).subscribe(course => {
+        expect(course).toEqual(mockCourse);
+      });
 
-    service.addCourse(newCourse).subscribe((courses) => {
-      expect(courses).toContain(newCourse);
+      const req = httpMock.expectOne(coursesUrl);
+      expect(req.request.method).toBe('POST');
+      req.flush(mockCourse);
     });
-
-    const req = httpController.expectOne(coursesUrl);
-    expect(req.request.method).toBe('GET');
-    req.flush([{ id: '1', name: 'Course 1', startDate: new Date(), endDate: new Date(), studentQuota: 30, enrolledStudents: [], comision: 1 }]);
-
-    const reqPost = httpController.expectOne(coursesUrl);
-    expect(reqPost.request.method).toBe('POST');
-    reqPost.flush(newCourse);
-
-    const reqAfterPost = httpController.expectOne(coursesUrl);
-    expect(reqAfterPost.request.method).toBe('GET');
-    reqAfterPost.flush([{ id: '1', name: 'Course 1', startDate: new Date(), endDate: new Date(), studentQuota: 30, enrolledStudents: [], comision: 1 }, newCourse]);
   });
 
-  it('should delete a course by ID', () => {
-    spyOn(enrollmentsService, 'deleteEnrollmentsByCourse').and.returnValue(of([]));
+  describe('#editCourseById', () => {
+    it('should update an existing course by ID', () => {
+      service.editCourseById(mockCourse.id, mockCourse).subscribe(course => {
+        expect(course).toEqual(mockCourse);
+      });
 
-    service.deleteCourseById('1').subscribe((courses) => {
-      expect(courses.length).toBe(0);
+      const req = httpMock.expectOne(`${coursesUrl}/${mockCourse.id}`);
+      expect(req.request.method).toBe('PUT');
+      req.flush(mockCourse);
+    });
+  });
+
+  describe('#deleteCourseById', () => {
+    it('should delete a course by ID and related enrollments', () => {
+      service.deleteCourseById(mockCourse.id).subscribe(deletedCourse => {
+        expect(deletedCourse).toEqual(mockCourse);
+      });
+
+      const deleteCourseReq = httpMock.expectOne(`${coursesUrl}/${mockCourse.id}`);
+      expect(deleteCourseReq.request.method).toBe('DELETE');
+      deleteCourseReq.flush(mockCourse);
+
+      const enrollmentsReq = httpMock.expectOne(`${enrollmentsUrl}?courseId=${mockCourse.id}`);
+      expect(enrollmentsReq.request.method).toBe('GET');
+      enrollmentsReq.flush([mockEnrollment]);
+
+      const deleteEnrollmentReq = httpMock.expectOne(`${enrollmentsUrl}/${mockEnrollment.id}`);
+      expect(deleteEnrollmentReq.request.method).toBe('DELETE');
+      deleteEnrollmentReq.flush({});
     });
 
-    const reqDelete = httpController.expectOne(`${coursesUrl}/1`);
-    expect(reqDelete.request.method).toBe('DELETE');
-    reqDelete.flush({});
+    it('should delete a course even if no enrollments exist', () => {
+      service.deleteCourseById(mockCourse.id).subscribe(deletedCourse => {
+        expect(deletedCourse).toEqual(mockCourse);
+      });
 
-    const reqAfterDelete = httpController.expectOne(coursesUrl);
-    expect(reqAfterDelete.request.method).toBe('GET');
-    reqAfterDelete.flush([]);
+      const deleteCourseReq = httpMock.expectOne(`${coursesUrl}/${mockCourse.id}`);
+      expect(deleteCourseReq.request.method).toBe('DELETE');
+      deleteCourseReq.flush(mockCourse);
+
+      const enrollmentsReq = httpMock.expectOne(`${enrollmentsUrl}?courseId=${mockCourse.id}`);
+      expect(enrollmentsReq.request.method).toBe('GET');
+      enrollmentsReq.flush([]);
+
+      httpMock.expectNone(`${enrollmentsUrl}/1`);
+    });
   });
 });

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { concatMap, delay, forkJoin, map, Observable, switchMap } from 'rxjs';
+import { forkJoin, map, Observable, switchMap } from 'rxjs';
 import { Student } from '../../shared/interfaces/student';
-import { EnrollmentsService } from './enrollments.service';
 import { environment } from '../../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Enrollment } from '../../shared/interfaces/enrollment';
 
 @Injectable({
@@ -56,4 +55,3 @@ export class StudentsService {
   }
 
 }
-

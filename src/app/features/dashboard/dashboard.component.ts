@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { User } from '../../shared/interfaces/user';
 import { Store } from '@ngrx/store';
 import { RootState } from '../../core/store/store';
@@ -22,7 +22,6 @@ export class DashboardComponent {
     private store: Store<RootState>) {
     this.authUser$ = this.store.select(selectAuthUser)
   }
-
 
   logOut() {
     this.authService.logOut();

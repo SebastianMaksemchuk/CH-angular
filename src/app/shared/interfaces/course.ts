@@ -3,7 +3,5 @@ export interface Course {
   comision: number;
   name: string;
   startDate: Date;
-  endDate: Date;
-  studentQuota: number;
-  enrolledStudents: any;
+  endDate: Date
 };

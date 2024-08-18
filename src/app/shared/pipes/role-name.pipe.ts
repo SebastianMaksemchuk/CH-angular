@@ -4,6 +4,7 @@ import { UserRole } from '../interfaces/user';
 @Pipe({
   name: 'roleName'
 })
+
 export class RoleNamePipe implements PipeTransform {
 
   transform(value: UserRole | undefined): string {
