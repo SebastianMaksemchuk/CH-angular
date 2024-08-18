@@ -6,7 +6,7 @@ import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { RootState } from '../store/store';
-import { setAuthUser, unsetAuthUser } from '../store/auth/auth.actions';
+import { AuthActions} from '../store/auth/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class AuthService {
           if (authUser.password === data.password) {
             if (authUser.token) {
               localStorage.setItem('token', authUser.token);
-              this.store.dispatch(setAuthUser({payload: authUser}))
+              this.store.dispatch(AuthActions.setAuthUser({payload: authUser}))
               this.router.navigate(['dashboard', 'home']);
             } else {
               localStorage.removeItem('token');
@@ -57,7 +57,7 @@ export class AuthService {
 
   logOut() {
     localStorage.removeItem('token');
-    this.store.dispatch(unsetAuthUser());
+    this.store.dispatch(AuthActions.unsetAuthUser());
     this.router.navigate(['auth', 'login']);
   }
 
@@ -73,7 +73,7 @@ export class AuthService {
           const authUser = response[0];
           if (authUser.token) {
             localStorage.setItem('token', authUser.token);
-            this.store.dispatch(setAuthUser({payload: authUser}))
+            this.store.dispatch(AuthActions.setAuthUser({payload: authUser}))
             return true;
           }
         }

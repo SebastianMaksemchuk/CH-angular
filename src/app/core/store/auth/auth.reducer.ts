@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { User } from "../../../shared/interfaces/user";
-import { setAuthUser, unsetAuthUser } from "./auth.actions";
+import { AuthActions } from "./auth.actions";
 
 export const authFeatureName = 'auth'
 
@@ -14,11 +14,6 @@ const initialState: AuthState = {
 
 export const authReducer = createReducer(
   initialState,
-  on(setAuthUser, (state, action) => {
-    return {
-      ...state,
-      authUser: action.payload,
-    };
-  }),
-  on(unsetAuthUser, ()=> initialState)
+  on(AuthActions.setAuthUser, (state, action) => { return { ...state, authUser: action.payload, }; }),
+  on(AuthActions.unsetAuthUser, () => initialState)
 )

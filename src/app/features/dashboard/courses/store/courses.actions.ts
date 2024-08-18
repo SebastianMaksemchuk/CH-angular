@@ -4,21 +4,21 @@ import { Course } from '../../../../shared/interfaces/course';
 export const CoursesActions = createActionGroup({
   source: 'Courses',
   events: {
-    'LoadCourses': emptyProps(),
-    'LoadCourses Success': props<{ data: Course[] }>(),
-    'LoadCourses Failure': props<{ error: unknown }>(),
-    'CreateCourse': props<{ payload: Course }>(),
-    'CreateCourse Success': props<{ data: Course }>(),
-    'CreateCourse Failure': props<{ error: unknown }>(),
-    'EditCourse': props<{ id: string, payload: Course }>(),
-    'EditCourse Success': props<{ data: Course }>(),
-    'EditCourse Failure': props<{ error: unknown }>(),
-    'DeleteCourse': props<{ id: string }>(),
-    'DeleteCourse Success': props<{ data: Course }>(),
-    'DeleteCourse Failure': props<{ error: unknown }>(),
-    'LoadCourse By Id': props<{ id: string }>(),
-    'LoadCourse By Id Success': props<{ data: Course }>(),
-    'LoadCourse By Id Failure': props<{ error: unknown }>(),
-    'UnsetCourses Store': emptyProps()
+    'Load Courses': emptyProps(),
+    'Load Courses Success': props<{ data: Course[] }>(),
+    'Load Courses Failure': props<{ error: unknown }>(),
+    'Create Course': props<{ payload: Course }>(),
+    'Create Course Success': props<{ data: Course }>(),
+    'Create Course Failure': props<{ error: unknown }>(),
+    'Edit Course': props<{ id: string, payload: Course }>(),
+    'Edit Course Success': props<{ data: Course }>(),
+    'Edit Course Failure': props<{ error: unknown }>(),
+    'Delete Course': props<{ id: string }>(),
+    'Delete Course Success': props<{ data: Course }>(),
+    'Delete Course Failure': props<{ error: unknown }>(),
+    'Load Course By Id': props<{ id: string }>(),
+    'Load Course By Id Success': props<{ data: Course }>(),
+    'Load Course By Id Failure': props<{ error: unknown }>(),
+    'Unset Courses Store': emptyProps()
   }
 });
