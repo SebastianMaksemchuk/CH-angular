@@ -72,11 +72,6 @@ describe('DashboardComponent', () => {
     expect(authService.logOut).toHaveBeenCalled();
   });
 
-  it('should show alert when changeTheme is called', () => {
-    spyOn(window, 'alert');
-    component.changeTheme();
-    expect(window.alert).toHaveBeenCalledWith('modo oscuro aún no implementado');
-  });
 
   it('should have correct initial state', () => {
     expect(component.showFiller).toBeFalse();

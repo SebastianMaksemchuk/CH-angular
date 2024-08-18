@@ -23,9 +23,6 @@ export class DashboardComponent {
     this.authUser$ = this.store.select(selectAuthUser)
   }
 
-  changeTheme() {
-    alert('modo oscuro aún no implementado');
-  };
 
   logOut() {
     this.authService.logOut();

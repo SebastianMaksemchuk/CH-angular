@@ -4,7 +4,7 @@
 <p>Ocurrió un error inesperado.</p>
 <button mat-flat-button (click)="reloadPage()">Recargar</button>
 } @else {
-<button mat-flat-button (click)="openStudentDialog()"><mat-icon>add</mat-icon>Ingresar un nuevo alumno</button>
+<button *ngIf="(authUser$ | async)?.role === 'ADMIN'" mat-flat-button (click)="openStudentDialog()"><mat-icon>add</mat-icon>Ingresar un nuevo alumno</button>
 
 <table mat-table [dataSource]="students$" class="mat-elevation-z8">
 

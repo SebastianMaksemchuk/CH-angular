@@ -9,6 +9,8 @@ import { Store } from '@ngrx/store';
 import { StudentsActions } from './store/students.actions';
 import { selectStudents, selectStudentsError, selectStudentsIsLoading } from './store/students.selectors';
 import { RootState } from '../../../core/store/store';
+import { User } from '../../../shared/interfaces/user';
+import { selectAuthUser } from '../../../core/store/auth/auth.selectors';
 
 @Component({
   selector: 'cha-students',
@@ -17,6 +19,8 @@ import { RootState } from '../../../core/store/store';
 })
 
 export class StudentsComponent implements OnInit, OnDestroy {
+  authUser$: Observable<User | null>
+
   displayedColumns: string[] = ['name', 'email', 'details', 'edit', 'delete'];
 
   students$: Observable<Student[]>;
@@ -27,6 +31,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
     private store: Store<RootState>,
     private matDialog: MatDialog,
   ) {
+    this.authUser$ = this.store.select(selectAuthUser);
     this.students$ = this.store.select(selectStudents);
     this.isLoading$ = this.store.select(selectStudentsIsLoading);
     this.error$ = this.store.select(selectStudentsError);
