@@ -14,7 +14,7 @@ import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 
 export class DashboardComponent {
   showFiller = false;
-  main: string = "start";
+  main: string = "home";
   authUser$: Observable<User | null>;
 
   constructor(

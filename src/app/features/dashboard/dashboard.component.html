@@ -7,6 +7,7 @@
       <a mat-list-item (click)="main='students'" routerLink="students" routerLinkActive #studentsRouter="routerLinkActive" [activated]="studentsRouter.isActive"><mat-icon>group</mat-icon> Alumnos</a>
       <a mat-list-item (click)="main='enrollments'" routerLink="enrollments" routerLinkActive #enrollmentsRouter="routerLinkActive" [activated]="enrollmentsRouter.isActive"><mat-icon>edit_calendar</mat-icon> Inscripciones</a>
       <a *ngIf="(authUser$ | async)?.role === 'ADMIN'" mat-list-item (click)="main='users'" routerLink="users" routerLinkActive #usersRouter="routerLinkActive" [activated]="usersRouter.isActive"><mat-icon>group</mat-icon> Usuarios</a>
+      <a mat-list-item (click)="logOut()"><mat-icon>logout</mat-icon> Cerrar sesión</a>
     </mat-nav-list>
   </mat-drawer>
 
@@ -24,6 +25,8 @@
         <span *ngSwitchCase="'users'">Usuarios</span>
       </span>
 
+      <span class="spacer"></span>
+      <span chaTitle>Proyecto Final Angular</span>
       <span class="spacer"></span>
 
       @if (authUser$ | async; as user) {
