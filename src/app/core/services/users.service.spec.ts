@@ -25,6 +25,8 @@ describe('UsersService', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@example.com',
+      phone: '',
+      adress: '',
       password: 'Password123!',
       role: 'TEACHER',
       token: 'abcde12345'

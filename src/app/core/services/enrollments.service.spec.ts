@@ -24,6 +24,8 @@ describe('EnrollmentsService', () => {
       id: 'abcd',
       courseId: 'fghi',
       studentId: 'ejkl',
+      enrollmentDate: new Date(),
+      enrolledByUserId: 'wxyz'
     };
   });
 

@@ -53,6 +53,8 @@ describe('CoursesComponent', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@example.com',
+      phone: '',
+      adress: '',
       password: 'password123',
       role: 'ADMIN',
       token: 'abcde12345'

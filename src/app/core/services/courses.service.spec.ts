@@ -35,6 +35,8 @@ describe('CoursesService', () => {
       id: 'efgh',
       courseId: mockCourse.id,
       studentId: 'ijkl',
+      enrollmentDate: new Date(),
+      enrolledByUserId: 'wxyz'
     };
   });
 

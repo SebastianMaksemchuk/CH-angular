@@ -20,12 +20,14 @@ describe('AuthService', () => {
 
     mockUser = {
       id: 'abcd',
-      email: 'test@example.com',
-      password: 'Password123!',
-      token: 'fakeToken',
       firstName: 'John',
       lastName: 'Doe',
-      role: 'ADMIN'
+      email: 'test@example.com',
+      phone: '',
+      adress: '',
+      password: 'Password123!',
+      role: 'ADMIN',
+      token: 'fakeToken'
     };
 
     TestBed.configureTestingModule({

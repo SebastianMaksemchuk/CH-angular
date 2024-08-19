@@ -28,7 +28,19 @@ describe('EnrollmentsComponent', () => {
     enrollmentsIsLoading: false,
     courses: [],
     students: [],
-    authUser: null
+    auth: {
+      authUser: {
+        id: 'wxyz',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        adress: '',
+        password: '',
+        role: '',
+        token: ''
+      }
+    }
   };
 
   beforeEach(async () => {
@@ -48,8 +60,10 @@ describe('EnrollmentsComponent', () => {
 
     mockEnrollment = {
       id: 'ijkl',
-      courseId: 'abcd',
-      studentId: 'efgh'
+      courseId: 'efgh',
+      studentId: 'abcd',
+      enrollmentDate: new Date(),
+      enrolledByUserId: 'wxyz'
     };
 
     mockStudent = {
@@ -97,8 +111,13 @@ describe('EnrollmentsComponent', () => {
     const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
     matDialog.open.and.returnValue(dialogRefSpy);
 
-    dialogRefSpy.afterClosed.and.returnValue(of(mockEnrollment));
+    dialogRefSpy.afterClosed.and.returnValue(of({
+      id: mockEnrollment.id,
+      courseId: mockEnrollment.courseId,
+      studentId: mockEnrollment.studentId
+    }));
     const dispatchSpy = spyOn(store, 'dispatch');
+    const authUserId = 'wxyz';
 
     component.openEnrollmentDialog();
     expect(matDialog.open).toHaveBeenCalledWith(EnrollmentDialogComponent, {
@@ -107,7 +126,21 @@ describe('EnrollmentsComponent', () => {
         students$: component.students$
       }
     });
-    expect(dispatchSpy).toHaveBeenCalledWith(EnrollmentsActions.createEnrollment({ payload: mockEnrollment }));
+
+    component.authUserId$.subscribe(userId => {
+      const expectedEnrollment = {
+        id: mockEnrollment.id,
+        courseId: mockEnrollment.courseId,
+        studentId: mockEnrollment.studentId,
+        enrollmentDate: mockEnrollment.enrollmentDate,
+        enrolledByUserId: authUserId
+      };
+      expect(dispatchSpy).toHaveBeenCalledWith(jasmine.objectContaining({
+        payload: jasmine.objectContaining({
+          enrollmentDate: jasmine.any(Date)
+        })
+      }));
+    });
   });
 
   it('should dispatch deleteEnrollment action on deleteEnrollmentById', () => {

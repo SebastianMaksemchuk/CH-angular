@@ -22,6 +22,8 @@ describe('UserDialogComponent', () => {
       lastName: 'Doe',
       email: 'john.doe@example.com',
       password: 'Password1!',
+      phone: '',
+      adress: '',
       role: 'TEACHER',
       token: 'token12345'
     };
@@ -56,6 +58,8 @@ describe('UserDialogComponent', () => {
     expect(component.userForm.contains('firstName')).toBeTrue();
     expect(component.userForm.contains('lastName')).toBeTrue();
     expect(component.userForm.contains('email')).toBeTrue();
+    expect(component.userForm.contains('phone')).toBeTrue();
+    expect(component.userForm.contains('adress')).toBeTrue();
     expect(component.userForm.contains('password')).toBeTrue();
     expect(component.userForm.contains('role')).toBeTrue();
   });
@@ -87,6 +91,15 @@ describe('UserDialogComponent', () => {
     expect(control!.valid).toBeTrue();
   });
 
+  it('should validate phone control', () => {
+    const control = component.userForm.get('phone');
+    expect(control).toBeTruthy();
+    control!.setValue('invalid-phone');
+    expect(control!.valid).toBeFalse();
+    control!.setValue('1112345678');
+    expect(control!.valid).toBeTrue();
+  });
+
   it('should validate password control with custom validator', () => {
     const control = component.userForm.get('password');
     expect(control).toBeTruthy();
@@ -106,6 +119,8 @@ describe('UserDialogComponent', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@example.com',
+      phone: '',
+      adress: '',
       password: 'Password1!',
       role: 'TEACHER',
       token: 'token12345'
@@ -116,6 +131,8 @@ describe('UserDialogComponent', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@example.com',
+      phone: '',
+      adress: '',
       password: 'Password1!',
       role: 'TEACHER',
       token: 'token12345'

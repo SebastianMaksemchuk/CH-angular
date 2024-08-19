@@ -34,7 +34,9 @@ describe('StudentsService', () => {
     mockEnrollment = {
       id: 'efgh',
       courseId: 'ijkl',
-      studentId: mockStudent.id
+      studentId: mockStudent.id,
+      enrollmentDate: new Date(),
+      enrolledByUserId: 'wxyz'
     } 
   });
 

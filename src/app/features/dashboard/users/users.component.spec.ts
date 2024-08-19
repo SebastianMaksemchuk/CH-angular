@@ -43,6 +43,8 @@ describe('UsersComponent', () => {
       lastName: 'Doe',
       email: 'john.doe@example.com',
       password: 'password123',
+      phone: '',
+      adress: '',
       role: 'TEACHER',
       token: 'abcde12345'
     };
