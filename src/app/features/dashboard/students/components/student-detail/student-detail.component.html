@@ -1,10 +1,12 @@
 @if (isLoading$ |async ) {
-  <mat-spinner></mat-spinner>
-  } @else if (error$ | async) {
-    <p>Ocurrió un error inesperado.</p>
-    <button mat-flat-button (click)="reloadPage()">Recargar</button>
-  } @else {
+<mat-spinner></mat-spinner>
+} @else if (error$ | async) {
+<p>Ocurrió un error inesperado.</p>
+<button mat-flat-button (click)="reloadPage()">Recargar</button>
+} @else {
 <div>
+  <div class="back-button-container"><button mat-button [routerLink]="['/dashboard/students']">Volver a lista de alumnos</button>
+  </div>
   <h2>Detalles del Alumno: {{ (selectedStudent$ | async) | fullName}}</h2>
   <p><strong>Correo electrónico:</strong> {{ (selectedStudent$ | async)?.email }}</p>
   <p><strong>Fecha de nacimiento:</strong> {{ (selectedStudent$ | async)?.DOB| date: 'dd/MM/YYYY' }}</p>
@@ -14,8 +16,7 @@
       {{ enrollment.course.comision}} - {{ enrollment.course.name}}
       <button mat-button (click)="deleteEnrollmentById(enrollment.id)"><mat-icon>delete</mat-icon></button>
     </li>
-    </ul>
+  </ul>
 </div>
 
-<button mat-button [routerLink]="['/dashboard/students']">Volver a lista de alumnos</button>
 }

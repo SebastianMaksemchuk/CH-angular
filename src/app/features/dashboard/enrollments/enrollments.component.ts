@@ -31,7 +31,7 @@ export class EnrollmentsComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   error$: Observable<any>;
   courses$: Observable<Course[]>;
-  students$: Observable<Student[]>
+  students$: Observable<Student[]>;
 
   constructor(
     private store: Store<RootState>,
@@ -46,17 +46,19 @@ export class EnrollmentsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(EnrollmentsActions.loadEnrollments())
-    this.store.dispatch(CoursesActions.loadCourses())
-    this.store.dispatch(StudentsActions.loadStudents())
+    this.store.dispatch(EnrollmentsActions.loadEnrollments());
+    this.store.dispatch(CoursesActions.loadCourses());
+    this.store.dispatch(StudentsActions.loadStudents());
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(EnrollmentsActions.unsetEnrollmentsStore())
+    this.store.dispatch(EnrollmentsActions.unsetEnrollmentsStore());
+    this.store.dispatch(CoursesActions.unsetCoursesStore());
+    this.store.dispatch(StudentsActions.unsetStudentsStore());
   }
 
   reloadPage(): void {
-    location.reload
+    location.reload;
   }
 
   openEnrollmentDialog(): void {

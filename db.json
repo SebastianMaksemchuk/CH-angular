@@ -43,6 +43,28 @@
       "password": "Iara5678?",
       "role": "TEACHER",
       "token": "njLuQs7tdw"
+    },
+    {
+      "id": "a97f",
+      "firstName": "Profesor No",
+      "lastName": "Asignado",
+      "email": "help@coder.com.ar",
+      "phone": null,
+      "adress": null,
+      "password": "Password123!",
+      "role": "TEACHER",
+      "token": "ogaMGsPhUl"
+    },
+    {
+      "id": "a2da",
+      "firstName": "Sebastian",
+      "lastName": "Maksemchuk",
+      "email": "sebastian@netio.com.ar",
+      "phone": null,
+      "adress": null,
+      "password": "Pass123!",
+      "role": "ADMIN",
+      "token": "cC76rw3jko"
     }
   ],
   "courses": [

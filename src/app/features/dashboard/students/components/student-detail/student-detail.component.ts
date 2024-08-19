@@ -46,8 +46,7 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
         enrollments.filter(enrollment => enrollment.studentId === selectedStudent?.id)
       )
     );
-
-  }
+  };
 
   ngOnInit(): void {
     this.store.dispatch(StudentsActions.loadStudents());
@@ -57,15 +56,16 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.store.dispatch(StudentsActions.unsetStudentsStore());
-  }
+    this.store.dispatch(EnrollmentsActions.unsetEnrollmentsStore());
+  };
 
   reloadPage() {
-    location.reload()
-  }
+    location.reload();
+  };
 
   deleteEnrollmentById(id: string) {
     if (confirm('¿Está seguro que desea elminar esta inscripción?')) {
       this.store.dispatch(EnrollmentsActions.deleteEnrollment({ id: id }))
     }
-  }
+  };
 }

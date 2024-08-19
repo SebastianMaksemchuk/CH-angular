@@ -1,17 +1,16 @@
 @if (isLoading$ |async ) {
-  <mat-spinner></mat-spinner>
-  } @else if (error$ | async) {
-    <p>Ocurrió un error inesperado.</p>
-    <button mat-flat-button (click)="reloadPage()">Recargar</button>
-  } @else {
-    <div>
-      <h2>Detalles del Usuario:</h2>
-      <p><strong>Nombre completo:</strong> {{ (selectedUser$ | async) | fullName}}</p>  
-      <p><strong>Correo electrónico:</strong> {{ (selectedUser$ | async)?.email }}</p>
-      <p><strong>Teléfono:</strong> {{ (selectedUser$ | async)?.phone }}</p>
-      <p><strong>Dirección:</strong> {{ (selectedUser$ | async)?.adress }}</p>
-      <p><strong>Rol:</strong> {{ (selectedUser$ | async)?.role | roleName }}</p>
-    </div>
-    
-    <button mat-button [routerLink]="['/dashboard/users']">Volver a lista de Usuarios</button>
-  }  
+<mat-spinner></mat-spinner>
+} @else if (error$ | async) {
+<p>Ocurrió un error inesperado.</p>
+<button mat-flat-button (click)="reloadPage()">Recargar</button>
+} @else {
+<div>
+  <div class="back-button-container"> <button mat-button [routerLink]="['/dashboard/users']">Volver a lista de Usuarios</button> </div>
+  <h2>Detalles del Usuario:</h2>
+  <p><strong>Nombre completo:</strong> {{ (selectedUser$ | async) | fullName}}</p>
+  <p><strong>Correo electrónico:</strong> {{ (selectedUser$ | async)?.email }}</p>
+  <p><strong>Teléfono:</strong> {{ (selectedUser$ | async)?.phone }}</p>
+  <p><strong>Dirección:</strong> {{ (selectedUser$ | async)?.adress }}</p>
+  <p><strong>Rol:</strong> {{ (selectedUser$ | async)?.role | roleName }}</p>
+</div>
+}

@@ -25,7 +25,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
   students$: Observable<Student[]>;
   isLoading$: Observable<boolean>;
-  error$: Observable<any>
+  error$: Observable<any>;
 
   constructor(
     private store: Store<RootState>,
@@ -35,20 +35,20 @@ export class StudentsComponent implements OnInit, OnDestroy {
     this.students$ = this.store.select(selectStudents);
     this.isLoading$ = this.store.select(selectStudentsIsLoading);
     this.error$ = this.store.select(selectStudentsError);
-  }
+  };
 
 
   ngOnInit(): void {
-    this.store.dispatch(StudentsActions.loadStudents())
-  }
+    this.store.dispatch(StudentsActions.loadStudents());
+  };
 
   ngOnDestroy(): void {
-    this.store.dispatch(StudentsActions.unsetStudentsStore())
-  }
+    this.store.dispatch(StudentsActions.unsetStudentsStore());
+  };
 
   reloadPage(): void {
-    location.reload()
-  }
+    location.reload();
+  };
 
   openStudentDialog(student?: Student): void {
     this.matDialog

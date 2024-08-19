@@ -27,23 +27,19 @@ export class UserDetailComponent implements OnInit, OnDestroy{
     this.isLoading$ = this.store.select(selectUsersIsLoading)
     this.error$ = this.store.select(selectUsersError)
     this.selectedUser$ = this.store.select(selectSelectedUser)
-  }
+  };
 
   ngOnInit(): void {
-    this.store.dispatch(
-      UsersActions.loadUsers()
-    );
+    this.store.dispatch(UsersActions.loadUsers());
     this.store.dispatch(UsersActions.loadUserById({id: this.route.snapshot.paramMap.get('id') ?? ""}))
-  }
+  };
 
   ngOnDestroy(): void {
-    this.store.dispatch(
-      UsersActions.unsetUsersState()
-    );
-  }
+    this.store.dispatch(UsersActions.unsetUsersState());
+  };
 
   reloadPage() {
-    location.reload()
-  }
+    location.reload();
+  };
 
 }

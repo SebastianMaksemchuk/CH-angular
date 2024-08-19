@@ -49,8 +49,8 @@ export class CoursesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-this.store.dispatch(CoursesActions.unsetCoursesStore())
-this.store.dispatch(UsersActions.unsetUsersState())
+    this.store.dispatch(CoursesActions.unsetCoursesStore())
+    this.store.dispatch(UsersActions.unsetUsersState())
   }
 
   reloadPage(): void {
@@ -59,21 +59,21 @@ this.store.dispatch(UsersActions.unsetUsersState())
 
   openCourseDialog(course?: Course): void {
     this.matDialog
-    .open(CourseDialogComponent, {data: {course: course,teachers$: this.teachers$}})
-    .afterClosed()
-    .subscribe(result => {
-      if (!course && result) {
-        this.store.dispatch(CoursesActions.createCourse({payload: result}))
-      };
-      if (course && result) {
-        this.store.dispatch(CoursesActions.editCourse({id: result.id, payload: result}))
-      }
-    })
+      .open(CourseDialogComponent, { data: { course: course, teachers$: this.teachers$ } })
+      .afterClosed()
+      .subscribe(result => {
+        if (!course && result) {
+          this.store.dispatch(CoursesActions.createCourse({ payload: result }))
+        };
+        if (course && result) {
+          this.store.dispatch(CoursesActions.editCourse({ id: result.id, payload: result }))
+        }
+      })
   }
 
   deleteCourseById(id: string): void {
     if (confirm('¿Está seguro que esea elminiar este curso?')) {
-      this.store.dispatch(CoursesActions.deleteCourse({id:id}))
+      this.store.dispatch(CoursesActions.deleteCourse({ id: id }))
     }
   }
 }
