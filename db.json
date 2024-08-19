@@ -79,11 +79,11 @@
     },
     {
       "id": "cd7b",
-      "firstName": "Profesor de",
-      "lastName": "Prueba",
+      "firstName": "Prueba de",
+      "lastName": "edicion",
       "email": "prueba@prueba.com",
-      "phone": null,
-      "adress": null,
+      "phone": "+54 11-1234-5678",
+      "adress": "Av. Prueba 12345",
       "password": "Pass123!",
       "role": "ADMIN",
       "token": "eb8H39ccej"

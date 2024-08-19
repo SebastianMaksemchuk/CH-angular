@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { forkJoin, map, Observable, switchMap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { Student } from '../../shared/interfaces/student';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -42,6 +42,9 @@ export class StudentsService {
       switchMap(deletedStudent => {
         return this.httpClient.get<Enrollment[]>(`${this.enrollmentsUrl}?studentId=${id}`).pipe(
           switchMap(enrollments => {
+            if (enrollments.length === 0) {
+              return of(deletedStudent);
+            }
             const deleteRequests = enrollments.map(enrollment =>
               this.httpClient.delete(`${this.enrollmentsUrl}/${enrollment.id}`)
             );
