@@ -20,8 +20,10 @@ export class UserDialogComponent {
     this.userForm = this.formBuilder.group({
       id: [],
       firstName: [null, { validators: [Validators.required, Validators.pattern(`^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+([ '-][a-zA-ZáéíóúÁÉÍÓÚñÑ]+)*$`)], updateOn: 'blur' }],
-      lastName: [null, Validators.pattern(`^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+([ '-][a-zA-ZáéíóúÁÉÍÓÚñÑ]+)*$`)],
+      lastName: [null, { validators: [Validators.required, Validators.pattern(`^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+([ '-][a-zA-ZáéíóúÁÉÍÓÚñÑ]+)*$`)], updateOn: 'blur' }],
       email: [null, { validators: [Validators.required, Validators.email], updateOn: 'blur' }],
+      phone: [null, { validators: [Validators.pattern(`^\\+?[0-9\\s-]{7,15}$`)], updateOn: 'blur' }],
+      adress: [null, ],
       password: [null, { validators: [Validators.required, this.passwordValidator()], updateOn: 'blur' }],
       role: ['TEACHER', Validators.required],
       token: []

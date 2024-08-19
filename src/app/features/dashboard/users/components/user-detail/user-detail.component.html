@@ -5,8 +5,11 @@
     <button mat-flat-button (click)="reloadPage()">Recargar</button>
   } @else {
     <div>
-      <h2>Detalles del Usuario: {{ (selectedUser$ | async) | fullName}}</h2>
+      <h2>Detalles del Usuario:</h2>
+      <p><strong>Nombre completo:</strong> {{ (selectedUser$ | async) | fullName}}</p>  
       <p><strong>Correo electrónico:</strong> {{ (selectedUser$ | async)?.email }}</p>
+      <p><strong>Teléfono:</strong> {{ (selectedUser$ | async)?.phone }}</p>
+      <p><strong>Dirección:</strong> {{ (selectedUser$ | async)?.adress }}</p>
       <p><strong>Rol:</strong> {{ (selectedUser$ | async)?.role | roleName }}</p>
     </div>
     

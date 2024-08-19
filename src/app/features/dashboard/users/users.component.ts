@@ -49,7 +49,7 @@ export class UsersComponent implements OnInit, OnDestroy {
         if (!user && result) {
           this.store.dispatch(UsersActions.createUser({ payload: result }))
         };
-        if (user) {
+        if (user && result) {
           this.store.dispatch(UsersActions.editUser({ id: result.id, payload: result }))
         };
       })

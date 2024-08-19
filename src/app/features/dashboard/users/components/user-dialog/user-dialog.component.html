@@ -25,6 +25,17 @@
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Teléfono (opcional)</mat-label>
+      <input formControlName="phone" matInput>
+      <mat-error *ngIf="userForm.get('phone')?.hasError('pattern')">Ingrese un número de teléfono válido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Dirección (opcional)</mat-label>
+      <input formControlName="adress" matInput>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
       <mat-label>Rol</mat-label>
       <mat-select matNativeControl formControlName="role">
         <mat-option *ngFor="let role of userRoles" [value]="role">

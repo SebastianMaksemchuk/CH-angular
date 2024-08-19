@@ -14,9 +14,22 @@
       "firstName": "Josue",
       "lastName": "Baez",
       "email": "jbaez@mail.com",
+      "phone": "011-9876-5432",
+      "adress": null,
       "password": "Jbaez123!",
       "role": "TEACHER",
       "token": "qrb19Buq2L"
+    },
+    {
+      "id": "0293",
+      "firstName": "Freddy",
+      "lastName": "Lezama",
+      "email": "freddylezzama@codehouse.com.ar",
+      "phone": "+54911 1234 5678",
+      "adress": "Calle Falsa 123",
+      "password": "Freddy1234!",
+      "role": "TEACHER",
+      "token": "1qOMblqTjl"
     }
   ],
   "courses": [
