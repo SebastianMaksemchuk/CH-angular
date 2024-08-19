@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { filter, map, Observable, switchMap, take } from 'rxjs';
 import { Enrollment } from '../../../shared/interfaces/enrollment';
 import { Student } from '../../../shared/interfaces/student';
 import { Course } from '../../../shared/interfaces/course';
@@ -67,19 +67,23 @@ export class EnrollmentsComponent implements OnInit, OnDestroy {
         students$: this.students$
       }
     })
-      .afterClosed()
-      .subscribe(result => {
-        if (result) {
-          this.authUserId$.subscribe((userId) => {
-            result = {
-              ...result,
-              enrollmentDate: new Date(),
-              enrolledByUserId: userId
-            };
-            this.store.dispatch(EnrollmentsActions.createEnrollment({ payload: result }));
-          });
-        }
-      });
+    .afterClosed()
+    .pipe(
+      filter(result => !!result),
+      switchMap(result => 
+        this.authUserId$.pipe(
+          take(1),
+          map(userId => ({
+            ...result,
+            enrollmentDate: new Date(),
+            enrolledByUserId: userId
+          }))
+        )
+      )
+    )
+    .subscribe(payload => {
+      this.store.dispatch(EnrollmentsActions.createEnrollment({ payload }));
+    });
   }
 
   deleteEnrollmentById(id: string) {

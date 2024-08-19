@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { concatMap, Observable, of } from 'rxjs';
+import { concatMap, Observable, of, switchMap } from 'rxjs';
 import { Enrollment } from '../../shared/interfaces/enrollment';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -20,7 +20,7 @@ export class EnrollmentsService {
 
   createEnrollment(payload: Enrollment): Observable<Enrollment> {
     return this.getEnrollments().pipe(
-      concatMap((enrollments) => {
+      switchMap((enrollments) => {
         const existingEnrollment = enrollments.find(enrollment => 
           enrollment.studentId === payload.studentId && enrollment.courseId === payload.courseId
         );
@@ -31,7 +31,7 @@ export class EnrollmentsService {
         } else {
           const { id, ...enrollment } = payload;
           return this.httpClient.post<Enrollment>(this.enrollmentsUrl, enrollment).pipe(
-            concatMap((newEnrollment) => this.httpClient.get<Enrollment>(`${this.enrollmentsUrl}/${newEnrollment.id}?_embed=student&_embed=course`))
+            switchMap((newEnrollment) => this.httpClient.get<Enrollment>(`${this.enrollmentsUrl}/${newEnrollment.id}?_embed=student&_embed=course`))
           );
         }
       })

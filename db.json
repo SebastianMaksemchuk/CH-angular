@@ -240,5 +240,173 @@
     }
   ],
   "enrollments": [
+    {
+      "id": "f1ea",
+      "studentId": "iiii",
+      "courseId": "aaaa",
+      "enrollmentDate": "2024-08-19T16:12:09.694Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "6026",
+      "studentId": "iiii",
+      "courseId": "bbbb",
+      "enrollmentDate": "2024-08-19T16:12:14.254Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "a86e",
+      "studentId": "iiii",
+      "courseId": "cccc",
+      "enrollmentDate": "2024-08-19T16:12:18.109Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "70f7",
+      "studentId": "jjjj",
+      "courseId": "cccc",
+      "enrollmentDate": "2024-08-19T16:12:23.997Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "f274",
+      "studentId": "jjjj",
+      "courseId": "dddd",
+      "enrollmentDate": "2024-08-19T16:12:29.658Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "9a5e",
+      "studentId": "jjjj",
+      "courseId": "eeee",
+      "enrollmentDate": "2024-08-19T16:12:33.921Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "cfa3",
+      "studentId": "kkkk",
+      "courseId": "eeee",
+      "enrollmentDate": "2024-08-19T16:12:38.552Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "7cd6",
+      "studentId": "kkkk",
+      "courseId": "ffff",
+      "enrollmentDate": "2024-08-19T16:12:43.170Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "1f86",
+      "studentId": "kkkk",
+      "courseId": "gggg",
+      "enrollmentDate": "2024-08-19T16:12:49.209Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "026c",
+      "studentId": "llll",
+      "courseId": "gggg",
+      "enrollmentDate": "2024-08-19T16:14:32.180Z",
+      "enrolledByUserId": "2107"
+    },
+    {
+      "id": "f9ae",
+      "studentId": "llll",
+      "courseId": "hhhh",
+      "enrollmentDate": "2024-08-19T16:14:37.895Z",
+      "enrolledByUserId": "2107"
+    },
+    {
+      "id": "34cb",
+      "studentId": "llll",
+      "courseId": "2a1d",
+      "enrollmentDate": "2024-08-19T16:14:44.814Z",
+      "enrolledByUserId": "2107"
+    },
+    {
+      "id": "4f2a",
+      "studentId": "mmmm",
+      "courseId": "2a1d",
+      "enrollmentDate": "2024-08-19T16:14:53.461Z",
+      "enrolledByUserId": "2107"
+    },
+    {
+      "id": "b016",
+      "studentId": "mmmm",
+      "courseId": "aaaa",
+      "enrollmentDate": "2024-08-19T16:14:58.702Z",
+      "enrolledByUserId": "2107"
+    },
+    {
+      "id": "1c7f",
+      "studentId": "mmmm",
+      "courseId": "bbbb",
+      "enrollmentDate": "2024-08-19T16:15:02.676Z",
+      "enrolledByUserId": "2107"
+    },
+    {
+      "id": "2298",
+      "studentId": "nnnn",
+      "courseId": "bbbb",
+      "enrollmentDate": "2024-08-19T16:24:26.712Z",
+      "enrolledByUserId": "cd7b"
+    },
+    {
+      "id": "d77e",
+      "studentId": "nnnn",
+      "courseId": "cccc",
+      "enrollmentDate": "2024-08-19T16:24:33.856Z",
+      "enrolledByUserId": "cd7b"
+    },
+    {
+      "id": "da2b",
+      "studentId": "nnnn",
+      "courseId": "dddd",
+      "enrollmentDate": "2024-08-19T16:24:43.987Z",
+      "enrolledByUserId": "cd7b"
+    },
+    {
+      "id": "4d73",
+      "studentId": "oooo",
+      "courseId": "dddd",
+      "enrollmentDate": "2024-08-19T16:24:51.254Z",
+      "enrolledByUserId": "cd7b"
+    },
+    {
+      "id": "7d10",
+      "studentId": "oooo",
+      "courseId": "eeee",
+      "enrollmentDate": "2024-08-19T16:24:56.137Z",
+      "enrolledByUserId": "cd7b"
+    },
+    {
+      "id": "16bd",
+      "studentId": "oooo",
+      "courseId": "ffff",
+      "enrollmentDate": "2024-08-19T16:25:08.236Z",
+      "enrolledByUserId": "cd7b"
+    },
+    {
+      "id": "4cd4",
+      "studentId": "pppp",
+      "courseId": "2a1d",
+      "enrollmentDate": "2024-08-19T16:30:40.369Z",
+      "enrolledByUserId": "2107"
+    },
+    {
+      "id": "c1ff",
+      "studentId": "pppp",
+      "courseId": "hhhh",
+      "enrollmentDate": "2024-08-19T16:30:45.483Z",
+      "enrolledByUserId": "2107"
+    },
+    {
+      "id": "3629",
+      "studentId": "pppp",
+      "courseId": "gggg",
+      "enrollmentDate": "2024-08-19T16:30:50.201Z",
+      "enrolledByUserId": "2107"
+    }
   ]
 }

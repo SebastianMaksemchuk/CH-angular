@@ -29,7 +29,7 @@ describe('EnrollmentsService', () => {
       enrolledByUserId: 'wxyz'
     };
 
-    spyOn(window, 'alert'); // Espiar window.alert
+    spyOn(window, 'alert');
   });
 
   afterEach(() => {
@@ -57,20 +57,18 @@ describe('EnrollmentsService', () => {
   describe('#createEnrollment', () => {
     it('should return existing enrollment if already exists', () => {
       const mockEnrollments: Enrollment[] = [mockEnrollment];
-      spyOn(service, 'getEnrollments').and.returnValue(of(mockEnrollments)); // Mock getEnrollments to return existing enrollment
+      spyOn(service, 'getEnrollments').and.returnValue(of(mockEnrollments));
 
       service.createEnrollment(mockEnrollment).subscribe(enrollment => {
         expect(enrollment).toEqual(mockEnrollment);
-        expect(window.alert).toHaveBeenCalledWith('Ya existe la inscripción.'); // Ensure alert is called
+        expect(window.alert).toHaveBeenCalledWith('Ya existe la inscripción.');
       });
-
-      // Ensure getEnrollments is called
       expect(service.getEnrollments).toHaveBeenCalled();
     });
 
     it('should create a new enrollment and return it', () => {
       const mockEnrollments: Enrollment[] = [];
-      spyOn(service, 'getEnrollments').and.returnValue(of(mockEnrollments)); // Mock getEnrollments to return an empty array
+      spyOn(service, 'getEnrollments').and.returnValue(of(mockEnrollments));
 
       service.createEnrollment(mockEnrollment).subscribe(enrollment => {
         expect(enrollment).toEqual(mockEnrollment);
