@@ -13,6 +13,8 @@ import { selectCourses } from '../courses/store/courses.selectors';
 import { selectStudents } from '../students/store/students.selectors';
 import { CoursesActions } from '../courses/store/courses.actions';
 import { StudentsActions } from '../students/store/students.actions';
+import { User } from '../../../shared/interfaces/user';
+import { selectAuthUser, selectAuthUserId } from '../../../core/store/auth/auth.selectors';
 
 @Component({
   selector: 'cha-enrollments',
@@ -28,6 +30,7 @@ export class EnrollmentsComponent implements OnInit, OnDestroy {
   error$: Observable<any>;
   courses$: Observable<Course[]>;
   students$: Observable<Student[]>
+  authUserId$: Observable<string | undefined>;
 
   constructor(
     private store: Store<RootState>,
@@ -37,7 +40,8 @@ export class EnrollmentsComponent implements OnInit, OnDestroy {
       this.isLoading$ = this.store.select(selectEnrollmentsIsLoading),
       this.error$ = this.store.select(selectEnrollmentsError),
       this.courses$ = this.store.select(selectCourses),
-      this.students$ = this.store.select(selectStudents)
+      this.students$ = this.store.select(selectStudents),
+      this.authUserId$ = this.store.select(selectAuthUserId)
   }
 
   ngOnInit(): void {
@@ -64,7 +68,14 @@ export class EnrollmentsComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(result => {
         if (result) {
-          this.store.dispatch(EnrollmentsActions.createEnrollment({ payload: result }))
+          this.authUserId$.subscribe((userId) => {
+            result = {
+              ...result,
+              enrollmentDate: new Date(),
+              enrolledByUserId: userId
+            };
+            this.store.dispatch(EnrollmentsActions.createEnrollment({ payload: result }));
+          });
         }
       });
   }

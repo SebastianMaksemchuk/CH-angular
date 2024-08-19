@@ -14,6 +14,6 @@ const initialState: AuthState = {
 
 export const authReducer = createReducer(
   initialState,
-  on(AuthActions.setAuthUser, (state, action) => { return { ...state, authUser: action.payload, }; }),
+  on(AuthActions.setAuthUser, (state, action) => { return { ...state, authUser: action.payload } }),
   on(AuthActions.unsetAuthUser, () => initialState)
 )

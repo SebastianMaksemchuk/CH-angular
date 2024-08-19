@@ -185,6 +185,13 @@
       "id": "3877",
       "studentId": "kkkk",
       "courseId": "gggg"
+    },
+    {
+      "id": "290a",
+      "studentId": "iiii",
+      "courseId": "aaaa",
+      "enrollmentDate": "2024-08-19T11:34:15.054Z",
+      "enrolledByUserId": "feee"
     }
   ]
 }
