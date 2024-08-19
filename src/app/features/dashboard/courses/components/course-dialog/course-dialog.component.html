@@ -1,4 +1,4 @@
-<h2 mat-dialog-title chaTitle>{{ course ? 'Editando curso ' + course.name : 'Nuevo curso' }}</h2>
+<h2 mat-dialog-title chaTitle>{{ data.course ? 'Editando curso ' + data.course.name : 'Nuevo curso' }}</h2>
 
 <mat-dialog-content>
   <form [formGroup]="courseForm">
@@ -31,6 +31,27 @@
       <mat-hint>Fecha de la última clase</mat-hint>
       <mat-datepicker #pickerEnd></mat-datepicker>
       <mat-error>Seleccione una fecha</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Cantidad de Clases</mat-label>
+      <input type="number" formControlName="classesCount" matInput>
+      <mat-error>Complete el número de clases</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Duración (horas totales de clase)</mat-label>
+      <input type="number" formControlName="duration" matInput>
+      <mat-error>Complete con la duración del curso en horas</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Profesor asigando</mat-label>
+      <mat-select formControlName="teacherId">
+        <mat-option *ngFor="let teacher of teachers$ | async" [value]="teacher.id">
+          {{teacher | fullName}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
   </form>

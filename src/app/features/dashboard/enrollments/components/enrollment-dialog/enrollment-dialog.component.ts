@@ -10,7 +10,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './enrollment-dialog.component.html',
   styleUrl: './enrollment-dialog.component.scss'
 })
-export class EnrollmentDialogComponent implements OnInit {
+export class EnrollmentDialogComponent {
   enrollmentForm: FormGroup;
   courses$: Observable<Course[]>;
   students$: Observable<Student[]>;
@@ -23,12 +23,11 @@ export class EnrollmentDialogComponent implements OnInit {
     this.courses$ = data.courses$;
     this.students$ = data.students$;
     this.enrollmentForm = this.fb.group({
-      studentId: ['', Validators.required],
-      courseId: ['', Validators.required]
+      studentId: [null, Validators.required],
+      courseId: [null, Validators.required]
     });
+    this.dialogRef.disableClose = true;
   }
-
-  ngOnInit(): void { }
 
   onSubmit() {
     if (this.enrollmentForm.valid) {

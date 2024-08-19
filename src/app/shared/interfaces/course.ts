@@ -3,5 +3,8 @@ export interface Course {
   comision: number;
   name: string;
   startDate: Date;
-  endDate: Date
+  endDate: Date;
+  classesCount: number;
+  duration: number;
+  teacherId: string
 };

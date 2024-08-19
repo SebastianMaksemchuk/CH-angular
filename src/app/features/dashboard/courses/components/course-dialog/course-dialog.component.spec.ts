@@ -21,7 +21,10 @@ describe('CourseDialogComponent', () => {
       comision: 101,
       name: 'Angular Basics',
       startDate: new Date('2024-01-01'),
-      endDate: new Date('2024-06-01')
+      endDate: new Date('2024-06-01'),
+      classesCount: 10,
+      duration: 100,
+      teacherId: 'wxyz',
     };
 
     await TestBed.configureTestingModule({
@@ -58,6 +61,16 @@ describe('CourseDialogComponent', () => {
     expect(component.courseForm.contains('name')).toBeTrue();
     expect(component.courseForm.contains('startDate')).toBeTrue();
     expect(component.courseForm.contains('endDate')).toBeTrue();
+    expect(component.courseForm.contains('classesCount')).toBeTrue();
+    expect(component.courseForm.contains('duration')).toBeTrue();
+    expect(component.courseForm.contains('teacherId')).toBeTrue();
+  });
+  
+  it('should make name control required', () => {
+    const control = component.courseForm.get('name');
+    expect(control).toBeTruthy();
+    control!.setValue(null);
+    expect(control!.valid).toBeFalse();
   });
 
   it('should make comision control required', () => {
@@ -67,8 +80,36 @@ describe('CourseDialogComponent', () => {
     expect(control!.valid).toBeFalse();
   });
 
-  it('should make name control required', () => {
-    const control = component.courseForm.get('name');
+  it('should make startDate control required', () => {
+    const control = component.courseForm.get('startDate');
+    expect(control).toBeTruthy();
+    control!.setValue(null);
+    expect(control!.valid).toBeFalse();
+  });
+
+  it('should make endDate control required', () => {
+    const control = component.courseForm.get('endDate');
+    expect(control).toBeTruthy();
+    control!.setValue(null);
+    expect(control!.valid).toBeFalse();
+  });
+
+  it('should make classesCount control required', () => {
+    const control = component.courseForm.get('classesCount');
+    expect(control).toBeTruthy();
+    control!.setValue(null);
+    expect(control!.valid).toBeFalse();
+  });
+
+  it('should make duration control required', () => {
+    const control = component.courseForm.get('duration');
+    expect(control).toBeTruthy();
+    control!.setValue(null);
+    expect(control!.valid).toBeFalse();
+  });
+
+  it('should make teacherId control required', () => {
+    const control = component.courseForm.get('teacherId');
     expect(control).toBeTruthy();
     control!.setValue(null);
     expect(control!.valid).toBeFalse();
@@ -80,7 +121,10 @@ describe('CourseDialogComponent', () => {
       comision: 101,
       name: 'Angular Basics',
       startDate: new Date('2024-01-01'),
-      endDate: new Date('2024-06-01')
+      endDate: new Date('2024-06-01'),
+      classesCount: 10,
+      duration: 100,
+      teacherId: 'wxyz',
     });
     component.onSubmit();
     expect(dialogRef.close).toHaveBeenCalledWith({
@@ -88,7 +132,10 @@ describe('CourseDialogComponent', () => {
       comision: 101,
       name: 'Angular Basics',
       startDate: new Date('2024-01-01'),
-      endDate: new Date('2024-06-01')
+      endDate: new Date('2024-06-01'),
+      classesCount: 10,
+      duration: 100,
+      teacherId: 'wxyz',
     });
   });
 

@@ -45,7 +45,10 @@ describe('CoursesComponent', () => {
       comision: 123567,
       name: 'Angular Basics',
       startDate: new Date('2024-01-01'),
-      endDate: new Date('2024-06-01')
+      endDate: new Date('2024-06-01'),
+      classesCount: 10,
+      duration: 100,
+      teacherId: 'wxyz',
     };
 
     mockUser = {
@@ -91,7 +94,7 @@ describe('CoursesComponent', () => {
     const dispatchSpy = spyOn(store, 'dispatch');
 
     component.openCourseDialog();
-    expect(matDialog.open).toHaveBeenCalledWith(CourseDialogComponent, { data: undefined });
+    expect(matDialog.open).toHaveBeenCalledWith(CourseDialogComponent, { data: { course: undefined, teachers$: component.teachers$ } });
     expect(dispatchSpy).toHaveBeenCalledWith(CoursesActions.createCourse({ payload: mockCourse }));
   });
 
@@ -103,7 +106,7 @@ describe('CoursesComponent', () => {
     const dispatchSpy = spyOn(store, 'dispatch');
 
     component.openCourseDialog(mockCourse);
-    expect(matDialog.open).toHaveBeenCalledWith(CourseDialogComponent, { data: mockCourse });
+    expect(matDialog.open).toHaveBeenCalledWith(CourseDialogComponent, { data: { course: mockCourse, teachers$: component.teachers$ } });
     expect(dispatchSpy).toHaveBeenCalledWith(CoursesActions.editCourse({ id: mockCourse.id, payload: mockCourse }));
   });
 

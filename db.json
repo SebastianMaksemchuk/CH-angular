@@ -5,6 +5,8 @@
       "firstName": "Perfil",
       "lastName": "Administrador",
       "email": "admin@angular.com",
+      "phone": null,
+      "adress": null,
       "password": "Admin00!",
       "role": "ADMIN",
       "token": "adminadmin"
@@ -30,6 +32,17 @@
       "password": "Freddy1234!",
       "role": "TEACHER",
       "token": "1qOMblqTjl"
+    },
+    {
+      "id": "e1c9",
+      "firstName": "Iara",
+      "lastName": "Donato",
+      "email": "iaraDonato@mail.com",
+      "phone": "1231451321",
+      "adress": "Av. Siempre Viva 6789",
+      "password": "Iara5678?",
+      "role": "TEACHER",
+      "token": "njLuQs7tdw"
     }
   ],
   "courses": [
@@ -88,6 +101,16 @@
       "name": "Looker Studio",
       "startDate": "2024-09-12",
       "endDate": "2024-09-23"
+    },
+    {
+      "id": "2a1d",
+      "comision": 57211,
+      "name": "Angular",
+      "startDate": "2024-06-11T03:00:00.000Z",
+      "endDate": "2024-11-15T03:00:00.000Z",
+      "classesCount": 18,
+      "duration": 124,
+      "teacherId": "2107"
     }
   ],
   "students": [
@@ -204,6 +227,13 @@
       "studentId": "iiii",
       "courseId": "aaaa",
       "enrollmentDate": "2024-08-19T11:34:15.054Z",
+      "enrolledByUserId": "feee"
+    },
+    {
+      "id": "a287",
+      "studentId": "iiii",
+      "courseId": "bbbb",
+      "enrollmentDate": "2024-08-19T13:08:04.176Z",
       "enrolledByUserId": "feee"
     }
   ]

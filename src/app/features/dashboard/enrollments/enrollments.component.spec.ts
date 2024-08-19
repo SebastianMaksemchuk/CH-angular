@@ -79,7 +79,10 @@ describe('EnrollmentsComponent', () => {
       comision: 123567,
       name: 'Angular Basics',
       startDate: new Date('2024-01-01'),
-      endDate: new Date('2024-06-01')
+      endDate: new Date('2024-06-01'),
+      classesCount: 10,
+      duration: 100,
+      teacherId: 'wxyz',
     };
   });
 

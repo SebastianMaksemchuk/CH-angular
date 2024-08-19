@@ -4,13 +4,15 @@ import { CourseDialogComponent } from './components/course-dialog/course-dialog.
 
 import { MatDialog } from '@angular/material/dialog';
 import { Course } from '../../../shared/interfaces/course';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { RootState } from '../../../core/store/store';
 import { selectCourses, selectCoursesError, selectCoursesIsLoading } from './store/courses.selectors';
 import { CoursesActions } from './store/courses.actions';
 import { selectAuthUser } from '../../../core/store/auth/auth.selectors';
 import { User } from '../../../shared/interfaces/user';
+import { selectUsers } from '../users/store/users.selectors';
+import { UsersActions } from '../users/store/users.actions';
 
 @Component({
   selector: 'cha-courses',
@@ -26,6 +28,7 @@ export class CoursesComponent implements OnInit, OnDestroy {
   courses$: Observable<Course[]>;
   isLoading$: Observable<boolean>;
   error$: Observable<any>;
+  teachers$: Observable<User[]>
 
   constructor(
     private store: Store<RootState>,
@@ -35,15 +38,19 @@ export class CoursesComponent implements OnInit, OnDestroy {
     this.courses$ = this.store.select(selectCourses);
     this.isLoading$ = this.store.select(selectCoursesIsLoading);
     this.error$ = this.store.select(selectCoursesError);
+    this.teachers$ = this.store.select(selectUsers).pipe(
+      map(users => users.filter(user => user.role === 'TEACHER'))
+    );
   }
 
   ngOnInit(): void {
     this.store.dispatch(CoursesActions.loadCourses())
-
+    this.store.dispatch(UsersActions.loadUsers())
   }
 
   ngOnDestroy(): void {
 this.store.dispatch(CoursesActions.unsetCoursesStore())
+this.store.dispatch(UsersActions.unsetUsersState())
   }
 
   reloadPage(): void {
@@ -52,13 +59,13 @@ this.store.dispatch(CoursesActions.unsetCoursesStore())
 
   openCourseDialog(course?: Course): void {
     this.matDialog
-    .open(CourseDialogComponent, {data: course})
+    .open(CourseDialogComponent, {data: {course: course,teachers$: this.teachers$}})
     .afterClosed()
     .subscribe(result => {
       if (!course && result) {
         this.store.dispatch(CoursesActions.createCourse({payload: result}))
       };
-      if (course) {
+      if (course && result) {
         this.store.dispatch(CoursesActions.editCourse({id: result.id, payload: result}))
       }
     })

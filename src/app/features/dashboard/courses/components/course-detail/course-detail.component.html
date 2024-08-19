@@ -5,10 +5,14 @@
     <button mat-flat-button (click)="reloadPage()">Recargar</button>
   } @else {
 <div>
-  <h2>Detalles del Curso: {{ (selectedCourse$ | async)?.name}}</h2>
+  <h2>Detalles del Curso:</h2>
+  <p><strong>Nombre del curso:</strong> {{ (selectedCourse$ | async)?.name}}</p>
   <p><strong>Comisión:</strong> {{ (selectedCourse$ | async)?.comision }}</p>
-  <p><strong>Inicio:</strong> {{ (selectedCourse$ | async)?.startDate | date: 'dd/MM/yyyy' }}</p>
-  <p><strong>Fin:</strong> {{ (selectedCourse$ | async)?.endDate | date: 'dd/MM/yyyy' }}</p>
+  <p><strong>Fecha de inicio:</strong> {{ (selectedCourse$ | async)?.startDate | date: 'dd/MM/yyyy' }}</p>
+  <p><strong>Fecha de finalización:</strong> {{ (selectedCourse$ | async)?.endDate | date: 'dd/MM/yyyy' }}</p>
+  <p><strong>Cantidad de clases:</strong> {{ (selectedCourse$ | async)?.classesCount }}</p>
+  <p><strong>Duración (total de horas de clase):</strong> {{ (selectedCourse$ | async)?.duration }}</p>
+  <p *ngIf="(teacher$ | async)"><strong>Profesor:</strong> {{ (teacher$ | async) | fullName }}</p>
   <h3>Alumnos inscriptos:</h3>
   <ul>
     <li *ngFor="let enrollment of filteredEnrollments$ | async">

@@ -23,6 +23,8 @@ import { selectAuthUser, selectAuthUserId } from '../../../core/store/auth/auth.
 })
 
 export class EnrollmentsComponent implements OnInit, OnDestroy {
+  authUserId$: Observable<string | undefined>;
+  
   displayedColumns: string[] = ['student', 'course', 'delete']
 
   enrollments$: Observable<Enrollment[]>;
@@ -30,7 +32,6 @@ export class EnrollmentsComponent implements OnInit, OnDestroy {
   error$: Observable<any>;
   courses$: Observable<Course[]>;
   students$: Observable<Student[]>
-  authUserId$: Observable<string | undefined>;
 
   constructor(
     private store: Store<RootState>,

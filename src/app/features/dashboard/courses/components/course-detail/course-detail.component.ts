@@ -9,6 +9,9 @@ import { selectCourses, selectCoursesError, selectCoursesIsLoading, selectSelect
 import { selectEnrollments } from '../../../enrollments/store/enrollments.selectors';
 import { CoursesActions } from '../../store/courses.actions';
 import { EnrollmentsActions } from '../../../enrollments/store/enrollments.actions';
+import { User } from '../../../../../shared/interfaces/user';
+import { selectUsers } from '../../../users/store/users.selectors';
+import { UsersActions } from '../../../users/store/users.actions';
 
 @Component({
   selector: 'cha-course-detail',
@@ -24,6 +27,8 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
   selectedCourse$: Observable<Course | null>;
   enrollments$: Observable<Enrollment[]>;
   filteredEnrollments$: Observable<any>;
+  users$: Observable<User[]>;
+  teacher$: Observable<User | undefined>;
 
   constructor(
     private store: Store<RootState>,
@@ -42,6 +47,15 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
         enrollments.filter(enrollment => enrollment.courseId === selectedCourse?.id)
       )
     );
+    this.users$ = this.store.select(selectUsers);
+    this.teacher$ = combineLatest([
+      this.users$,
+      this.selectedCourse$
+    ]).pipe(
+      map(([users, selectedCourse]) =>
+        users.find(teacher => teacher.id === selectedCourse?.teacherId)
+      )
+    );
   }
 
   ngOnInit(): void {
@@ -50,12 +64,13 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
     );
     this.store.dispatch(CoursesActions.loadCourseById({ id: this.route.snapshot.paramMap.get('id') ?? "" }));
     this.store.dispatch(EnrollmentsActions.loadEnrollments());
+    this.store.dispatch(UsersActions.loadUsers());
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(
-      CoursesActions.unsetCoursesStore()
-    );
+    this.store.dispatch(CoursesActions.unsetCoursesStore());
+    this.store.dispatch(EnrollmentsActions.unsetEnrollmentsStore());
+    this.store.dispatch(UsersActions.unsetUsersState());
   }
 
   reloadPage() {

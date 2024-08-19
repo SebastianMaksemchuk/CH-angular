@@ -29,6 +29,9 @@ describe('CoursesService', () => {
       name: 'Test Course',
       startDate: new Date(),
       endDate: new Date(),
+      classesCount: 10,
+      duration: 100,
+      teacherId: 'wxyz',
     };
 
     mockEnrollment = {

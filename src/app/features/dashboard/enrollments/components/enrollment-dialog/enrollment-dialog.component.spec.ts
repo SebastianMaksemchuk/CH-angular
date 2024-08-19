@@ -19,10 +19,25 @@ describe('EnrollmentDialogComponent', () => {
     const dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
 
     mockCourses$ = of([
-      { id: 'abcd', comision: 12345, name: 'Angular', startDate: new Date(), endDate: new Date() }
+      {
+        id: 'abcd',
+        comision: 12345,
+        name: 'Angular',
+        startDate: new Date(),
+        endDate: new Date(),
+        classesCount: 10,
+        duration: 100,
+        teacherId: 'wxyz',
+      }
     ]);
     mockStudents$ = of([
-      { id: 'efgh', firstName: 'Jane', lastName: 'Doe', email: 'jane.doe@example.com', DOB: new Date() }
+      {
+        id: 'efgh',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        email: 'jane.doe@example.com',
+        DOB: new Date()
+      }
     ]);
 
     await TestBed.configureTestingModule({
