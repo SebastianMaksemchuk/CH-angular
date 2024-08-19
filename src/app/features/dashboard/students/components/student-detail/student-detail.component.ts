@@ -1,12 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Student } from '../../../../../shared/interfaces/student';
 import { ActivatedRoute } from '@angular/router';
-import { StudentsService } from '../../../../../core/services/students.service';
-import { Course } from '../../../../../shared/interfaces/course';
 import { Enrollment } from '../../../../../shared/interfaces/enrollment';
 import { combineLatest, forkJoin, map, Observable } from 'rxjs';
-import { EnrollmentsService } from '../../../../../core/services/enrollments.service';
-import { CoursesService } from '../../../../../core/services/courses.service';
 import { Store } from '@ngrx/store';
 import { RootState } from '../../../../../core/store/store';
 import { selectSelecterStudent, selectStudents, selectStudentsError, selectStudentsIsLoading } from '../../store/students.selectors';

@@ -7,6 +7,7 @@ import { User } from '../../../shared/interfaces/user';
 import { selectUsers, selectUsersError, selectUsersIsLoading } from './store/users.selectors';
 import { MatDialog } from '@angular/material/dialog';
 import { UserDialogComponent } from './components/user-dialog/user-dialog.component';
+import { selectAuthUser } from '../../../core/store/auth/auth.selectors';
 
 @Component({
   selector: 'cha-users',
@@ -19,14 +20,16 @@ export class UsersComponent implements OnInit, OnDestroy {
   users$: Observable<User[]>
   isLoading$: Observable<boolean>
   error$: Observable<any>
+  authUser$: Observable<User | null>
 
   constructor(
     private store: Store<RootState>,
     private matDialog: MatDialog
   ) {
-    this.users$ = this.store.select(selectUsers)
-    this.isLoading$ = this.store.select(selectUsersIsLoading)
-    this.error$ = this.store.select(selectUsersError)
+    this.users$ = this.store.select(selectUsers);
+    this.isLoading$ = this.store.select(selectUsersIsLoading);
+    this.error$ = this.store.select(selectUsersError);
+    this.authUser$ = this.store.select(selectAuthUser);
   }
 
   ngOnInit(): void {

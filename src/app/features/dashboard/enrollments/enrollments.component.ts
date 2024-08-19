@@ -13,8 +13,7 @@ import { selectCourses } from '../courses/store/courses.selectors';
 import { selectStudents } from '../students/store/students.selectors';
 import { CoursesActions } from '../courses/store/courses.actions';
 import { StudentsActions } from '../students/store/students.actions';
-import { User } from '../../../shared/interfaces/user';
-import { selectAuthUser, selectAuthUserId } from '../../../core/store/auth/auth.selectors';
+import { selectAuthUserId } from '../../../core/store/auth/auth.selectors';
 
 @Component({
   selector: 'cha-enrollments',

@@ -65,6 +65,28 @@
       "password": "Pass123!",
       "role": "ADMIN",
       "token": "cC76rw3jko"
+    },
+    {
+      "id": "03d8",
+      "firstName": "Prof",
+      "lastName": "Fernandez",
+      "email": "fercho@mail.com",
+      "phone": "78967896",
+      "adress": "Av. Córdoba 0001",
+      "password": "Pass123!",
+      "role": "TEACHER",
+      "token": "kYXOB07R98"
+    },
+    {
+      "id": "cd7b",
+      "firstName": "Profesor de",
+      "lastName": "Prueba",
+      "email": "prueba@prueba.com",
+      "phone": null,
+      "adress": null,
+      "password": "Pass123!",
+      "role": "ADMIN",
+      "token": "eb8H39ccej"
     }
   ],
   "courses": [
@@ -72,57 +94,81 @@
       "id": "aaaa",
       "comision": 60160,
       "name": "Desarrollo Web",
-      "startDate": "2023-08-28",
-      "endDate": "2023-11-01"
+      "startDate": "2023-08-28T00:00:00.000Z",
+      "endDate": "2023-11-01T00:00:00.000Z",
+      "classesCount": 12,
+      "duration": 24,
+      "teacherId": "e1c9"
     },
     {
       "id": "bbbb",
       "comision": 57210,
       "name": "JavaScript",
-      "startDate": "2024-01-22",
-      "endDate": "2024-03-25"
+      "startDate": "2024-01-22T00:00:00.000Z",
+      "endDate": "2024-03-25T00:00:00.000Z",
+      "classesCount": 16,
+      "duration": 32,
+      "teacherId": "0293"
     },
     {
       "id": "cccc",
       "comision": 57210,
       "name": "Angular",
-      "startDate": "2024-06-10",
-      "endDate": "2024-08-12"
+      "startDate": "2024-06-10T00:00:00.000Z",
+      "endDate": "2024-08-12T00:00:00.000Z",
+      "classesCount": 18,
+      "duration": 36,
+      "teacherId": "2107"
     },
     {
       "id": "dddd",
       "comision": 57300,
       "name": "React Js",
-      "startDate": "2024-08-05",
-      "endDate": "2024-09-23"
+      "startDate": "2024-08-05T00:00:00.000Z",
+      "endDate": "2024-09-23T00:00:00.000Z",
+      "classesCount": 18,
+      "duration": 36,
+      "teacherId": "03d8"
     },
     {
       "id": "eeee",
       "comision": 58010,
       "name": "Data Science I",
-      "startDate": "2024-08-03",
-      "endDate": "2024-10-05"
+      "startDate": "2024-08-03T00:00:00.000Z",
+      "endDate": "2024-10-05T00:00:00.000Z",
+      "classesCount": 24,
+      "duration": 48,
+      "teacherId": "a97f"
     },
     {
       "id": "ffff",
       "comision": 51111,
       "name": "Data Science II",
-      "startDate": "2024-08-13",
-      "endDate": "2024-11-26"
+      "startDate": "2024-08-13T00:00:00.000Z",
+      "endDate": "2024-11-26T00:00:00.000Z",
+      "classesCount": 24,
+      "duration": 48,
+      "teacherId": "a97f"
     },
     {
       "id": "gggg",
       "comision": 52222,
       "name": "Blockchain",
-      "startDate": "2024-09-09",
-      "endDate": "2024-10-21"
+      "startDate": "2024-09-09T00:00:00.000Z",
+      "endDate": "2024-10-21T00:00:00.000Z",
+      "classesCount": 20,
+      "duration": 30,
+      "teacherId": "b5b5"
     },
     {
       "id": "hhhh",
       "comision": 53333,
       "name": "Looker Studio",
-      "startDate": "2024-09-12",
-      "endDate": "2024-09-23"
+      "startDate": "2024-09-12T00:00:00.000Z",
+      "endDate": "2024-09-23T00:00:00.000Z",
+      "classesCount": 6,
+      "duration": 12,
+      "teacherId": "b5b5"
     },
     {
       "id": "2a1d",
@@ -194,69 +240,5 @@
     }
   ],
   "enrollments": [
-    {
-      "id": "072d",
-      "studentId": "kkkk",
-      "courseId": "eeee"
-    },
-    {
-      "id": "d656",
-      "studentId": "iiii",
-      "courseId": "aaaa"
-    },
-    {
-      "id": "bc7d",
-      "studentId": "jjjj",
-      "courseId": "bbbb"
-    },
-    {
-      "id": "ee5d",
-      "studentId": "nnnn",
-      "courseId": "cccc"
-    },
-    {
-      "id": "1bc0",
-      "studentId": "oooo",
-      "courseId": "hhhh"
-    },
-    {
-      "id": "4aec",
-      "studentId": "pppp",
-      "courseId": "bbbb"
-    },
-    {
-      "id": "c2ac",
-      "studentId": "kkkk",
-      "courseId": "ffff"
-    },
-    {
-      "id": "de95",
-      "studentId": "oooo",
-      "courseId": "dddd"
-    },
-    {
-      "id": "5a59",
-      "studentId": "kkkk",
-      "courseId": "aaaa"
-    },
-    {
-      "id": "3877",
-      "studentId": "kkkk",
-      "courseId": "gggg"
-    },
-    {
-      "id": "290a",
-      "studentId": "iiii",
-      "courseId": "aaaa",
-      "enrollmentDate": "2024-08-19T11:34:15.054Z",
-      "enrolledByUserId": "feee"
-    },
-    {
-      "id": "a287",
-      "studentId": "iiii",
-      "courseId": "bbbb",
-      "enrollmentDate": "2024-08-19T13:08:04.176Z",
-      "enrolledByUserId": "feee"
-    }
   ]
 }
