@@ -3,6 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { EnrollmentsService } from './enrollments.service';
 import { environment } from '../../../environments/environment';
 import { Enrollment } from '../../shared/interfaces/enrollment';
+import { of } from 'rxjs';
 
 describe('EnrollmentsService', () => {
   let service: EnrollmentsService;
@@ -27,6 +28,8 @@ describe('EnrollmentsService', () => {
       enrollmentDate: new Date(),
       enrolledByUserId: 'wxyz'
     };
+
+    spyOn(window, 'alert'); // Espiar window.alert
   });
 
   afterEach(() => {
@@ -38,7 +41,7 @@ describe('EnrollmentsService', () => {
   });
 
   describe('#getEnrollments', () => {
-    it('should return an Observable of Enrollments with embeded course and student', () => {
+    it('should return an Observable of Enrollments with embedded course and student', () => {
       const mockEnrollments: Enrollment[] = [mockEnrollment];
       service.getEnrollments().subscribe(enrollments => {
         expect(enrollments.length).toBe(1);
@@ -52,7 +55,23 @@ describe('EnrollmentsService', () => {
   });
 
   describe('#createEnrollment', () => {
+    it('should return existing enrollment if already exists', () => {
+      const mockEnrollments: Enrollment[] = [mockEnrollment];
+      spyOn(service, 'getEnrollments').and.returnValue(of(mockEnrollments)); // Mock getEnrollments to return existing enrollment
+
+      service.createEnrollment(mockEnrollment).subscribe(enrollment => {
+        expect(enrollment).toEqual(mockEnrollment);
+        expect(window.alert).toHaveBeenCalledWith('Ya existe la inscripción.'); // Ensure alert is called
+      });
+
+      // Ensure getEnrollments is called
+      expect(service.getEnrollments).toHaveBeenCalled();
+    });
+
     it('should create a new enrollment and return it', () => {
+      const mockEnrollments: Enrollment[] = [];
+      spyOn(service, 'getEnrollments').and.returnValue(of(mockEnrollments)); // Mock getEnrollments to return an empty array
+
       service.createEnrollment(mockEnrollment).subscribe(enrollment => {
         expect(enrollment).toEqual(mockEnrollment);
       });
