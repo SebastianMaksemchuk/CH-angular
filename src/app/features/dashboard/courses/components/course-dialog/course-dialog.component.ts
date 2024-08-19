@@ -32,11 +32,22 @@ export class CourseDialogComponent {
       classesCount: [null, Validators.required],
       duration: [null, Validators.required],
       teacherId: [null, Validators.required],
-    });
+    }, { validators: this.dateRangeValidator });
+    this.courseForm.get('startDate')?.valueChanges.subscribe(() => this.courseForm.updateValueAndValidity());
+    this.courseForm.get('endDate')?.valueChanges.subscribe(() => this.courseForm.updateValueAndValidity());
     if (this.data.course) {
       this.courseForm.patchValue(this.data.course)
     };
   };
+
+  dateRangeValidator(group: FormGroup): { [key: string]: boolean } | null {
+    const startDate = group.get('startDate')?.value;
+    const endDate = group.get('endDate')?.value;
+    if (startDate && endDate && startDate > endDate) {
+      return { dateRangeInvalid: true };
+    }
+    return null;
+  }
 
   onSubmit(): void {
     this.matDialogRef.close(this.courseForm.value)

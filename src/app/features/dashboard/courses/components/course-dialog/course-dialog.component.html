@@ -6,13 +6,13 @@
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Nombre del curso</mat-label>
       <input formControlName="name" matInput>
-      <mat-error>Debe asignarle un nombre al curso</mat-error>
+      <mat-error *ngIf="courseForm.get('name')?.hasError('required')">Debe asignarle un nombre al curso</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Número de comisión</mat-label>
       <input type="number" formControlName="comision" matInput>
-      <mat-error>Complete el número de comisión</mat-error>
+      <mat-error *ngIf="courseForm.get('comision')?.hasError('required')">Complete el número de comisión</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline">
@@ -21,8 +21,10 @@
       <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
       <mat-datepicker #pickerStart></mat-datepicker>
       <mat-hint>Fecha de la primera clase</mat-hint>
-      <mat-error>Seleccione una fecha</mat-error>
+      <mat-error *ngIf="courseForm.get('startDate')?.hasError('required')">Seleccione una fecha</mat-error>
     </mat-form-field>
+
+    <mat-error *ngIf="courseForm.errors?.['dateRangeInvalid']">La fecha de fin no puede ser anterior a la fecha de inicio</mat-error>
 
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Fecha de fin</mat-label>
@@ -30,19 +32,19 @@
       <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
       <mat-hint>Fecha de la última clase</mat-hint>
       <mat-datepicker #pickerEnd></mat-datepicker>
-      <mat-error>Seleccione una fecha</mat-error>
+      <mat-error *ngIf="courseForm.get('endDate')?.hasError('required')">Seleccione una fecha</mat-error>
     </mat-form-field>
-
+    
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Cantidad de Clases</mat-label>
       <input type="number" formControlName="classesCount" matInput>
-      <mat-error>Complete el número de clases</mat-error>
+      <mat-error *ngIf="courseForm.get('classesCount')?.hasError('required')">Complete el número de clases</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Duración (horas totales de clase)</mat-label>
       <input type="number" formControlName="duration" matInput>
-      <mat-error>Complete con la duración del curso en horas</mat-error>
+      <mat-error *ngIf="courseForm.get('duration')?.hasError('required')">Complete con la duración del curso en horas</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full">
@@ -52,6 +54,7 @@
           {{teacher | fullName}}
         </mat-option>
       </mat-select>
+      <mat-error *ngIf="courseForm.get('teacherId')?.hasError('required')">Debe asignar un profesor al curso</mat-error>
     </mat-form-field>
 
   </form>
