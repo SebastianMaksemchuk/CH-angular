@@ -5,9 +5,13 @@
 <button mat-flat-button (click)="reloadPage()">Recargar</button>
 } @else {
 
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
+</mat-form-field>
+
 <button mat-flat-button (click)="openUserDialog()"><mat-icon>add</mat-icon>Crear un nuevo usuario</button>
 
-<table mat-table [dataSource]="users$" class="mat-elevation-z8">
+<table mat-table [dataSource]="filteredUsers$" class="mat-elevation-z8">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef chaTitle> Nombre </th>

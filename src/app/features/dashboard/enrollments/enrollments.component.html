@@ -1,13 +1,17 @@
 @if (isLoading$ |async ) {
-  <mat-spinner></mat-spinner>
-  } @else if (error$ | async) {
-  <p>Ocurrió un error inesperado.</p>
-  <button mat-flat-button (click)="reloadPage()">Recargar</button>
-  } @else {
+<mat-spinner></mat-spinner>
+} @else if (error$ | async) {
+<p>Ocurrió un error inesperado.</p>
+<button mat-flat-button (click)="reloadPage()">Recargar</button>
+} @else {
+
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
+</mat-form-field>
 
 <button mat-flat-button (click)="openEnrollmentDialog()"><mat-icon>add</mat-icon>Gestionar inscripción</button>
 
-<table mat-table [dataSource]="enrollments$" class="mat-elevation-z8">
+<table mat-table [dataSource]="filteredEnrollments$" class="mat-elevation-z8">
 
   <ng-container matColumnDef="student">
     <th mat-header-cell *matHeaderCellDef chaTitle> Alumno</th>

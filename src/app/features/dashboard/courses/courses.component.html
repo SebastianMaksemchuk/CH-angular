@@ -5,9 +5,13 @@
 <button mat-flat-button (click)="reloadPage()">Recargar</button>
 } @else {
 
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
+</mat-form-field>
+
 <button *ngIf="(authUser$ | async)?.role === 'ADMIN'" mat-flat-button (click)="openCourseDialog()"><mat-icon>add</mat-icon>Añadir un nuevo curso</button>
 
-<table mat-table [dataSource]="courses$" class="mat-elevation-z8">
+<table mat-table [dataSource]="filteredCourses$" class="mat-elevation-z8">
 
   <ng-container matColumnDef="comision">
     <th mat-header-cell *matHeaderCellDef chaTitle> Comisión </th>

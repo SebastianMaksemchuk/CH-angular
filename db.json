@@ -76,17 +76,6 @@
       "password": "Pass123!",
       "role": "TEACHER",
       "token": "kYXOB07R98"
-    },
-    {
-      "id": "cd7b",
-      "firstName": "Prueba de",
-      "lastName": "edicion",
-      "email": "prueba@prueba.com",
-      "phone": "+54 11-1234-5678",
-      "adress": "Av. Prueba 12345",
-      "password": "Pass123!",
-      "role": "ADMIN",
-      "token": "eb8H39ccej"
     }
   ],
   "courses": [
@@ -122,7 +111,7 @@
     },
     {
       "id": "dddd",
-      "comision": 57300,
+      "comision": 57310,
       "name": "React Js",
       "startDate": "2024-08-05T00:00:00.000Z",
       "endDate": "2024-09-23T00:00:00.000Z",
@@ -194,7 +183,7 @@
       "firstName": "Alan",
       "lastName": "Netio",
       "DOB": "1990-07-10T00:00:00.000Z",
-      "email": "alan@netio.com.ar"
+      "email": "alan@netio.com"
     },
     {
       "id": "kkkk",

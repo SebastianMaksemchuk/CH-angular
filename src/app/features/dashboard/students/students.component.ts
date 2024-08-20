@@ -4,7 +4,7 @@ import { StudentDialogComponent } from './components/student-dialog/student-dial
 
 import { MatDialog } from '@angular/material/dialog';
 import { Student } from '../../../shared/interfaces/student';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { StudentsActions } from './store/students.actions';
 import { selectStudents, selectStudentsError, selectStudentsIsLoading } from './store/students.selectors';
@@ -26,6 +26,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
   students$: Observable<Student[]>;
   isLoading$: Observable<boolean>;
   error$: Observable<any>;
+  filteredStudents$ = new BehaviorSubject<Student[]>([]);
 
   constructor(
     private store: Store<RootState>,
@@ -40,6 +41,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.dispatch(StudentsActions.loadStudents());
+    this.students$.subscribe(students => {this.filteredStudents$.next(students)});
   };
 
   ngOnDestroy(): void {
@@ -55,18 +57,44 @@ export class StudentsComponent implements OnInit, OnDestroy {
       .open(StudentDialogComponent, { data: student })
       .afterClosed()
       .subscribe(result => {
-        if (!student && result) {
-          this.store.dispatch(StudentsActions.createStudent({ payload: result }))
+        if (result) {
+          if (!student) {
+            this.store.dispatch(StudentsActions.createStudent({ payload: result }))
+          } else {
+              this.store.dispatch(StudentsActions.editStudent({ id: result.id, payload: result }))
         };
-        if (student) {
-          this.store.dispatch(StudentsActions.editStudent({ id: result.id, payload: result }))
-        }
+        this.resetFilter();
+        };
       })
-  }
+  };
 
   deleteStudentById(id: string): void {
     if (confirm('¿Está seguro que desea elminiar este alumno?')) {
       this.store.dispatch(StudentsActions.deleteStudent({ id: id }))
-    }
+      this.resetFilter();
+    };
+  };
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.students$.pipe(
+      map(students => students.filter(student =>
+        student.firstName.toLowerCase().includes(filterValue) ||
+        student.lastName.toLowerCase().includes(filterValue) ||
+        student.email.toLowerCase().includes(filterValue)
+      ))
+    ).subscribe(filtered => {
+      this.filteredStudents$.next(filtered);
+    });
+  }
+
+  resetFilter(): void {
+    this.students$.subscribe(students => {
+      this.filteredStudents$.next(students);
+      const input = document.querySelector('#input') as HTMLInputElement;
+      if (input) {
+        input.value = '';
+      }
+    });
   }
 }

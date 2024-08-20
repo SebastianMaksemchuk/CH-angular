@@ -4,7 +4,7 @@ import { CourseDialogComponent } from './components/course-dialog/course-dialog.
 
 import { MatDialog } from '@angular/material/dialog';
 import { Course } from '../../../shared/interfaces/course';
-import { forkJoin, map, Observable } from 'rxjs';
+import { map, Observable, BehaviorSubject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { RootState } from '../../../core/store/store';
 import { selectCourses, selectCoursesError, selectCoursesIsLoading } from './store/courses.selectors';
@@ -28,7 +28,8 @@ export class CoursesComponent implements OnInit, OnDestroy {
   courses$: Observable<Course[]>;
   isLoading$: Observable<boolean>;
   error$: Observable<any>;
-  teachers$: Observable<User[]>
+  teachers$: Observable<User[]>;
+  filteredCourses$ = new BehaviorSubject<Course[]>([]);
 
   constructor(
     private store: Store<RootState>,
@@ -41,39 +42,65 @@ export class CoursesComponent implements OnInit, OnDestroy {
     this.teachers$ = this.store.select(selectUsers).pipe(
       map(users => users.filter(user => user.role === 'TEACHER'))
     );
-  }
+  };
 
   ngOnInit(): void {
-    this.store.dispatch(CoursesActions.loadCourses())
-    this.store.dispatch(UsersActions.loadUsers())
-  }
+    this.store.dispatch(CoursesActions.loadCourses());
+    this.store.dispatch(UsersActions.loadUsers());
+    this.courses$.subscribe(courses => {this.filteredCourses$.next(courses)});
+  };
 
   ngOnDestroy(): void {
-    this.store.dispatch(CoursesActions.unsetCoursesStore())
-    this.store.dispatch(UsersActions.unsetUsersState())
-  }
+    this.store.dispatch(CoursesActions.unsetCoursesStore());
+    this.store.dispatch(UsersActions.unsetUsersState());
+  };
 
   reloadPage(): void {
-    location.reload()
-  }
+    location.reload();
+  };
 
   openCourseDialog(course?: Course): void {
     this.matDialog
       .open(CourseDialogComponent, { data: { course: course, teachers$: this.teachers$ } })
       .afterClosed()
       .subscribe(result => {
-        if (!course && result) {
-          this.store.dispatch(CoursesActions.createCourse({ payload: result }))
+        if (result) {
+          if (!course) {
+            this.store.dispatch(CoursesActions.createCourse({ payload: result }));
+          } else {
+            this.store.dispatch(CoursesActions.editCourse({ id: result.id, payload: result }));
+          };
+          this.resetFilter();
         };
-        if (course && result) {
-          this.store.dispatch(CoursesActions.editCourse({ id: result.id, payload: result }))
-        }
-      })
-  }
+      });
+  };
 
   deleteCourseById(id: string): void {
     if (confirm('¿Está seguro que esea elminiar este curso?')) {
       this.store.dispatch(CoursesActions.deleteCourse({ id: id }))
-    }
+      this.resetFilter();
+    };
+  };
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.courses$.pipe(
+      map(courses => courses.filter(course =>
+        course.comision.toString().includes(filterValue) ||
+        course.name.toLowerCase().includes(filterValue)
+      ))
+    ).subscribe(filtered => {
+      this.filteredCourses$.next(filtered);
+    });
+  }
+
+  resetFilter(): void {
+    this.courses$.subscribe(courses => {
+      this.filteredCourses$.next(courses);
+      const input = document.querySelector('#input') as HTMLInputElement;
+      if (input) {
+        input.value = '';
+      }
+    });
   }
 }

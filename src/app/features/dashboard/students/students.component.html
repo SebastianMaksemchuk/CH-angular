@@ -4,9 +4,14 @@
 <p>Ocurrió un error inesperado.</p>
 <button mat-flat-button (click)="reloadPage()">Recargar</button>
 } @else {
+
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
+</mat-form-field>
+
 <button *ngIf="(authUser$ | async)?.role === 'ADMIN'" mat-flat-button (click)="openStudentDialog()"><mat-icon>add</mat-icon>Ingresar un nuevo alumno</button>
 
-<table mat-table [dataSource]="students$" class="mat-elevation-z8">
+<table mat-table [dataSource]="filteredStudents$" class="mat-elevation-z8">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef chaTitle> Alumno </th>

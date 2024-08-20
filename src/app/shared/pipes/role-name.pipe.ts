@@ -22,4 +22,17 @@ export class RoleNamePipe implements PipeTransform {
         return 'Indefinido';
     }
   }
+
+  reverseTransform(name: string): UserRole | undefined {
+    switch (name.toLowerCase()) {
+      case 'administrador':
+        return 'ADMIN';
+      case 'profesor':
+        return 'TEACHER';
+      case 'alumno':
+        return 'STUDENT';
+      default:
+        return undefined;
+    }
+  }
 }

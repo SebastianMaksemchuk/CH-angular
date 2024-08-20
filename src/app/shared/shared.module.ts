@@ -25,6 +25,9 @@ import { FeatureNamePipe } from './pipes/feature-name.pipe';
     FeatureNamePipe,
     TitleDirective,
     SharedImportsModule
+  ],
+  providers: [
+    RoleNamePipe
   ]
 })
 export class SharedModule { }

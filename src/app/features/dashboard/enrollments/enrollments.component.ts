@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { filter, map, Observable, switchMap, take } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, switchMap, take } from 'rxjs';
 import { Enrollment } from '../../../shared/interfaces/enrollment';
 import { Student } from '../../../shared/interfaces/student';
 import { Course } from '../../../shared/interfaces/course';
@@ -23,14 +23,15 @@ import { selectAuthUserId } from '../../../core/store/auth/auth.selectors';
 
 export class EnrollmentsComponent implements OnInit, OnDestroy {
   authUserId$: Observable<string | undefined>;
-  
+
   displayedColumns: string[] = ['student', 'course', 'delete']
 
-  enrollments$: Observable<Enrollment[]>;
+  enrollments$: Observable<Enrollment[] | any[]>;
   isLoading$: Observable<boolean>;
   error$: Observable<any>;
   courses$: Observable<Course[]>;
-  students$: Observable<Student[]>;
+  students$: Observable<Student[]>;;
+  filteredEnrollments$ = new BehaviorSubject<Enrollment[]>([]);
 
   constructor(
     private store: Store<RootState>,
@@ -48,6 +49,7 @@ export class EnrollmentsComponent implements OnInit, OnDestroy {
     this.store.dispatch(EnrollmentsActions.loadEnrollments());
     this.store.dispatch(CoursesActions.loadCourses());
     this.store.dispatch(StudentsActions.loadStudents());
+    this.enrollments$.subscribe(enrollments => {this.filteredEnrollments$.next(enrollments);});
   }
 
   ngOnDestroy(): void {
@@ -67,28 +69,53 @@ export class EnrollmentsComponent implements OnInit, OnDestroy {
         students$: this.students$
       }
     })
-    .afterClosed()
-    .pipe(
-      filter(result => !!result),
-      switchMap(result => 
-        this.authUserId$.pipe(
-          take(1),
-          map(userId => ({
-            ...result,
-            enrollmentDate: new Date(),
-            enrolledByUserId: userId
-          }))
+      .afterClosed()
+      .pipe(
+        filter(result => !!result),
+        switchMap(result =>
+          this.authUserId$.pipe(
+            take(1),
+            map(userId => ({
+              ...result,
+              enrollmentDate: new Date(),
+              enrolledByUserId: userId
+            }))
+          )
         )
       )
-    )
-    .subscribe(payload => {
-      this.store.dispatch(EnrollmentsActions.createEnrollment({ payload }));
-    });
-  }
+      .subscribe(payload => {
+        this.store.dispatch(EnrollmentsActions.createEnrollment({ payload }));
+      });
+  };
 
   deleteEnrollmentById(id: string) {
     if (confirm('¿Está seguro que desea elminiar esta inscripción?')) {
       this.store.dispatch(EnrollmentsActions.deleteEnrollment({ id: id }))
-    }
-  }
+      this.resetFilter();
+    };
+  };
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.enrollments$.pipe(
+      map(enrollments => enrollments.filter(enrollment =>
+        enrollment.student.firstName.toLowerCase().includes(filterValue) ||
+        enrollment.student.lastName.toLowerCase().includes(filterValue) ||
+        enrollment.course.name.toLowerCase().includes(filterValue) ||
+        enrollment.course.comision.toString().includes(filterValue)
+      ))
+    ).subscribe(filtered => {
+      this.filteredEnrollments$.next(filtered);
+    });
+  };
+
+  resetFilter(): void {
+    this.enrollments$.subscribe(enrollments => {
+      this.filteredEnrollments$.next(enrollments);
+      const input = document.querySelector('#input') as HTMLInputElement;
+      if (input) {
+        input.value = '';
+      };
+    });
+  };
 }
