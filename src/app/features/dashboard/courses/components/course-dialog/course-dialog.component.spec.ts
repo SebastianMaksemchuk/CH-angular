@@ -65,7 +65,7 @@ describe('CourseDialogComponent', () => {
     expect(component.courseForm.contains('duration')).toBeTrue();
     expect(component.courseForm.contains('teacherId')).toBeTrue();
   });
-  
+
   it('should make name control required', () => {
     const control = component.courseForm.get('name');
     expect(control).toBeTruthy();

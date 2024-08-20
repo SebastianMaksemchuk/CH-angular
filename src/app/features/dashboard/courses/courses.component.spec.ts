@@ -9,6 +9,9 @@ import { RootState } from '../../../core/store/store';
 import { Course } from '../../../shared/interfaces/course';
 import { User } from '../../../shared/interfaces/user';
 import { SharedModule } from '../../../shared/shared.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { selectCourses } from './store/courses.selectors';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CoursesComponent', () => {
   let component: CoursesComponent;
@@ -19,7 +22,16 @@ describe('CoursesComponent', () => {
   let mockUser: User;
 
   const initialState = {
-    courses: [],
+    courses: [{
+      id: 'efgh',
+      comision: 123567,
+      name: 'Angular Basics',
+      startDate: new Date('2024-01-01'),
+      endDate: new Date('2024-06-01'),
+      classesCount: 10,
+      duration: 100,
+      teacherId: 'wxyz',
+    }],
     coursesError: null,
     coursesIsLoading: false,
     authUser: null
@@ -29,7 +41,11 @@ describe('CoursesComponent', () => {
     const dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
     await TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [
+        SharedModule,
+        NoopAnimationsModule,
+        RouterTestingModule
+      ],
       declarations: [CoursesComponent],
       providers: [
         provideMockStore({ initialState }),
@@ -67,6 +83,16 @@ describe('CoursesComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CoursesComponent);
     component = fixture.componentInstance;
+    store.overrideSelector(selectCourses, [{
+      id: 'efgh',
+      comision: 123567,
+      name: 'Angular Basics',
+      startDate: new Date('2024-01-01'),
+      endDate: new Date('2024-06-01'),
+      classesCount: 10,
+      duration: 100,
+      teacherId: 'wxyz',
+    }]);
     fixture.detectChanges();
   });
 

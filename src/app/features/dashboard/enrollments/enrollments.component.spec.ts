@@ -12,6 +12,7 @@ import { Enrollment } from '../../../shared/interfaces/enrollment';
 import { Student } from '../../../shared/interfaces/student';
 import { Course } from '../../../shared/interfaces/course';
 import { SharedModule } from '../../../shared/shared.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EnrollmentsComponent', () => {
   let component: EnrollmentsComponent;
@@ -47,7 +48,10 @@ describe('EnrollmentsComponent', () => {
     const dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
     await TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [
+        SharedModule,
+        NoopAnimationsModule
+      ],
       declarations: [EnrollmentsComponent],
       providers: [
         provideMockStore({ initialState }),

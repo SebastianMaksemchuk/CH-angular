@@ -8,6 +8,7 @@ import { UsersActions } from './store/users.actions';
 import { RootState } from '../../../core/store/store';
 import { User, UserRole } from '../../../shared/interfaces/user';
 import { SharedModule } from '../../../shared/shared.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('UsersComponent', () => {
   let component: UsersComponent;
@@ -26,7 +27,10 @@ describe('UsersComponent', () => {
     const dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
     await TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [
+        SharedModule,
+        NoopAnimationsModule,
+      ],
       declarations: [UsersComponent],
       providers: [
         provideMockStore({ initialState }),
