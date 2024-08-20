@@ -26,14 +26,15 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<RootState>,
-    private matDialog: MatDialog,
-    private roleNamePipe: RoleNamePipe
+    private matDialog: MatDialog
   ) {
     this.users$ = this.store.select(selectUsers);
     this.isLoading$ = this.store.select(selectUsersIsLoading);
     this.error$ = this.store.select(selectUsersError);
     this.authUser$ = this.store.select(selectAuthUser);
   };
+
+  private roleNamePipe = new RoleNamePipe();
 
   ngOnInit(): void {
     this.store.dispatch(UsersActions.loadUsers());
