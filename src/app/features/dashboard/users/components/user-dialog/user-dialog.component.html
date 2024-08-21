@@ -39,7 +39,7 @@
       <mat-label>Rol</mat-label>
       <mat-select matNativeControl formControlName="role">
         <mat-option *ngFor="let role of userRoles" [value]="role">
-          {{ role  | roleName }}
+          {{ role | roleName }}
         </mat-option>
       </mat-select>
       <mat-error>Debe seleccionar un rol</mat-error>
@@ -47,7 +47,8 @@
 
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Contraseña</mat-label>
-      <input formControlName="password" matInput type="password">
+      <input formControlName="password" matInput [type]="hidePassword ? 'password' : 'text'">
+      <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button" aria-label="Mostrar u ocultar contraseña"><mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon></button>
       <mat-error *ngIf="userForm.get('password')?.hasError('required')">Debe crear una contraseña</mat-error>
       <mat-error *ngIf="userForm.get('password')?.hasError('upperCase')">La contraseña debe tener al menos una letra mayúscula</mat-error>
       <mat-error *ngIf="userForm.get('password')?.hasError('lowerCase')">La contraseña debe tener al menos una letra minúscula</mat-error>

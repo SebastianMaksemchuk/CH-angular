@@ -10,6 +10,7 @@ import { User, UserRole } from '../../../../../shared/interfaces/user';
 })
 export class UserDialogComponent {
   userForm: FormGroup;
+  hidePassword = true;
   userRoles: UserRole[] = ['ADMIN', 'TEACHER'];
 
   constructor(

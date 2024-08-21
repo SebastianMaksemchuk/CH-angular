@@ -12,6 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class LoginComponent {
 
   logInForm: FormGroup;
+  hidePassword = true;
 
   constructor(
     private formBuilder: FormBuilder,
