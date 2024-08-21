@@ -40,7 +40,7 @@
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef chaTitle> Editar</th>
     <td mat-cell *matCellDef="let element">
-      <button (click)="openUserDialog(element)" mat-icon-button matTooltip="Editar usuario" matTooltipPosition="above">
+      <button (click)="openUserDialog(element)" [disabled]="element.id === (authUser$ | async)?.id" mat-icon-button matTooltip="Editar usuario" matTooltipPosition="above">
         <mat-icon>edit</mat-icon>
       </button>
     </td>
